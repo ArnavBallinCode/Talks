@@ -341,6 +341,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .oss-stats div:first-child b { color: var(--tally); }
 .oss-stats span { font-family: var(--f-mono); font-size: .72em; color: var(--mute); text-transform: uppercase; letter-spacing: .08em; }
 
+
+/* ── integrations ── */
+.integ { display: grid; grid-template-columns: .9fr 1.1fr; gap: 4vw; align-items: center; }
+.integ > * { min-width: 0; }
+.plugs { display: flex; flex-wrap: wrap; gap: .6em; }
+.plug { display: inline-flex; align-items: center; gap: .5em; font-family: var(--f-mono); font-size: .75em; padding: .45em .9em; border: 1px dashed var(--line); border-radius: 999px; color: var(--mute); }
+.plug.real { border: 1px solid var(--tally); color: var(--ink); }
+.plug img { height: 1.4em; width: auto; }
+.apis { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .9em 1.6em; }
+.apis b { display: block; font-weight: 500; }
+.apis span { color: var(--mute); font-size: .85em; }
+.term .m { color: var(--signal); }
+.term .u { color: var(--ink); }
+
 /* channel strip */
 .strip {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -368,7 +382,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   .slide { position: relative; inset: auto; opacity: 1; visibility: visible; padding-block: 56px; border-bottom: 1px solid var(--line); overflow: hidden; }
   .slide:first-child { min-height: 80vh; }
   .strip, .notes-panel { display: none; }
-  .about, .product, .demo-grid, .problem-grid, .versions, .oss, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
+  .about, .product, .demo-grid, .problem-grid, .versions, .oss, .integ, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
   .fmap { grid-template-columns: 1fr 1fr; }
   .strike { grid-template-columns: 1fr 1fr; }
   .browser { transform: none; }
@@ -731,6 +745,50 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       </div>
     </div>
     <aside class="notes"><ul><li>~0:40. Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+  </section>
+
+  <!-- integrations -->
+  <section class="slide" data-name="Integrations">
+    <div class="wrap">
+      <div class="integ">
+        <div style="display:flex;flex-direction:column;gap:2.8vh">
+          <span class="eyebrow rise">Integrations</span>
+          <h2 class="h-l rise" style="--d:1">Plugs into <span class="tally">any</span> event platform.</h2>
+          <p class="lede rise" style="--d:2">Eventyay already does. The whole booth lifecycle is an API, so your ticketing, app or website can run interpretation without anyone opening our admin.</p>
+          <div class="plugs rise" style="--d:3">
+            <span class="plug real"><img src="@@img:eventyay.svg@@" alt="">Eventyay</span>
+            <span class="plug">your ticketing</span>
+            <span class="plug">your event app</span>
+            <span class="plug">your website</span>
+          </div>
+          <ul class="apis rise" style="--d:4">
+            <li><b>OAuth 2.0 apps</b><span>scoped tokens, e.g. events:write</span></li>
+            <li><b>REST API v1</b><span>events, rooms, booths, transcription</span></li>
+            <li><b>Signed webhooks</b><span>HMAC-SHA256 on every delivery</span></li>
+            <li><b>Embeddable player</b><span>drop it into any event page</span></li>
+          </ul>
+        </div>
+        <div class="term rise" style="--d:3">
+          <div class="bar"><i></i><i></i><i></i><span>your platform → VoxBento</span></div>
+          <pre><span class="c"># create the event, then a booth per language</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/booths/de</span>
+
+<span class="c"># AI captions for the floor</span>
+<span class="m">POST</span> <span class="u">…/booths/de/transcription/start</span>
+
+<span class="c"># a listener link for every ticket holder</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/listener-token</span>
+
+<span class="c"># we call you back when a session goes live</span>
+<span class="ok">←</span> <span class="u">session.status_changed</span>  <span class="c">X-VoxBento-Signature</span>
+
+<span class="c"># after the talk</span>
+<span class="m">GET</span>  <span class="u">…/booths/de/transcripts/export</span></pre>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>~0:40. "Eventyay creates booths and hands out listener links through this API. Any platform can do the same."</li></ul></aside>
   </section>
 
   <!-- open source -->
