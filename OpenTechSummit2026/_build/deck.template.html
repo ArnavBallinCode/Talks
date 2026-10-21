@@ -452,6 +452,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .contrib { display: grid; grid-template-columns: .62fr 1.38fr; gap: 3vw; align-items: start; }
 .contrib > * { min-width: 0; }
 .contrib .photos { height: min(34vh, 300px); }
+.contrib.simple { grid-template-columns: .9fr 1.1fr; align-items: center; gap: 4vw; }
+.contrib.simple .photos { height: min(56vh, 500px); }
+.contrib.simple .photo { width: 60%; padding: 8px 8px 30px; }
+.contrib.simple .photo figcaption { font-size: 12px; bottom: 7px; }
+.contrib.simple .me-line { font-size: .85em; }
 .contrib .photo { width: 62%; padding: 6px 6px 22px; }
 .contrib .photo figcaption { font-size: 10px; bottom: 5px; }
 .me-line { font-family: var(--f-mono); font-size: .72em; color: var(--signal); line-height: 1.6; }
@@ -895,55 +900,21 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   <!-- contributions -->
   <section data-act="Wrap-up" class="slide" data-name="My contributions">
     <div class="wrap">
-      <span class="eyebrow rise">My contributions</span>
-      <div class="contrib">
-        <div style="display:flex;flex-direction:column;gap:2vh">
-          <div class="photos rise" style="--d:1">
-            <figure class="photo" style="margin:0"><img src="@@img:bkk.jpg@@" alt="Arnav speaking at FOSSASIA Summit in Bangkok"><figcaption>BANGKOK</figcaption></figure>
-            <figure class="photo" style="margin:0"><img src="@@img:unesco.jpg@@" alt="Arnav at UNESCO in Paris"><figcaption>PARIS</figcaption></figure>
-            <figure class="photo" style="margin:0"><img src="@@img:de.jpg@@" alt="Arnav with Mario and Saksham in Germany"><figcaption>GERMANY</figcaption></figure>
-          </div>
-          <p class="me-line rise" style="--d:2">Arnav Angarkar · 3rd year, IIIT Dharwad<br>GSoC 2026 with FOSSASIA</p>
-          <div class="nums rise" style="--d:3">
-            <div><b id="prs">265</b><span>merged PRs in VoxBento, of 501</span></div>
-            <div><b>249</b><span>others' PRs reviewed</span></div>
-            <div><b>621</b><span>merged PRs across FOSSASIA</span></div>
-            <div><b>387</b><span>of 624 commits</span></div>
-          </div>
+      <div class="contrib simple">
+        <div class="photos rise">
+          <figure class="photo" style="margin:0"><img src="@@img:bkk.jpg@@" alt="Arnav speaking at FOSSASIA Summit in Bangkok"><figcaption>BANGKOK</figcaption></figure>
+          <figure class="photo" style="margin:0"><img src="@@img:unesco.jpg@@" alt="Arnav at UNESCO in Paris"><figcaption>PARIS</figcaption></figure>
+          <figure class="photo" style="margin:0"><img src="@@img:de.jpg@@" alt="Arnav with Mario and Saksham in Germany"><figcaption>GERMANY</figcaption></figure>
         </div>
-        <div style="display:flex;flex-direction:column;gap:2vh">
-          <h2 class="h-m rise" style="--d:1">I designed and built VoxBento <span class="tally">from the first commit.</span></h2>
-          <div class="cgrid rise" style="--d:2">
-            <div><h3>Features I implemented</h3><ul>
-              <li>WHIP ingest and WHEP playback <span>#56 #93</span></li>
-              <li>FastAPI migration off Flask and aiortc <span>#79–#81</span></li>
-              <li>Speech-to-text and TTS providers <span>#128 #140 #205 #211</span></li>
-              <li>OAuth developer API <span>#376–#391</span> · glossary prompts <span>#888</span></li>
-            </ul></div>
-            <div><h3>Workflows I improved</h3><ul>
-              <li>Listener page redesign <span>#278</span></li>
-              <li>Interpreter booth layout <span>#111 #295</span></li>
-              <li>Roles defined in one place <span>#923</span></li>
-              <li>Secure program stream ingest <span>#725</span></li>
-            </ul></div>
-            <div><h3>Bugs and performance</h3><ul>
-              <li>One Whisper model in memory, no OOM <span>#132</span></li>
-              <li>N+1 booth queries removed <span>#187</span></li>
-              <li>Shared HTTP client <span>#302</span> · TTS config cache <span>#226</span></li>
-            </ul></div>
-            <div><h3>Testing, reviews, collaboration</h3><ul>
-              <li>Characterisation and edge-case tests <span>#186 #594</span></li>
-              <li>Docker build + smoke tests in CI <span>#95</span></li>
-              <li>249 reviews and 165 issues filed in VoxBento</li>
-            </ul></div>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:2.6vh">
+          <span class="eyebrow rise">My contribution</span>
+          <h2 class="h-l rise" style="--d:1">I designed and built VoxBento <span class="tally">from the first commit.</span></h2>
+          <p class="me-line rise" style="--d:2">Arnav Angarkar · 3rd year, IIIT Dharwad · GSoC 2026 with FOSSASIA</p>
         </div>
       </div>
     </div>
     <aside class="notes"><ul>
-      <li>~1:00. "I wrote the first line: the bootstrap (#20), the architecture docs (#24), the media pipeline, the AI pipeline and the API."</li>
-      <li>Credit: single-use publish tickets (#796) and the RTMPS relay (#804) were Sanket Kokate's work.</li>
-      <li>Numbers are from GitHub search on 21 Oct 2026; re-check on the day.</li>
+      <li>~0:45. "I wrote the first line, and the architecture: the media pipeline, the AI pipeline and the API."</li>
       <li>Transition: "And then other people showed up."</li>
     </ul></aside>
   </section>
@@ -1265,19 +1236,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       langEl.classList.remove("swap");
     }, 350);
   }, 2400);
-
-  // Contributions: count up the merged PR number
-  enterHooks["My contributions"] = () => {
-    const el = document.getElementById("prs");
-    if (still) return;
-    const t0 = performance.now();
-    const tick = (t) => {
-      const p = Math.min((t - t0) / 1200, 1);
-      el.textContent = Math.round(265 * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  };
 
   // Local: the terminal types the Homebrew install
   const term = document.getElementById("term");
