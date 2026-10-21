@@ -191,7 +191,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .runorder .act::before { content: none; }
 
 /* ── 08 architecture ── */
-.diagram { overflow-x: auto; }
+.diagram { overflow-x: auto; width: 100%; max-width: 116vh; }
 .diagram svg { width: 100%; min-width: 680px; height: auto; display: block; }
 .d-node { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
 .d-hub { fill: var(--panel-2); stroke: var(--tally); stroke-width: 2; }
@@ -363,10 +363,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   font-family: var(--f-mono); font-size: 12px; color: var(--mute);
 }
 .strip .ch { color: var(--tally); letter-spacing: .1em; white-space: nowrap; }
-.strip .name { letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 16em; }
+.strip .name { letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 28em; }
 .meter { flex: 1; display: flex; gap: 3px; height: 10px; min-width: 60px; }
 .meter i { flex: 1; height: 100%; background: var(--line); border-radius: 1px; transition: background .3s; }
 .meter i.on { background: var(--tally); }
+.meter i.act-start { margin-left: 10px; }
 .strip button { font: inherit; color: var(--mute); background: none; border: 1px solid var(--line); border-radius: 4px; padding: .3em .7em; cursor: pointer; }
 .strip button:hover { color: var(--ink); border-color: var(--mute); }
 
@@ -401,7 +402,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 <main class="deck" id="deck">
 
   <!-- 01 -->
-  <section class="slide is-active" data-name="On air">
+  <section data-act="The hook" class="slide is-active" data-name="On air">
     <canvas id="wave" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="title-row">
@@ -417,7 +418,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- cold open -->
-  <section class="slide" data-name="Cold open">
+  <section data-act="The hook" class="slide" data-name="Cold open">
     <div class="wrap">
       <div class="demo-grid">
         <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
@@ -433,7 +434,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- problem -->
-  <section class="slide" data-name="The problem">
+  <section data-act="The hook" class="slide" data-name="The problem">
     <div class="wrap">
       <div class="problem-grid">
         <div style="display:flex;flex-direction:column;gap:3vh">
@@ -450,7 +451,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 
 
   <!-- 03 -->
-  <section class="slide" data-name="About me">
+  <section data-act="The hook" class="slide" data-name="About me">
     <div class="wrap">
       <div class="about">
         <div class="photos rise">
@@ -476,7 +477,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- 04 -->
-  <section class="slide" data-name="Meet VoxBento">
+  <section data-act="The product" class="slide" data-name="Meet VoxBento">
     <div class="wrap">
       <span class="eyebrow rise">Meet VoxBento</span>
       <h2 class="h-m rise" style="--d:1">Three browser tabs. <span class="tally">Zero installs.</span></h2>
@@ -508,7 +509,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 
 
   <!-- 06 -->
-  <section class="slide" data-name="Everything in the box">
+  <section data-act="The product" class="slide" data-name="Everything in the box">
     <div class="wrap">
       <span class="eyebrow rise">Everything in the box</span>
       <h2 class="h-m rise" style="--d:1">The whole platform, on one slide.</h2>
@@ -555,7 +556,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- 07 -->
-  <section class="slide" data-name="Live demo">
+  <section data-act="The product" class="slide" data-name="Live demo">
     <div class="wrap">
       <div class="demo-grid">
         <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
@@ -574,14 +575,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~4:30, the centrepiece. Phones should already be on the listener page from the cold open. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li></ul></aside>
+    <aside class="notes"><ul><li>~4:30, the centrepiece. Phones should already be on the listener page from the cold open. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li><li>Close the demo on: "That was under a second. How?"</li></ul></aside>
   </section>
 
   <!-- deep dive -->
-  <section class="slide" data-name="Deep dive · latency">
+  <section data-act="Under the hood" class="slide" data-name="Deep dive · latency">
     <div class="wrap">
-      <span class="eyebrow rise">One problem, in depth</span>
-      <h2 class="h-m rise" style="--d:1">Interpreters already run 2–3 s behind.<br><span class="tally">The network can't add more.</span></h2>
+      <span class="eyebrow rise">Under the hood · 1 / 5 · Latency</span>
+      <h2 class="h-m rise" style="--d:1">That was under a second.<br><span class="tally">It wasn't always.</span></h2>
+      <p class="lede rise" style="--d:1">Interpreters already run 2–3 s behind the speaker, so the network can't add more. It took three versions in three weeks.</p>
       <div class="versions">
         <div class="ver rise" style="--d:2"><span class="when">14 MAY · v1</span><h3>Python carries the audio</h3><p>Flask, Socket.IO and aiortc. The server decoded and relayed every packet.</p><span class="tag">CPU-bound, one process in the path</span></div>
         <div class="ver rise" style="--d:3"><span class="when">24 MAY · v2 · #78</span><h3>A media server takes over</h3><p>The browser publishes WHIP straight to MediaMTX. Listeners still play HLS.</p><span class="tag">seconds behind: HLS buffers segments</span></div>
@@ -593,13 +595,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         <div class="axis"><span></span><div><span>0 s</span><span>5 s</span><span>10 s · typical values</span></div></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~1:30. This is the engineering story. Three rewrites in three weeks.</li><li>Ear-voice span: a simultaneous interpreter lags the speaker by 2–3 seconds. Add HLS on top and listeners laugh at a joke after the slide has moved.</li><li>The fix wasn't a faster frontend: it was taking Python out of the media path.</li></ul></aside>
+    <aside class="notes"><ul><li>~1:30. Bridge from the demo: "What you just heard was under a second behind me. It wasn't always."</li><li>Ear-voice span: a simultaneous interpreter lags the speaker by 2–3 seconds. Add HLS on top and listeners laugh at a joke after the slide has moved.</li><li>The fix wasn't a faster frontend: it was taking Python out of the media path. Next slide: where v3 landed.</li></ul></aside>
   </section>
 
   <!-- 08 -->
-  <section class="slide" data-name="How it works">
+  <section data-act="Under the hood" class="slide" data-name="How it works">
     <div class="wrap">
-      <span class="eyebrow rise">How it works</span>
+      <span class="eyebrow rise">Under the hood · 2 / 5 · Architecture</span>
       <h2 class="h-m rise" style="--d:1">Where v3 landed: <span class="tally">two planes.</span></h2>
       <div class="diagram rise" style="--d:2">
         <svg viewBox="0 0 1200 560" role="img" aria-label="Audio flows from the interpreter's browser over WHIP into MediaMTX and out over WHEP to listeners' phones. MediaMTX also feeds the AI pipeline over RTSP, which sends captions and voice to phones over WebSocket. FastAPI coordinates everything but never carries audio.">
@@ -645,54 +647,28 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       </div>
       <div class="arch-foot rise" style="--d:3"><span><b>Media plane</b> MediaMTX moves the audio</span><span><b>Control plane</b> Python coordinates, never relays</span><span><b>Floor sources</b> Jitsi agent · OBS · ATEM · vMix</span></div>
     </div>
-    <aside class="notes"><ul><li>~1:00. Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
-  </section>
-
-  <!-- 09 -->
-  <section class="slide" data-name="Built with">
-    <div class="wrap">
-      <span class="eyebrow rise">Built with</span>
-      <h2 class="h-m rise" style="--d:1">Boring, proven, <span class="tally">open</span> parts.</h2>
-      <div class="stack">
-        <div class="rise" style="--d:2"><h3>Media</h3><div class="logos">
-          <div class="lg"><img src="@@img:mediamtx.png@@" alt="MediaMTX"><span>WHIP · WHEP · RTSP</span></div>
-          <div class="lg">@@svg:webrtc@@<span>WebRTC</span></div>
-          <div class="lg">@@svg:jitsi@@<span>Jitsi Meet</span></div>
-          <div class="lg">@@svg:ffmpeg@@<span>FFmpeg</span></div>
-        </div></div>
-        <div class="rise" style="--d:3"><h3>Backend</h3><div class="logos">
-          <div class="lg">@@svg:fastapi@@<span>FastAPI</span></div>
-          <div class="lg">@@svg:python@@<span>Python 3.13</span></div>
-          <div class="lg">@@svg:uv@@<span>uv</span></div>
-          <div class="lg">@@svg:postgresql@@<span>PostgreSQL</span></div>
-          <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
-          <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
-        </div></div>
-      </div>
-      <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
-    </div>
-    <aside class="notes"><ul><li>~0:20. Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
+    <aside class="notes"><ul><li>~1:00. "This is v3." Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
   </section>
 
   <!-- 10 -->
-  <section class="slide" data-name="The hard parts">
+  <section data-act="Under the hood" class="slide" data-name="The hard parts">
     <div class="wrap">
-      <span class="eyebrow rise">The hard parts</span>
-      <h2 class="h-m rise" style="--d:1">What breaks when it's live.</h2>
+      <span class="eyebrow rise">Under the hood · 3 / 5 · Going live safely</span>
+      <h2 class="h-m rise" style="--d:1">Fast isn't enough. <span class="tally">Live has to be safe.</span></h2>
       <div class="problems">
         <div class="problem rise" style="--d:2"><span class="big">1</span><h3>One voice per channel</h3><p>Two interpreters live at once means listeners hear both. MediaMTX replaces the old publisher, and the booth registry decides who's active.</p></div>
         <div class="problem rise" style="--d:3"><span class="big">30 s</span><h3>Tickets, not open mics</h3><p>Going live redeems a single-use ticket. It expires in 30 seconds and only opens that booth's path, for the active interpreter.</p></div>
         <div class="problem rise" style="--d:4"><span class="big">0</span><h3>Roles from the client</h3><p>The browser never says who it is. Roles come from the server session, so a modified client can't promote itself.</p></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:30. Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:30. Bridge: "Once audio is fast, the risk moves to who's allowed on air." Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
   </section>
 
   <!-- 11 -->
-  <section class="slide" data-name="AI engines">
+  <section data-act="Under the hood" class="slide" data-name="AI engines">
     <div class="wrap">
-      <span class="eyebrow rise">AI interpretation, under the hood</span>
-      <h2 class="h-m rise" style="--d:1">Swap any engine. <span class="sig">Or run all of it offline.</span></h2>
+      <span class="eyebrow rise">Under the hood · 4 / 5 · The AI branch</span>
+      <h2 class="h-m rise" style="--d:1">The blue branch. <span class="sig">Swap any engine, or run it all offline.</span></h2>
       <div class="engines">
         <div class="stage rise" style="--d:2">
           <header><h3>Hear</h3><span>SPEECH → TEXT</span></header>
@@ -722,15 +698,41 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:40. Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:40. Bridge: "Remember the blue branch on the diagram? Here's what's inside it." Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+  </section>
+
+  <!-- 09 -->
+  <section data-act="Under the hood" class="slide" data-name="Built with">
+    <div class="wrap">
+      <span class="eyebrow rise">Under the hood · 5 / 5 · The parts</span>
+      <h2 class="h-m rise" style="--d:1">Boring, proven, <span class="tally">open</span> parts.</h2>
+      <div class="stack">
+        <div class="rise" style="--d:2"><h3>Media</h3><div class="logos">
+          <div class="lg"><img src="@@img:mediamtx.png@@" alt="MediaMTX"><span>WHIP · WHEP · RTSP</span></div>
+          <div class="lg">@@svg:webrtc@@<span>WebRTC</span></div>
+          <div class="lg">@@svg:jitsi@@<span>Jitsi Meet</span></div>
+          <div class="lg">@@svg:ffmpeg@@<span>FFmpeg</span></div>
+        </div></div>
+        <div class="rise" style="--d:3"><h3>Backend</h3><div class="logos">
+          <div class="lg">@@svg:fastapi@@<span>FastAPI</span></div>
+          <div class="lg">@@svg:python@@<span>Python 3.13</span></div>
+          <div class="lg">@@svg:uv@@<span>uv</span></div>
+          <div class="lg">@@svg:postgresql@@<span>PostgreSQL</span></div>
+          <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
+          <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
+        </div></div>
+      </div>
+      <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
+    </div>
+    <aside class="notes"><ul><li>~0:20. Recap, closes the tech section. Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
   </section>
 
   <!-- 12 -->
-  <section class="slide" data-name="VoxBento Local">
+  <section data-act="Beyond the booth" class="slide" data-name="VoxBento Local">
     <div class="wrap">
       <div class="local">
         <div style="display:flex;flex-direction:column;gap:2.6vh">
-          <span class="eyebrow rise">VoxBento Local</span>
+          <span class="eyebrow rise">Beyond the booth · VoxBento Local</span>
           <h2 class="h-l rise" style="--d:1">Your meeting <span class="sig">never leaves</span> your laptop.</h2>
           <ul class="local-points rise" style="--d:2">
             <li>@@svg:apple@@<div><b>On-device AI</b><span>Whisper for transcripts, Qwen for minutes and action items</span></div></li>
@@ -744,15 +746,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:40. Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+    <aside class="notes"><ul><li>~0:40. Bridge: "The same AI pipeline, without a network." Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
   </section>
 
   <!-- integrations -->
-  <section class="slide" data-name="Integrations">
+  <section data-act="Beyond the booth" class="slide" data-name="Integrations">
     <div class="wrap">
       <div class="integ">
         <div style="display:flex;flex-direction:column;gap:2.8vh">
-          <span class="eyebrow rise">Integrations</span>
+          <span class="eyebrow rise">Beyond the booth · Integrations</span>
           <h2 class="h-l rise" style="--d:1">Plugs into <span class="tally">any</span> event platform.</h2>
           <p class="lede rise" style="--d:2">Eventyay already does. The whole booth lifecycle is an API, so your ticketing, app or website can run interpretation without anyone opening our admin.</p>
           <div class="plugs rise" style="--d:3">
@@ -792,7 +794,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- open source -->
-  <section class="slide" data-name="Open source">
+  <section data-act="Beyond the booth" class="slide" data-name="Open source">
     <div class="wrap">
       <div class="oss">
         <div class="browser rise">
@@ -800,7 +802,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
           <img src="@@img:github.jpg@@" alt="The fossasia/voxbento repository on GitHub: 1.5k stars, 113 forks, 66 contributors, 657 commits">
         </div>
         <div style="display:flex;flex-direction:column;gap:3vh">
-          <span class="eyebrow rise" style="--d:1">Built in the open</span>
+          <span class="eyebrow rise" style="--d:1">Beyond the booth · Built in the open</span>
           <h2 class="h-m rise" style="--d:2">A GSoC project became <span class="tally">a community.</span></h2>
           <div class="oss-stats rise" style="--d:3">
             <div><b>1.5k+</b><span>stars</span></div>
@@ -816,7 +818,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- 13 -->
-  <section class="slide" data-name="Lessons">
+  <section data-act="Wrap-up" class="slide" data-name="Lessons">
     <div class="wrap">
       <span class="eyebrow rise">What I learned</span>
       <div class="lessons">
@@ -829,7 +831,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- 14 -->
-  <section class="slide" data-name="What next?">
+  <section data-act="Wrap-up" class="slide" data-name="What next?">
     <div class="wrap">
       <div class="next">
         <div class="qmark rise" aria-hidden="true">?</div>
@@ -848,7 +850,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   </section>
 
   <!-- 15 -->
-  <section class="slide" data-name="Let's connect">
+  <section data-act="Wrap-up" class="slide" data-name="Let's connect">
     <div class="wrap">
       <div class="connect">
         <div class="thanks">
@@ -894,7 +896,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   const slides = [...document.querySelectorAll(".slide")];
   slides.forEach((s, k) => { s.dataset.ch = String(k + 1).padStart(2, "0"); });
   const meter = document.getElementById("meter");
-  slides.forEach(() => meter.appendChild(document.createElement("i")));
+  slides.forEach((sl, k) => {
+    const bar = document.createElement("i");
+    if (k && sl.dataset.act !== slides[k - 1].dataset.act) bar.className = "act-start";
+    meter.appendChild(bar);
+  });
   const bars = [...meter.children];
   const notesPanel = document.getElementById("notesPanel");
   const notesBody = document.getElementById("notesBody");
@@ -907,7 +913,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
     slides.forEach((s, k) => s.classList.toggle("is-active", k === i));
     bars.forEach((b, k) => b.classList.toggle("on", k <= i));
     document.getElementById("ch").textContent = "CH " + slides[i].dataset.ch;
-    document.getElementById("chname").textContent = slides[i].dataset.name;
+    document.getElementById("chname").textContent = slides[i].dataset.act + " · " + slides[i].dataset.name;
     const notes = slides[i].querySelector(".notes");
     notesBody.innerHTML = notes ? notes.innerHTML : "<p>No notes.</p>";
     try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) {}
