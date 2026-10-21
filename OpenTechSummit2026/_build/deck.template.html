@@ -1,0 +1,970 @@
+<meta charset="utf-8">
+<title>VoxBento Talk Deck</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one stage per slide, like a booth console at lights-down. A giant outlined channel number sits behind
+   every slide, and a channel strip along the bottom tracks progress. */
+:root {
+  --night: #0b0e1b;        /* booth at lights-down */
+  --panel: #141a2d;        /* console surface */
+  --panel-2: #1b2238;      /* raised surface */
+  --line: #2a3150;         /* hairlines, rack edges */
+  --ink: #eeecf6;          /* main text */
+  --mute: #959bb8;         /* secondary text */
+  --tally: #ffb340;        /* ON AIR lamp, the one bold colour */
+  --tally-soft: rgba(255, 179, 64, .14);
+  --signal: #7fd8e8;       /* audio signal, used sparingly */
+  --live: #ff5a4e;         /* live dot only */
+  --bezel: #05060c;        /* phone and browser frames */
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background:
+    radial-gradient(60vmax 50vmax at 0% 0%, var(--tally-soft), transparent 60%),
+    radial-gradient(50vmax 40vmax at 100% 100%, rgba(127, 216, 232, .07), transparent 60%),
+    var(--night);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: clamp(15px, 1.5vmin + 6px, 22px);
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow: hidden;
+}
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--signal); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline-offset: 3px; }
+.logo { width: 1em; height: 1em; flex: none; }
+
+.deck { position: relative; height: 100%; }
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-block: 5vh 11vh;
+  opacity: 0; visibility: hidden;
+  transition: opacity .5s ease, visibility 0s linear .5s;
+}
+.slide.is-active { opacity: 1; visibility: visible; transition: opacity .5s ease; }
+.slide::before {
+  content: attr(data-ch); position: absolute; right: -1vw; bottom: 6vh; z-index: 0; pointer-events: none;
+  font: 800 34vmin/0.8 var(--f-display); letter-spacing: -0.06em;
+  color: transparent; -webkit-text-stroke: 1.5px var(--line); opacity: .7;
+}
+.wrap { position: relative; z-index: 1; width: 100%; max-width: 1280px; margin-inline: auto; display: flex; flex-direction: column; gap: 3.2vh; min-width: 0; }
+
+/* entrance: each .rise child lifts in, staggered by --d */
+.is-active .rise { animation: rise .7s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: calc(var(--d, 0) * 110ms + 120ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(26px); } }
+
+.eyebrow { font-family: var(--f-mono); font-size: .72em; letter-spacing: .16em; text-transform: uppercase; color: var(--tally); display: flex; align-items: center; gap: .7em; }
+.eyebrow::before { content: ""; width: .55em; height: .55em; border-radius: 50%; background: var(--tally); box-shadow: 0 0 14px var(--tally); }
+.h-xl { font-size: clamp(2.8rem, 12vmin, 10rem); }
+.h-l { font-size: clamp(2.2rem, 7.4vmin, 6rem); }
+.h-m { font-size: clamp(1.7rem, 5vmin, 3.8rem); }
+.lede { font-size: 1.15em; color: var(--mute); max-width: 46ch; }
+.lede strong { color: var(--ink); font-weight: 500; }
+.tally { color: var(--tally); }
+.sig { color: var(--signal); }
+
+/* ── 01 title ── */
+#wave { position: absolute; inset: auto 0 6vh 0; width: 100%; height: 30%; pointer-events: none; }
+.brand { display: flex; align-items: center; gap: .8em; }
+.brand img { height: 2.6em; width: auto; }
+.brand span { font-family: var(--f-display); font-weight: 800; font-size: 1.5em; letter-spacing: -.02em; }
+.onair { display: inline-flex; align-items: center; gap: .55em; padding: .35em .8em; border: 1px solid var(--tally); border-radius: 4px; color: var(--tally); font-family: var(--f-mono); font-size: .7em; letter-spacing: .18em; }
+.onair i { width: .6em; height: .6em; border-radius: 50%; background: var(--live); box-shadow: 0 0 10px var(--live); animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.title-row { display: flex; align-items: center; gap: 1.4em; flex-wrap: wrap; }
+#lang { display: inline-block; transition: opacity .35s ease, filter .35s ease, transform .35s ease; }
+#lang.swap { opacity: 0; filter: blur(8px); transform: translateY(-.12em); }
+.langtag { font-family: var(--f-mono); font-size: .75em; color: var(--mute); letter-spacing: .1em; min-height: 1.5em; }
+.byline { display: flex; flex-wrap: wrap; gap: .4em 1.6em; font-family: var(--f-mono); font-size: .8em; color: var(--mute); }
+
+/* ── 02 hook ── */
+.hand { font-size: clamp(2rem, 7.6vmin, 6rem); max-width: 16ch; }
+.strike { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2em; }
+.strike div { border-top: 1px solid var(--line); padding-top: .8em; color: var(--mute); min-width: 0; }
+.strike b { position: relative; display: inline-block; color: var(--ink); font-family: var(--f-display); font-size: 1.35em; font-weight: 600; }
+.strike b::after { content: ""; position: absolute; left: -2%; top: 55%; height: 3px; width: 104%; background: var(--tally); transform-origin: left; transform: scaleX(1); }
+.is-active .strike b::after { animation: cross .5s ease-out backwards; animation-delay: calc(var(--d) * 260ms + 700ms); }
+@keyframes cross { from { transform: scaleX(0); } }
+.punch { font-size: clamp(1.8rem, 6vmin, 4.6rem); }
+
+/* ── 03 about ── */
+.about { display: grid; grid-template-columns: .95fr 1.05fr; gap: 4vw; align-items: center; }
+.about > * { min-width: 0; }
+.photos { position: relative; height: min(62vh, 560px); }
+.photo { position: absolute; width: 58%; background: var(--ink); padding: 8px 8px 30px; border-radius: 3px; box-shadow: 0 22px 50px rgba(0, 0, 0, .55); }
+.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; max-width: 100%; }
+.photo figcaption { position: absolute; left: 10px; bottom: 7px; font-family: var(--f-mono); font-size: 12px; color: var(--night); letter-spacing: .06em; }
+.photo:nth-child(1) { left: 0; top: 0; transform: rotate(-6deg); }
+.photo:nth-child(2) { right: 0; top: 18%; transform: rotate(5deg); z-index: 2; }
+.photo:nth-child(3) { left: 12%; bottom: 0; transform: rotate(-2deg); z-index: 3; }
+.me { display: flex; flex-direction: column; gap: 2.4vh; }
+.school { font-family: var(--f-mono); font-size: .8em; color: var(--signal); letter-spacing: .06em; }
+.roles { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.roles li { display: flex; align-items: baseline; gap: .8em; padding: .5em 0; border-bottom: 1px solid var(--line); }
+.roles li::before { content: "▸"; color: var(--tally); font-size: .8em; }
+.roles b { font-weight: 500; }
+.roles span { color: var(--mute); }
+.big-stat { display: flex; align-items: baseline; gap: .6em; flex-wrap: wrap; }
+.big-stat b { font-family: var(--f-display); font-weight: 800; font-size: clamp(3rem, 11vmin, 8rem); line-height: .9; color: var(--tally); font-variant-numeric: tabular-nums; }
+.big-stat span { color: var(--mute); max-width: 14ch; }
+.stamps { display: flex; flex-wrap: wrap; gap: .5em; }
+.stamp { font-family: var(--f-mono); font-size: .7em; padding: .3em .7em; border: 1px solid var(--line); border-radius: 999px; color: var(--mute); }
+
+/* ── 04 product ── */
+.product { display: grid; grid-template-columns: minmax(0, calc(50vh * 1.62)) auto; justify-content: center; gap: 4vw; align-items: center; }
+.product > * { min-width: 0; }
+.browser { background: var(--bezel); border-radius: 12px; overflow: hidden; box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 0 0 1px var(--line); transform: perspective(1600px) rotateY(9deg) rotateX(2deg); transform-origin: left center; position: relative; }
+.browser .bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: var(--panel); }
+.browser .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.browser .bar span { margin-left: 10px; font-family: var(--f-mono); font-size: 11px; color: var(--mute); background: var(--night); padding: 3px 12px; border-radius: 6px; }
+.browser img { display: block; width: 100%; max-width: 100%; }
+.pin { position: absolute; display: flex; align-items: center; gap: .45em; font-family: var(--f-mono); font-size: 12px; color: var(--night); background: var(--tally); padding: .3em .7em .3em .35em; border-radius: 999px; box-shadow: 0 6px 18px rgba(0, 0, 0, .4); white-space: nowrap; }
+.pin b { display: grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--night); color: var(--tally); font-weight: 500; }
+.is-active .pin { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: calc(var(--d) * 300ms + 900ms); }
+@keyframes pop { from { opacity: 0; transform: scale(.5); } }
+.phone { width: clamp(180px, 25vh, 270px); aspect-ratio: 9 / 18.5; max-width: 100%; background: var(--night); border: 10px solid var(--bezel); border-radius: 36px; box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 0 0 1px var(--line); padding: 26px 14px 16px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+.phone::before { content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 34%; height: 10px; border-radius: 10px; background: var(--bezel); }
+.ph-top { display: flex; justify-content: space-between; align-items: center; font-family: var(--f-mono); font-size: 10px; color: var(--mute); }
+.ph-live { color: var(--live); display: flex; align-items: center; gap: 4px; }
+.ph-live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--live); animation: blink 1.2s infinite; }
+.ph-title { font-family: var(--f-display); font-weight: 800; font-size: 17px; line-height: 1.1; }
+.ph-langs { display: flex; gap: 5px; flex-wrap: wrap; }
+.ph-langs span { font-family: var(--f-mono); font-size: 10px; padding: 3px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--mute); }
+.ph-langs .on { background: var(--tally); color: var(--night); border-color: var(--tally); }
+.bars { display: flex; align-items: center; gap: 3px; height: 48px; }
+.bars i { flex: 1; background: var(--tally); border-radius: 2px; height: 30%; animation: eq 1s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -137ms); }
+@keyframes eq { 0% { height: 12%; } 50% { height: 90%; } 100% { height: 35%; } }
+.ph-cap { flex: 1; background: var(--panel); border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.45; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+.ph-cap .src { color: var(--mute); font-size: 10.5px; }
+.ph-cap .tr { color: var(--ink); }
+.ph-cap .tr::after { content: "▍"; color: var(--tally); animation: blink 1s steps(1) infinite; }
+.legend-3 { display: flex; gap: 2.4em; flex-wrap: wrap; }
+.legend-3 div { display: flex; flex-direction: column; }
+.legend-3 b { font-family: var(--f-display); font-size: 1.2em; }
+.legend-3 span { color: var(--mute); font-size: .85em; }
+
+/* ── 05 modes ── */
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4em; }
+.mode { padding: 1.6em 1.8em; display: flex; flex-direction: column; gap: .8em; min-width: 0; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); }
+.mode.ai { border-color: rgba(127, 216, 232, .35); }
+.mode h3 { font-size: 2em; }
+.mode ul { margin: 0; padding-left: 1.1em; color: var(--mute); display: flex; flex-direction: column; gap: .35em; }
+.mode .when { font-family: var(--f-mono); font-size: .75em; letter-spacing: .1em; text-transform: uppercase; color: var(--tally); }
+.mode.ai .when { color: var(--signal); }
+
+/* ── 06 feature map ── */
+.fmap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.1em; }
+.fcol { border-top: 2px solid var(--line); padding-top: .8em; display: flex; flex-direction: column; gap: .55em; min-width: 0; }
+.fcol h3 { font-size: .95em; font-family: var(--f-mono); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.fcol.demo { border-top-color: var(--tally); }
+.fcol.demo h3 { color: var(--tally); }
+.fcol ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .5em; font-size: .86em; }
+.fcol li { color: var(--mute); line-height: 1.3; }
+.fcol li b { color: var(--ink); font-weight: 500; display: block; }
+.legend { font-family: var(--f-mono); font-size: .72em; color: var(--mute); display: flex; gap: 1.6em; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 1.6em; height: 2px; vertical-align: middle; margin-right: .5em; }
+
+/* ── 07 demo ── */
+.demo-grid { display: grid; grid-template-columns: auto 1fr; gap: 5vw; align-items: center; }
+.demo-grid > * { min-width: 0; }
+.qr-card { background: var(--ink); color: var(--night); padding: 16px; border-radius: 14px; width: clamp(170px, 32vmin, 320px); max-width: 100%; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 0 6px var(--tally-soft), 0 30px 70px rgba(0, 0, 0, .5); }
+.qr-card .qr-svg, .qr-card #qr svg { display: block; width: 100%; height: auto; aspect-ratio: 1; }
+.qr-card p { font-family: var(--f-mono); font-size: 11px; word-break: break-all; text-align: center; }
+.runorder { list-style: none; counter-reset: s; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.runorder li { counter-increment: s; display: grid; grid-template-columns: 2.4em 1fr auto; gap: .8em; align-items: baseline; padding: .55em 0; border-bottom: 1px solid var(--line); }
+.runorder li::before { content: counter(s, decimal-leading-zero); font-family: var(--f-mono); color: var(--tally); font-size: .85em; }
+.runorder b { font-weight: 500; }
+.runorder em { font-style: normal; font-family: var(--f-mono); font-size: .72em; color: var(--mute); }
+.runorder .act { display: block; font-family: var(--f-mono); font-size: .7em; letter-spacing: .14em; text-transform: uppercase; color: var(--signal); border: 0; padding: 1em 0 .1em; counter-increment: none; }
+.runorder .act::before { content: none; }
+
+/* ── 08 architecture ── */
+.diagram { overflow-x: auto; }
+.diagram svg { width: 100%; min-width: 680px; height: auto; display: block; }
+.d-node { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+.d-hub { fill: var(--panel-2); stroke: var(--tally); stroke-width: 2; }
+.d-ai { fill: var(--panel); stroke: var(--signal); stroke-width: 1.5; }
+.d-ctl { fill: rgba(255, 255, 255, .02); stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 5 7; }
+.d-t { fill: var(--ink); font-family: var(--f-display); font-size: 24px; font-weight: 800; }
+.d-s { fill: var(--mute); font-family: var(--f-mono); font-size: 14px; }
+.d-lab { fill: var(--tally); font-family: var(--f-mono); font-size: 15px; font-weight: 500; }
+.d-labs { fill: var(--signal); font-family: var(--f-mono); font-size: 14px; }
+.d-rail { stroke: var(--line); stroke-width: 6; fill: none; stroke-linecap: round; }
+.d-flow { stroke: var(--tally); stroke-width: 6; fill: none; stroke-linecap: round; stroke-dasharray: 0.1 22; animation: flow .9s linear infinite; }
+.d-flow-s { stroke: var(--signal); stroke-width: 5; fill: none; stroke-linecap: round; stroke-dasharray: 0.1 20; animation: flow 1.1s linear infinite; }
+.d-tick { stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 2 6; fill: none; }
+.d-chip { fill: var(--night); stroke: var(--line); }
+.d-chipt { fill: var(--ink); font-family: var(--f-mono); font-size: 14px; }
+.d-logo { fill: currentColor; color: var(--ink); }
+.d-mtx { filter: brightness(0) invert(1); }
+@keyframes flow { to { stroke-dashoffset: -22.1; } }
+.arch-foot { display: flex; gap: 2em; flex-wrap: wrap; font-family: var(--f-mono); font-size: .75em; color: var(--mute); }
+.arch-foot b { color: var(--tally); font-weight: 500; }
+
+/* ── 09 stack ── */
+.stack { display: grid; grid-template-columns: 1fr 1.4fr 1.4fr; gap: 2.4vw; }
+.stack > div { display: flex; flex-direction: column; gap: 1em; min-width: 0; }
+.stack h3 { font-family: var(--f-mono); font-weight: 500; font-size: .8em; letter-spacing: .12em; text-transform: uppercase; color: var(--tally); border-bottom: 1px solid var(--line); padding-bottom: .6em; }
+.logos { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5em, 1fr)); gap: .7em; }
+.lg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .55em; padding: 1em .5em .8em; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; min-height: 6.6em; transition: border-color .2s, transform .2s; }
+.lg:hover { border-color: var(--tally); transform: translateY(-3px); }
+.lg .logo { font-size: 2.1em; color: var(--ink); }
+.lg img { height: 1.5em; width: auto; max-width: 100%; filter: brightness(0) invert(1); }
+.lg .word { font-family: var(--f-display); font-weight: 800; font-size: 1.3em; line-height: 1.6; letter-spacing: -.02em; }
+.lg span { font-family: var(--f-mono); font-size: .66em; color: var(--mute); text-align: center; }
+
+/* ── 10 hard parts ── */
+.problems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4em; }
+.problem { display: flex; flex-direction: column; gap: .7em; min-width: 0; padding: 1.4em; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
+.problem .big { font-family: var(--f-display); font-weight: 800; font-size: 2.6em; line-height: 1; color: var(--tally); }
+.problem h3 { font-size: 1.45em; }
+.problem p { color: var(--mute); font-size: .92em; }
+
+/* ── 11 engines ── */
+.engines { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4em; }
+.stage { display: flex; flex-direction: column; gap: .2em; min-width: 0; }
+.stage header { display: flex; align-items: baseline; justify-content: space-between; gap: 1em; border-bottom: 2px solid var(--tally); padding-bottom: .5em; margin-bottom: .3em; }
+.stage header h3 { font-size: 1.5em; }
+.stage header span { font-family: var(--f-mono); font-size: .7em; color: var(--tally); letter-spacing: .1em; }
+.eng { display: grid; grid-template-columns: 1.6em 1fr; gap: .2em .8em; align-items: center; padding: .55em 0; border-bottom: 1px solid var(--line); }
+.eng .logo { font-size: 1.3em; color: var(--ink); grid-row: span 2; }
+.eng .dot { width: 1.3em; height: 1.3em; border-radius: 50%; border: 2px solid var(--signal); grid-row: span 2; }
+.eng b { font-weight: 500; display: flex; gap: .5em; align-items: center; flex-wrap: wrap; }
+.eng small { grid-column: 2; font-family: var(--f-mono); font-size: .7em; color: var(--mute); }
+.offline { font-family: var(--f-mono); font-size: .62em; color: var(--night); background: var(--signal); padding: .1em .5em; border-radius: 999px; font-weight: 500; }
+.extras { display: flex; flex-wrap: wrap; gap: .6em; }
+.chip { font-family: var(--f-mono); font-size: .72em; padding: .35em .75em; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
+
+/* ── 12 local ── */
+.local { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4vw; align-items: center; }
+.local > * { min-width: 0; }
+.local-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7em; }
+.local-points li { display: grid; grid-template-columns: 2.2em 1fr; gap: .8em; align-items: start; }
+.local-points .logo { font-size: 1.5em; color: var(--signal); margin-top: .1em; }
+.local-points b { display: block; font-weight: 500; }
+.local-points span { color: var(--mute); font-size: .9em; }
+.term { background: var(--bezel); border-radius: 12px; box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 0 0 1px var(--line); overflow: hidden; }
+.term .bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: var(--panel); font-family: var(--f-mono); font-size: 11px; color: var(--mute); }
+.term .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.term .bar span { margin-left: auto; margin-right: auto; }
+.term pre { margin: 0; padding: 1.2em 1.3em 1.4em; font-family: var(--f-mono); font-size: .8em; line-height: 1.75; color: var(--ink); white-space: pre-wrap; word-break: break-word; min-height: 15em; }
+.term .p { color: var(--tally); }
+.term .c { color: var(--mute); }
+.term .ok { color: var(--signal); }
+.term .cur::after { content: "▍"; color: var(--tally); animation: blink 1s steps(1) infinite; }
+
+/* ── 13 lessons ── */
+.lessons { display: flex; flex-direction: column; }
+.lesson { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; padding: 1.2em 0; border-top: 1px solid var(--line); align-items: baseline; }
+.lesson > * { min-width: 0; }
+.lesson h3 { font-size: 1.7em; }
+.lesson p { color: var(--mute); }
+
+/* ── 14 what next ── */
+.next { display: grid; grid-template-columns: auto 1fr; gap: 4vw; align-items: center; }
+.next > * { min-width: 0; }
+.qmark { font: 800 clamp(10rem, 48vmin, 30rem)/0.8 var(--f-display); color: transparent; -webkit-text-stroke: 3px var(--tally); text-shadow: 0 0 60px rgba(255, 179, 64, .25); }
+.is-active .qmark { animation: wobble 3.2s ease-in-out infinite; }
+@keyframes wobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg) translateY(-8px); } }
+.next ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.next li { padding: .8em 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: .2em; }
+.next li b { font-family: var(--f-display); font-size: 1.35em; font-weight: 600; }
+.next li span { color: var(--mute); }
+
+/* ── 15 connect ── */
+.connect { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 2vw; align-items: stretch; }
+.connect > * { min-width: 0; }
+.qcard { display: flex; flex-direction: column; gap: .8em; padding: 1.1em; background: var(--ink); color: var(--night); border-radius: 16px; text-decoration: none; transition: transform .2s; }
+.qcard:hover { transform: translateY(-4px) rotate(-1deg); }
+.qcard .qr-svg { width: 100%; height: auto; aspect-ratio: 1; display: block; }
+.qcard .who { display: flex; align-items: center; gap: .6em; }
+.qcard .who .logo { font-size: 1.5em; }
+.qcard .who b { font-family: var(--f-display); font-weight: 800; font-size: 1.2em; }
+.qcard small { font-family: var(--f-mono); font-size: .68em; word-break: break-all; opacity: .75; }
+.thanks { display: flex; flex-direction: column; justify-content: center; gap: 2.4vh; }
+.mini-links { display: flex; flex-direction: column; gap: .4em; font-family: var(--f-mono); font-size: .8em; }
+.mini-links a { color: var(--mute); text-decoration: none; }
+.mini-links a:hover { color: var(--tally); }
+
+/* channel strip */
+.strip {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  display: flex; align-items: center; gap: 1.2em;
+  padding: .8em max(16px, env(safe-area-inset-right, 0px)) calc(.8em + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  font-family: var(--f-mono); font-size: 12px; color: var(--mute);
+}
+.strip .ch { color: var(--tally); letter-spacing: .1em; white-space: nowrap; }
+.strip .name { letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 16em; }
+.meter { flex: 1; display: flex; gap: 3px; height: 10px; min-width: 60px; }
+.meter i { flex: 1; height: 100%; background: var(--line); border-radius: 1px; transition: background .3s; }
+.meter i.on { background: var(--tally); }
+.strip button { font: inherit; color: var(--mute); background: none; border: 1px solid var(--line); border-radius: 4px; padding: .3em .7em; cursor: pointer; }
+.strip button:hover { color: var(--ink); border-color: var(--mute); }
+
+.notes { display: none; }
+.notes-panel { position: fixed; left: 50%; bottom: calc(3.6em + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(760px, calc(100% - 32px)); z-index: 6; background: var(--panel); border: 1px solid var(--tally); border-radius: 10px; padding: 1em 1.2em; font-size: 15px; color: var(--ink); box-shadow: 0 20px 60px rgba(0, 0, 0, .5); }
+.notes-panel h4 { margin: 0 0 .4em; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--tally); }
+.notes-panel ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: .3em; }
+
+/* narrow screens and short windows: read it as a scrolling page */
+@media (max-width: 860px), (max-height: 540px) {
+  body { overflow: auto; }
+  .deck { height: auto; }
+  .slide { position: relative; inset: auto; opacity: 1; visibility: visible; padding-block: 56px; border-bottom: 1px solid var(--line); overflow: hidden; }
+  .slide:first-child { min-height: 80vh; }
+  .strip, .notes-panel { display: none; }
+  .about, .product, .demo-grid, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
+  .fmap { grid-template-columns: 1fr 1fr; }
+  .strike { grid-template-columns: 1fr 1fr; }
+  .browser { transform: none; }
+  .photos { height: 70vw; }
+  .phone { margin-inline: auto; }
+  .qmark { font-size: 9rem; }
+}
+@media (max-width: 460px) { .fmap, .strike { grid-template-columns: 1fr; } .pin { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .slide, .slide.is-active { transition: none; }
+  .is-active .rise, .is-active .pin, .is-active .strike b::after, .is-active .qmark { animation: none; }
+  .onair i, .d-flow, .d-flow-s, .bars i, .ph-live::before, .ph-cap .tr::after, .term .cur::after { animation: none; }
+}
+</style>
+
+<main class="deck" id="deck">
+
+  <!-- 01 -->
+  <section class="slide is-active" data-name="On air">
+    <canvas id="wave" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="title-row">
+        <div class="brand"><img src="@@img:icon.png@@" alt=""><span>VoxBento</span></div>
+        <span class="onair"><i></i>ON AIR</span>
+      </div>
+      <h1 class="h-xl"><span id="lang">Every language,</span><br><span class="tally">one room.</span></h1>
+      <p class="langtag" id="langtag" aria-hidden="true">EN</p>
+      <p class="lede"><strong>Open-source simultaneous interpretation in the browser.</strong> Interpreters speak, AI fills the gaps, and every listener hears it on their own phone in under a second.</p>
+      <div class="byline"><span>Arnav Angarkar</span><span>GSoC 2026 · FOSSASIA</span><span>voxbento.com</span></div>
+    </div>
+    <aside class="notes"><ul><li>Let the headline cycle through two or three languages before you speak.</li><li>Open: "Raise your hand if you've ever sat through a talk in your second language."</li></ul></aside>
+  </section>
+
+  <!-- 02 -->
+  <section class="slide" data-name="The problem">
+    <div class="wrap">
+      <span class="eyebrow rise">The problem</span>
+      <h2 class="hand rise" style="--d:1">Interpretation at events still ships in a truck.</h2>
+      <div class="strike rise" style="--d:2">
+        <div><b style="--d:0">Soundproof booths</b><p>Built at every venue.</p></div>
+        <div><b style="--d:1">IR receivers</b><p>Handed out, collected, recharged.</p></div>
+        <div><b style="--d:2">A sound technician</b><p>Mixing every channel by hand.</p></div>
+        <div><b style="--d:3">Remote attendees</b><p>Left with nothing.</p></div>
+      </div>
+      <h2 class="punch rise" style="--d:9">What if all of it was <span class="tally">a link?</span></h2>
+    </div>
+    <aside class="notes"><ul><li>Pause while the lines cross out. Then the punchline.</li><li>Under a minute.</li></ul></aside>
+  </section>
+
+  <!-- 03 -->
+  <section class="slide" data-name="About me">
+    <div class="wrap">
+      <div class="about">
+        <div class="photos rise">
+          <figure class="photo" style="margin:0"><img src="@@img:bkk.jpg@@" alt="Arnav speaking at FOSSASIA Summit in Bangkok"><figcaption>BANGKOK · MAR</figcaption></figure>
+          <figure class="photo" style="margin:0"><img src="@@img:unesco.jpg@@" alt="Arnav at UNESCO in Paris"><figcaption>PARIS · JUL</figcaption></figure>
+          <figure class="photo" style="margin:0"><img src="@@img:de.jpg@@" alt="Arnav with Mario and Saksham in Germany"><figcaption>GERMANY · AUG</figcaption></figure>
+        </div>
+        <div class="me">
+          <span class="eyebrow rise">Who's talking</span>
+          <h2 class="h-l rise" style="--d:1">Hi, I'm Arnav.</h2>
+          <p class="school rise" style="--d:2">3rd-year student · IIIT Dharwad · GSoC 2026 with FOSSASIA</p>
+          <ul class="roles rise" style="--d:3">
+            <li><b>Built VoxBento</b><span>and maintain it</span></li>
+            <li><b>Core developer</b><span>Eventyay</span></li>
+            <li><b>Built Eventyay Business</b><span>plans and billing</span></li>
+            <li><b>And more</b><span>Star-Me and other FOSSASIA tools</span></li>
+          </ul>
+          <div class="big-stat rise" style="--d:4"><b id="prs">600+</b><span>pull requests across FOSSASIA</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>90 seconds, max. A story, not a CV.</li><li>Bangkok: first met the community. Paris: Wikimania and UNESCO, rooms full of people who need more than one language. Germany: working with mentors.</li></ul></aside>
+  </section>
+
+  <!-- 04 -->
+  <section class="slide" data-name="Meet VoxBento">
+    <div class="wrap">
+      <span class="eyebrow rise">Meet VoxBento</span>
+      <h2 class="h-m rise" style="--d:1">Three browser tabs. <span class="tally">Zero installs.</span></h2>
+      <div class="product">
+        <div class="browser rise" style="--d:2">
+          <div class="bar"><i></i><i></i><i></i><span>voxbento.com/interpreter/fossasia-2027/de</span></div>
+          <img src="@@img:booth.jpg@@" alt="The real VoxBento interpreter booth: Jitsi floor feed, pass mic button, participants, booth chat and diagnostics">
+          <span class="pin" style="left:24%;top:46%;--d:0"><b>1</b>Floor feed</span>
+          <span class="pin" style="left:38%;top:7%;--d:1"><b>2</b>Pass mic</span>
+          <span class="pin" style="right:6%;top:44%;--d:2"><b>3</b>Booth chat</span>
+          <span class="pin" style="right:8%;top:20%;--d:3"><b>4</b>Who's live</span>
+        </div>
+        <div class="phone rise" style="--d:3" aria-label="Listener view on a phone">
+          <div class="ph-top"><span>Big Hall</span><span class="ph-live">LIVE</span></div>
+          <div class="ph-title">FOSSASIA Summit<br>Keynote</div>
+          <div class="ph-langs"><span>EN</span><span class="on">DE</span><span>HI</span><span>MR</span><span>VI</span><span>ZH</span><span>JA</span></div>
+          <div class="bars" id="bars"></div>
+          <div class="ph-cap"><p class="src" id="capSrc">Welcome everyone to FOSSASIA.</p><p class="tr" id="capTr">Willkommen bei FOSSASIA.</p></div>
+        </div>
+      </div>
+      <div class="legend-3 rise" style="--d:4">
+        <div><b>Interpreter</b><span>the real booth, left</span></div>
+        <div><b>Coordinator</b><span>Mission Control, every booth at once</span></div>
+        <div><b>Listener</b><span>scan, pick a language, listen</span></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>That's a real screenshot of the booth. Point at the pins quickly; the demo shows them for real.</li></ul></aside>
+  </section>
+
+  <!-- 05 -->
+  <section class="slide" data-name="Two ways to interpret">
+    <div class="wrap">
+      <span class="eyebrow rise">Two ways to interpret</span>
+      <h2 class="h-l rise" style="--d:1">People where you have them.<br><span class="sig">AI where you don't.</span></h2>
+      <div class="modes">
+        <div class="mode rise" style="--d:2">
+          <span class="when">Human interpreters</span>
+          <h3>The booth, in a browser</h3>
+          <ul>
+            <li>Professional interpreters, on site or remote</li>
+            <li>Active and backup per language, swapping every 20–30 min</li>
+            <li>Booth chat and a live floor monitor</li>
+            <li>Sub-second audio to every listener</li>
+          </ul>
+        </div>
+        <div class="mode ai rise" style="--d:3">
+          <span class="when">AI interpretation</span>
+          <h3>Speech → text → speech</h3>
+          <ul>
+            <li>Live captions of the floor</li>
+            <li>Translated captions in many languages</li>
+            <li>A synthetic voice reading the translation</li>
+            <li>Tuned per room with a persona, style and glossary</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Both run in the same room at once: German from a human booth, Japanese from the AI.</li><li>Frame AI as coverage, not replacement.</li></ul></aside>
+  </section>
+
+  <!-- 06 -->
+  <section class="slide" data-name="Everything in the box">
+    <div class="wrap">
+      <span class="eyebrow rise">Everything in the box</span>
+      <h2 class="h-m rise" style="--d:1">The whole platform, on one slide.</h2>
+      <div class="fmap">
+        <div class="fcol demo rise" style="--d:2"><h3>Booth</h3><ul>
+          <li><b>Go live from a browser</b>WHIP, no plugins</li>
+          <li><b>Mic test + level meter</b></li>
+          <li><b>Active / backup handoff</b></li>
+          <li><b>Booth chat</b></li>
+          <li><b>Floor monitor</b>self-hosted Jitsi</li>
+        </ul></div>
+        <div class="fcol demo rise" style="--d:3"><h3>Listeners</h3><ul>
+          <li><b>QR link, pick a language</b></li>
+          <li><b>Sub-second playback</b>WHEP, auto-reconnect</li>
+          <li><b>Live + translated captions</b></li>
+          <li><b>Embeddable player</b>for event sites</li>
+          <li><b>Join codes</b></li>
+        </ul></div>
+        <div class="fcol demo rise" style="--d:4"><h3>AI interpretation</h3><ul>
+          <li><b>Floor transcription</b>5 speech engines</li>
+          <li><b>LLM translation</b>persona + style</li>
+          <li><b>Glossary CSV</b>keeps "FOSSASIA" as FOSSASIA</li>
+          <li><b>AI voice</b>cloud or offline</li>
+          <li><b>Transcript export</b></li>
+        </ul></div>
+        <div class="fcol rise" style="--d:5"><h3>Organisers</h3><ul>
+          <li><b>Mission Control</b>all rooms, all booths</li>
+          <li><b>Setup wizard</b>event → rooms → booths</li>
+          <li><b>Invite links by role</b></li>
+          <li><b>OBS / ATEM / vMix ingest</b></li>
+          <li><b>YouTube relay</b>RTMPS</li>
+        </ul></div>
+        <div class="fcol rise" style="--d:6"><h3>Platform</h3><ul>
+          <li><b>REST API + OAuth</b>Eventyay integration</li>
+          <li><b>Webhooks</b></li>
+          <li><b>Developer apps</b></li>
+          <li><b>VoxBento Local</b>offline desktop app</li>
+          <li><b>Self-hostable</b>Docker Compose</li>
+        </ul></div>
+      </div>
+      <div class="legend rise" style="--d:7"><span><i style="background:var(--tally)"></i>live in the demo, next</span><span><i style="background:var(--line)"></i>ask me after</span></div>
+    </div>
+    <aside class="notes"><ul><li>Don't read it. 30–45 seconds: "This is everything. The orange columns, you'll see live."</li></ul></aside>
+  </section>
+
+  <!-- 07 -->
+  <section class="slide" data-name="Live demo">
+    <div class="wrap">
+      <div class="demo-grid">
+        <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
+        <div style="display:flex;flex-direction:column;gap:2vh;min-width:0">
+          <span class="eyebrow rise" style="--d:1">Live demo · phones out</span>
+          <h2 class="h-l rise" style="--d:2">Scan it.<br><span class="tally">You're the audience.</span></h2>
+          <ol class="runorder rise" style="--d:3">
+            <li class="act">Act 1 · human booth</li>
+            <li><b>I go live from the booth</b><em>you hear me</em></li>
+            <li><b>Backup interpreter takes over</b><em>Mission Control</em></li>
+            <li class="act">Act 2 · AI interpreter</li>
+            <li><b>Floor transcription on</b><em>captions</em></li>
+            <li><b>Translated captions</b><em>pick a language</em></li>
+            <li><b>The AI voice speaks</b><em>no booth needed</em></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>20 seconds to scan. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li></ul></aside>
+  </section>
+
+  <!-- 08 -->
+  <section class="slide" data-name="How it works">
+    <div class="wrap">
+      <span class="eyebrow rise">How it works</span>
+      <h2 class="h-m rise" style="--d:1">Mouth to ear in <span class="tally">under a second.</span></h2>
+      <div class="diagram rise" style="--d:2">
+        <svg viewBox="0 0 1200 560" role="img" aria-label="Audio flows from the interpreter's browser over WHIP into MediaMTX and out over WHEP to listeners' phones. MediaMTX also feeds the AI pipeline over RTSP, which sends captions and voice to phones over WebSocket. FastAPI coordinates everything but never carries audio.">
+          <!-- control plane -->
+          <rect class="d-ctl" x="2" y="2" width="1196" height="72" rx="14"/>
+          @@svgat:fastapi:26:21:30@@
+          <text class="d-t" x="70" y="46" style="font-size:20px">FastAPI control plane</text>
+          <text class="d-s" x="1174" y="44" text-anchor="end">booths · roles · chat · handoff · publish tickets — never audio</text>
+          <path class="d-tick" d="M160 74V150"/><path class="d-tick" d="M1040 74V150"/>
+
+          <!-- nodes -->
+          <rect class="d-node" x="30" y="150" width="260" height="150" rx="16"/>
+          <text class="d-t" x="56" y="208">Interpreter</text>
+          <text class="d-s" x="56" y="236">any browser</text>
+          <text class="d-s" x="56" y="260">mic · Jitsi floor feed</text>
+
+          <rect class="d-hub" x="460" y="140" width="280" height="170" rx="20"/>
+          <image class="d-mtx" href="@@img:mediamtx.png@@" x="490" y="190" width="220" height="46"/>
+          <text class="d-s" x="600" y="270" text-anchor="middle">one path per language</text>
+
+          <rect class="d-node" x="910" y="150" width="260" height="150" rx="16"/>
+          <text class="d-t" x="936" y="208">Listeners</text>
+          <text class="d-s" x="936" y="236">any phone</text>
+          <text class="d-s" x="936" y="260">audio · captions · voice</text>
+
+          <!-- media path -->
+          <path class="d-rail" d="M290 225H460"/><path class="d-flow" d="M290 225H460"/>
+          <text class="d-lab" x="375" y="208" text-anchor="middle">WHIP</text>
+          <path class="d-rail" d="M740 225H910"/><path class="d-flow" d="M740 225H910"/>
+          <text class="d-lab" x="825" y="208" text-anchor="middle">WHEP</text>
+
+          <!-- AI branch -->
+          <path class="d-rail" d="M600 310V400"/><path class="d-flow-s" d="M600 310V400"/>
+          <text class="d-labs" x="614" y="362">RTSP</text>
+          <rect class="d-ai" x="390" y="400" width="420" height="120" rx="18"/>
+          <text class="d-t" x="600" y="444" text-anchor="middle" style="font-size:20px">AI pipeline</text>
+          <rect class="d-chip" x="418" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="473" y="485" text-anchor="middle">speech</text>
+          <rect class="d-chip" x="545" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="600" y="485" text-anchor="middle">translate</text>
+          <rect class="d-chip" x="672" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="727" y="485" text-anchor="middle">voice</text>
+          <path class="d-rail" d="M810 460H1040V300"/><path class="d-flow-s" d="M810 460H1040V300"/>
+          <text class="d-labs" x="925" y="446" text-anchor="middle">WebSocket</text>
+        </svg>
+      </div>
+      <div class="arch-foot rise" style="--d:3"><span><b>Media plane</b> MediaMTX moves the audio</span><span><b>Control plane</b> Python coordinates, never relays</span><span><b>Floor sources</b> Jitsi agent · OBS · ATEM · vMix</span></div>
+    </div>
+    <aside class="notes"><ul><li>Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
+  </section>
+
+  <!-- 09 -->
+  <section class="slide" data-name="Built with">
+    <div class="wrap">
+      <span class="eyebrow rise">Built with</span>
+      <h2 class="h-m rise" style="--d:1">Boring, proven, <span class="tally">open</span> parts.</h2>
+      <div class="stack">
+        <div class="rise" style="--d:2"><h3>Media</h3><div class="logos">
+          <div class="lg"><img src="@@img:mediamtx.png@@" alt="MediaMTX"><span>WHIP · WHEP · RTSP</span></div>
+          <div class="lg">@@svg:webrtc@@<span>WebRTC</span></div>
+          <div class="lg">@@svg:jitsi@@<span>Jitsi Meet</span></div>
+          <div class="lg">@@svg:ffmpeg@@<span>FFmpeg</span></div>
+        </div></div>
+        <div class="rise" style="--d:3"><h3>Backend</h3><div class="logos">
+          <div class="lg">@@svg:fastapi@@<span>FastAPI</span></div>
+          <div class="lg">@@svg:python@@<span>Python 3.13</span></div>
+          <div class="lg">@@svg:uv@@<span>uv</span></div>
+          <div class="lg">@@svg:postgresql@@<span>PostgreSQL</span></div>
+          <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
+          <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
+        </div></div>
+        <div class="rise" style="--d:4"><h3>AI</h3><div class="logos">
+          <div class="lg">@@svg:openai@@<span>OpenAI</span></div>
+          <div class="lg">@@svg:anthropic@@<span>Anthropic</span></div>
+          <div class="lg">@@svg:googlegemini@@<span>Gemini</span></div>
+          <div class="lg">@@svg:nvidia@@<span>NVIDIA Parakeet</span></div>
+          <div class="lg">@@svg:elevenlabs@@<span>ElevenLabs</span></div>
+          <div class="lg"><span class="word">Deepgram</span><span>Nova · Aura</span></div>
+          <div class="lg">@@svg:huggingface@@<span>NLLB · Whisper</span></div>
+          <div class="lg">@@svg:onnx@@<span>Supertonic</span></div>
+        </div></div>
+      </div>
+      <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
+    </div>
+    <aside class="notes"><ul><li>Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" data-name="The hard parts">
+    <div class="wrap">
+      <span class="eyebrow rise">The hard parts</span>
+      <h2 class="h-m rise" style="--d:1">What breaks when it's live.</h2>
+      <div class="problems">
+        <div class="problem rise" style="--d:2"><span class="big">1</span><h3>One voice per channel</h3><p>Two interpreters live at once means listeners hear both. MediaMTX replaces the old publisher, and the booth registry decides who's active.</p></div>
+        <div class="problem rise" style="--d:3"><span class="big">30 s</span><h3>Tickets, not open mics</h3><p>Going live redeems a single-use ticket. It expires in 30 seconds and only opens that booth's path, for the active interpreter.</p></div>
+        <div class="problem rise" style="--d:4"><span class="big">0</span><h3>Roles from the client</h3><p>The browser never says who it is. Roles come from the server session, so a modified client can't promote itself.</p></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" data-name="AI engines">
+    <div class="wrap">
+      <span class="eyebrow rise">AI interpretation, under the hood</span>
+      <h2 class="h-m rise" style="--d:1">Swap any engine. <span class="sig">Or run all of it offline.</span></h2>
+      <div class="engines">
+        <div class="stage rise" style="--d:2">
+          <header><h3>Hear</h3><span>SPEECH → TEXT</span></header>
+          <div class="eng"><i class="dot"></i><b>Faster-Whisper <span class="offline">offline</span></b><small>runs on CPU</small></div>
+          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>gpt-4o-transcribe · whisper-1 · realtime</small></div>
+          <div class="eng"><i class="dot"></i><b>Deepgram</b><small>nova-2</small></div>
+          <div class="eng">@@svg:nvidia@@<b>NVIDIA Parakeet</b><small>CTC · RNNT</small></div>
+          <div class="eng">@@svg:elevenlabs@@<b>ElevenLabs</b><small>scribe v2 realtime</small></div>
+        </div>
+        <div class="stage rise" style="--d:3">
+          <header><h3>Translate</h3><span>TEXT → TEXT</span></header>
+          <div class="eng">@@svg:huggingface@@<b>NLLB <span class="offline">offline</span></b><small>200 languages · CTranslate2</small></div>
+          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>GPT-4o · GPT-4o mini</small></div>
+          <div class="eng">@@svg:anthropic@@<b>Anthropic</b><small>Claude Sonnet · Haiku</small></div>
+          <div class="eng">@@svg:googlegemini@@<b>Google Gemini</b><small>2.5 Flash · 2.5 Pro</small></div>
+          <div class="eng"><i class="dot"></i><b>Groq</b><small>Llama 3.3 70B</small></div>
+        </div>
+        <div class="stage rise" style="--d:4">
+          <header><h3>Speak</h3><span>TEXT → VOICE</span></header>
+          <div class="eng">@@svg:onnx@@<b>Supertonic <span class="offline">offline</span></b><small>ONNX, on your machine</small></div>
+          <div class="eng"><i class="dot"></i><b>Deepgram Aura-2</b><small>voices in en · de · it · nl · ja</small></div>
+          <div class="extras" style="margin-top:1em">
+            <span class="chip">room persona + style</span>
+            <span class="chip">glossary: only matching terms reach the prompt</span>
+            <span class="chip">captions and voice share one translation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" data-name="VoxBento Local">
+    <div class="wrap">
+      <div class="local">
+        <div style="display:flex;flex-direction:column;gap:2.6vh">
+          <span class="eyebrow rise">VoxBento Local</span>
+          <h2 class="h-l rise" style="--d:1">Your meeting <span class="sig">never leaves</span> your laptop.</h2>
+          <ul class="local-points rise" style="--d:2">
+            <li>@@svg:apple@@<div><b>On-device AI</b><span>Whisper for transcripts, Qwen for minutes and action items</span></div></li>
+            <li>@@svg:nvidia@@<div><b>Uses your GPU</b><span>Metal on Apple Silicon, CUDA on Windows and Linux</span></div></li>
+            <li>@@svg:linux@@<div><b>Every desktop</b><span>macOS, Windows and Linux builds</span></div></li>
+          </ul>
+        </div>
+        <div class="term rise" style="--d:3">
+          <div class="bar"><i></i><i></i><i></i><span>Terminal — zsh</span></div>
+          <pre id="term" aria-label="Install VoxBento Local with Homebrew"></pre>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" data-name="Lessons">
+    <div class="wrap">
+      <span class="eyebrow rise">What I learned</span>
+      <div class="lessons">
+        <div class="lesson rise" style="--d:1"><h3>Latency is an architecture decision.</h3><p>No amount of frontend tuning fixes audio that takes the long way round.</p></div>
+        <div class="lesson rise" style="--d:2"><h3>Keep Python out of the audio path.</h3><p>Python coordinates. A media server moves the audio.</p></div>
+        <div class="lesson rise" style="--d:3"><h3>Small PRs, reviewed in the open.</h3><p>600+ of them across FOSSASIA. Each one taught me something about the code or the people.</p></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Thank your mentors by name here.</li></ul></aside>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" data-name="What next?">
+    <div class="wrap">
+      <div class="next">
+        <div class="qmark rise" aria-hidden="true">?</div>
+        <div style="display:flex;flex-direction:column;gap:2.4vh;min-width:0">
+          <span class="eyebrow rise" style="--d:1">What next?</span>
+          <h2 class="h-l rise" style="--d:2">The booth is open.</h2>
+          <ul class="rise" style="--d:3">
+            <li><b>Local → live</b><span>Publish channels from VoxBento Local straight to a VoxBento event.</span></li>
+            <li><b>More languages, more voices</b><span>Better offline models for languages the cloud ignores.</span></li>
+            <li><b>Your event</b><span>Run it at your conference, then tell us what broke.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Adjust these to your real roadmap.</li><li>End on an ask: "Run it at your event."</li></ul></aside>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" data-name="Let's connect">
+    <div class="wrap">
+      <div class="connect">
+        <div class="thanks">
+          <span class="onair rise" style="align-self:flex-start"><i></i>STILL ON AIR</span>
+          <h2 class="h-l rise" style="--d:1">Thank you.<br><span class="tally">Let's talk.</span></h2>
+          <div class="mini-links rise" style="--d:2">
+            <a href="https://voxbento.com" target="_blank" rel="noopener">voxbento.com</a>
+            <a href="https://github.com/fossasia/voxbento" target="_blank" rel="noopener">github.com/fossasia/voxbento</a>
+            <a href="https://arnavballincode.github.io/fossasia-journey/" target="_blank" rel="noopener">arnavballincode.github.io/fossasia-journey</a>
+          </div>
+        </div>
+        <a class="qcard rise" style="--d:3" href="https://github.com/arnavballincode" target="_blank" rel="noopener">
+          @@qr:https://github.com/arnavballincode@@
+          <div class="who">@@svg:github@@<b>GitHub</b></div>
+          <small>github.com/arnavballincode</small>
+        </a>
+        <a class="qcard rise" style="--d:4" href="https://linkedin.com/in/arnav-angarkar" target="_blank" rel="noopener">
+          @@qr:https://linkedin.com/in/arnav-angarkar@@
+          <div class="who">@@svg:linkedin@@<b>LinkedIn</b></div>
+          <small>linkedin.com/in/arnav-angarkar</small>
+        </a>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Leave this up for Q&amp;A.</li></ul></aside>
+  </section>
+</main>
+
+<nav class="strip" aria-label="Slide controls">
+  <span class="ch" id="ch">CH 01</span>
+  <span class="name" id="chname">On air</span>
+  <div class="meter" id="meter" aria-hidden="true"></div>
+  <button type="button" id="prev" aria-label="Previous slide">←</button>
+  <button type="button" id="next" aria-label="Next slide">→</button>
+  <button type="button" id="notesBtn" aria-pressed="false">notes · N</button>
+  <button type="button" id="fsBtn">full screen · F</button>
+</nav>
+<div class="notes-panel" id="notesPanel" hidden><h4>Speaker notes</h4><div id="notesBody"></div></div>
+
+<script>
+(() => {
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scrollMode = () => matchMedia("(max-width: 860px), (max-height: 540px)").matches;
+  const slides = [...document.querySelectorAll(".slide")];
+  slides.forEach((s, k) => { s.dataset.ch = String(k + 1).padStart(2, "0"); });
+  const meter = document.getElementById("meter");
+  slides.forEach(() => meter.appendChild(document.createElement("i")));
+  const bars = [...meter.children];
+  const notesPanel = document.getElementById("notesPanel");
+  const notesBody = document.getElementById("notesBody");
+  const notesBtn = document.getElementById("notesBtn");
+  const enterHooks = {};
+  let i = 0;
+
+  function go(n) {
+    i = Math.min(Math.max(n, 0), slides.length - 1);
+    slides.forEach((s, k) => s.classList.toggle("is-active", k === i));
+    bars.forEach((b, k) => b.classList.toggle("on", k <= i));
+    document.getElementById("ch").textContent = "CH " + slides[i].dataset.ch;
+    document.getElementById("chname").textContent = slides[i].dataset.name;
+    const notes = slides[i].querySelector(".notes");
+    notesBody.innerHTML = notes ? notes.innerHTML : "<p>No notes.</p>";
+    try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) {}
+    const hook = enterHooks[slides[i].dataset.name];
+    if (hook) hook();
+  }
+  function toggleNotes() {
+    notesPanel.hidden = !notesPanel.hidden;
+    notesBtn.setAttribute("aria-pressed", String(!notesPanel.hidden));
+  }
+  function toggleFs() {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.().catch(() => {});
+    } catch (e) {}
+  }
+  document.getElementById("prev").addEventListener("click", () => go(i - 1));
+  document.getElementById("next").addEventListener("click", () => go(i + 1));
+  notesBtn.addEventListener("click", toggleNotes);
+  document.getElementById("fsBtn").addEventListener("click", toggleFs);
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(k)) { e.preventDefault(); go(i + 1); }
+    else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(k)) { e.preventDefault(); go(i - 1); }
+    else if (k === "Home") go(0);
+    else if (k === "End") go(slides.length - 1);
+    else if (k === "n" || k === "N") toggleNotes();
+    else if (k === "f" || k === "F") toggleFs();
+  });
+  let tx = null;
+  document.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", (e) => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    tx = null;
+  });
+
+  // Title: the headline cycles through languages
+  const langs = [
+    ["Every language,", "EN"], ["Jede Sprache,", "DE"], ["हर भाषा,", "HI"], ["प्रत्येक भाषा,", "MR"],
+    ["Mọi ngôn ngữ,", "VI"], ["每一种语言，", "ZH"], ["すべての言語、", "JA"],
+  ];
+  const langEl = document.getElementById("lang");
+  const langTag = document.getElementById("langtag");
+  let li = 0;
+  if (!still) setInterval(() => {
+    if (!slides[0].classList.contains("is-active") && !scrollMode()) return;
+    langEl.classList.add("swap");
+    setTimeout(() => {
+      li = (li + 1) % langs.length;
+      langEl.textContent = langs[li][0];
+      langTag.textContent = langs[li][1];
+      langEl.classList.remove("swap");
+    }, 350);
+  }, 2400);
+
+  // About: count up the PR number
+  enterHooks["About me"] = () => {
+    const el = document.getElementById("prs");
+    if (still) return;
+    const t0 = performance.now();
+    const tick = (t) => {
+      const p = Math.min((t - t0) / 1400, 1);
+      el.textContent = Math.round(600 * (1 - Math.pow(1 - p, 3))) + (p === 1 ? "+" : "");
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  // Phone: audio bars and rolling captions
+  const barBox = document.getElementById("bars");
+  for (let k = 0; k < 22; k++) { const b = document.createElement("i"); b.style.setProperty("--k", k * 7 % 11); barBox.appendChild(b); }
+  const caps = [
+    ["Welcome everyone to FOSSASIA.", "Willkommen bei FOSSASIA."],
+    ["Today we're talking about live interpretation.", "Heute sprechen wir über Live-Dolmetschen."],
+    ["Every listener picks their own language.", "Jede Person wählt ihre eigene Sprache."],
+    ["And it all runs in the browser.", "Und alles läuft im Browser."],
+  ];
+  const capSrc = document.getElementById("capSrc");
+  const capTr = document.getElementById("capTr");
+  let ci = 0, typing = null;
+  function nextCaption() {
+    ci = (ci + 1) % caps.length;
+    const [src, tr] = caps[ci];
+    capSrc.textContent = src;
+    if (still) { capTr.textContent = tr; return; }
+    clearInterval(typing);
+    let n = 0;
+    typing = setInterval(() => { capTr.textContent = tr.slice(0, ++n); if (n >= tr.length) clearInterval(typing); }, 38);
+  }
+  setInterval(nextCaption, 3200);
+
+  // Local: the terminal types the Homebrew install
+  const term = document.getElementById("term");
+  const script = [
+    ["p", "$ "], ["t", "brew tap ArnavBallinCode/voxa\n"],
+    ["o", "==> Tapping arnavballincode/voxa\n"],
+    ["p", "$ "], ["t", "brew install --cask voxa\n"],
+    ["o", "==> Downloading Voxa.dmg\n==> Moving App 'Voxa.app' to '/Applications/Voxa.app'\n"],
+    ["ok", "✔ voxa was successfully installed!\n"],
+    ["p", "$ "], ["t", "open -a Voxa\n"],
+    ["c", "\n# blocked by Gatekeeper? the app is unsigned for now:\n"],
+    ["p", "$ "], ["t", "xattr -cr /Applications/Voxa.app\n"],
+    ["c", "# update later: brew upgrade --cask voxa\n# other platforms: voxbento.com/local"],
+  ];
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const cls = { p: "p", o: "c", ok: "ok", c: "c", t: "" };
+  const full = () => script.map(([k, s]) => cls[k] ? `<span class="${cls[k]}">${esc(s)}</span>` : esc(s)).join("");
+  let termRun = 0;
+  enterHooks["VoxBento Local"] = () => {
+    const run = ++termRun;
+    if (still) { term.innerHTML = full(); return; }
+    let html = "", seg = 0;
+    const step = () => {
+      if (run !== termRun) return;
+      if (seg >= script.length) { term.innerHTML = html + '<span class="cur"></span>'; return; }
+      const [k, s] = script[seg++];
+      if (k !== "t") {
+        html += `<span class="${cls[k]}">${esc(s)}</span>`;
+        term.innerHTML = html + '<span class="cur"></span>';
+        setTimeout(step, k === "o" ? 450 : 120);
+        return;
+      }
+      let n = 0;
+      const typeIt = () => {
+        if (run !== termRun) return;
+        n++;
+        term.innerHTML = html + esc(s.slice(0, n)) + '<span class="cur"></span>';
+        if (n < s.length) setTimeout(typeIt, 34);
+        else { html += esc(s); setTimeout(step, 300); }
+      };
+      typeIt();
+    };
+    step();
+  };
+  term.innerHTML = full();
+
+  // Title waveform: three voices, like channels on a mixer
+  const cv = document.getElementById("wave");
+  const ctx = cv.getContext("2d");
+  const css = getComputedStyle(document.documentElement);
+  const voices = [
+    { c: css.getPropertyValue("--line").trim(), a: .3, f: 1.3, s: .5, w: 1 },
+    { c: css.getPropertyValue("--signal").trim(), a: .24, f: 2.1, s: .8, w: 1.4 },
+    { c: css.getPropertyValue("--tally").trim(), a: .36, f: 1.7, s: 1.1, w: 2.6 },
+  ];
+  function size() {
+    const r = devicePixelRatio || 1;
+    cv.width = cv.clientWidth * r; cv.height = cv.clientHeight * r;
+    ctx.setTransform(r, 0, 0, r, 0, 0);
+  }
+  function draw(t) {
+    const W = cv.clientWidth, H = cv.clientHeight, mid = H * .55;
+    ctx.clearRect(0, 0, W, H);
+    for (const v of voices) {
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 3) {
+        const p = x / W;
+        const env = Math.sin(p * Math.PI) * (0.55 + 0.45 * Math.sin(p * 9 + t * v.s * .7));
+        const y = mid + Math.sin(p * 18 * v.f + t * v.s) * Math.sin(p * 5 - t * .4) * H * v.a * env;
+        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.strokeStyle = v.c; ctx.lineWidth = v.w; ctx.stroke();
+    }
+  }
+  size(); draw(1.2);
+  addEventListener("resize", () => { size(); draw(1.2); });
+  if (!still) {
+    const loop = (ms) => {
+      if (slides[0].classList.contains("is-active") || scrollMode()) draw(ms / 1000);
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  const m = /^#s(\d+)$/.exec(location.hash);
+  go(m ? +m[1] - 1 : 0);
+})();
+</script>
