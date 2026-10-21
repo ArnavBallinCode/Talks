@@ -214,7 +214,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .arch-foot b { color: var(--tally); font-weight: 500; }
 
 /* ── 09 stack ── */
-.stack { display: grid; grid-template-columns: 1fr 1.4fr 1.4fr; gap: 2.4vw; }
+.stack { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2.4vw; }
 .stack > div { display: flex; flex-direction: column; gap: 1em; min-width: 0; }
 .stack h3 { font-family: var(--f-mono); font-weight: 500; font-size: .8em; letter-spacing: .12em; text-transform: uppercase; color: var(--tally); border-bottom: 1px solid var(--line); padding-bottom: .6em; }
 .logos { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5em, 1fr)); gap: .7em; }
@@ -298,6 +298,49 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .mini-links a { color: var(--mute); text-decoration: none; }
 .mini-links a:hover { color: var(--tally); }
 
+
+/* ── cold open ── */
+.langrow { display: flex; flex-wrap: wrap; gap: .5em; }
+.langrow span { font-family: var(--f-mono); font-size: .8em; padding: .3em .8em; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
+.langrow span:first-child { border-color: var(--tally); color: var(--tally); }
+
+/* ── problem image ── */
+.problem-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4vw; align-items: center; }
+.problem-grid > * { min-width: 0; }
+.legacy { margin: 0; }
+.legacy img { display: block; width: 100%; max-width: 100%; max-height: 64vh; object-fit: contain; border-radius: 14px; box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 0 0 1px var(--line); transform: rotate(1.5deg); }
+
+/* ── deep dive ── */
+.versions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; }
+.ver { display: flex; flex-direction: column; gap: .45em; padding: 1.1em 1.2em; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.ver.now { border-color: var(--tally); box-shadow: 0 0 0 4px var(--tally-soft); }
+.ver .when { font-family: var(--f-mono); font-size: .7em; color: var(--mute); letter-spacing: .08em; }
+.ver h3 { font-size: 1.3em; }
+.ver p { color: var(--mute); font-size: .88em; }
+.ver .tag { font-family: var(--f-mono); font-size: .7em; color: var(--live); }
+.ver.now .tag { color: var(--tally); }
+.budget { display: flex; flex-direction: column; gap: .7em; }
+.budget-row { display: grid; grid-template-columns: 8rem 1fr; gap: 1em; align-items: center; }
+.budget-row > span { font-family: var(--f-mono); font-size: .75em; color: var(--mute); }
+.track { display: flex; height: 1.7em; border-radius: 6px; overflow: hidden; background: var(--panel); font-family: var(--f-mono); font-size: .68em; }
+.track i { display: flex; align-items: center; padding-inline: .7em; white-space: nowrap; font-style: normal; overflow: hidden; }
+.track .evs { background: var(--line); color: var(--ink); }
+.track .net { background: var(--live); color: var(--night); }
+.track .fast { background: var(--tally); color: var(--night); }
+.axis { display: grid; grid-template-columns: 8rem 1fr; gap: 1em; font-family: var(--f-mono); font-size: .65em; color: var(--mute); }
+.axis div { display: flex; justify-content: space-between; }
+.is-active .track i { animation: grow .9s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: .5s; transform-origin: left; }
+@keyframes grow { from { transform: scaleX(0); } }
+
+/* ── open source ── */
+.oss { display: grid; grid-template-columns: 1.15fr .85fr; gap: 4vw; align-items: center; }
+.oss > * { min-width: 0; }
+.oss .browser { transform: perspective(1600px) rotateY(-8deg) rotateX(2deg); transform-origin: right center; }
+.oss-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4em 2em; }
+.oss-stats b { display: block; font-family: var(--f-display); font-weight: 800; font-size: clamp(2.2rem, 7vmin, 5rem); line-height: .95; font-variant-numeric: tabular-nums; }
+.oss-stats div:first-child b { color: var(--tally); }
+.oss-stats span { font-family: var(--f-mono); font-size: .72em; color: var(--mute); text-transform: uppercase; letter-spacing: .08em; }
+
 /* channel strip */
 .strip {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -325,7 +368,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   .slide { position: relative; inset: auto; opacity: 1; visibility: visible; padding-block: 56px; border-bottom: 1px solid var(--line); overflow: hidden; }
   .slide:first-child { min-height: 80vh; }
   .strip, .notes-panel { display: none; }
-  .about, .product, .demo-grid, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
+  .about, .product, .demo-grid, .problem-grid, .versions, .oss, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
   .fmap { grid-template-columns: 1fr 1fr; }
   .strike { grid-template-columns: 1fr 1fr; }
   .browser { transform: none; }
@@ -336,7 +379,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 @media (max-width: 460px) { .fmap, .strike { grid-template-columns: 1fr; } .pin { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active { transition: none; }
-  .is-active .rise, .is-active .pin, .is-active .strike b::after, .is-active .qmark { animation: none; }
+  .is-active .rise, .is-active .pin, .is-active .strike b::after, .is-active .qmark, .is-active .track i { animation: none; }
   .onair i, .d-flow, .d-flow-s, .bars i, .ph-live::before, .ph-cap .tr::after, .term .cur::after { animation: none; }
 }
 </style>
@@ -356,24 +399,41 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       <p class="lede"><strong>Open-source simultaneous interpretation in the browser.</strong> Interpreters speak, AI fills the gaps, and every listener hears it on their own phone in under a second.</p>
       <div class="byline"><span>Arnav Angarkar</span><span>GSoC 2026 · FOSSASIA</span><span>voxbento.com</span></div>
     </div>
-    <aside class="notes"><ul><li>Let the headline cycle through two or three languages before you speak.</li><li>Open: "Raise your hand if you've ever sat through a talk in your second language."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:20. Let the headline cycle through two or three languages, then go straight to the next slide.</li></ul></aside>
   </section>
 
-  <!-- 02 -->
+  <!-- cold open -->
+  <section class="slide" data-name="Cold open">
+    <div class="wrap">
+      <div class="demo-grid">
+        <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
+        <div style="display:flex;flex-direction:column;gap:2.4vh;min-width:0">
+          <span class="eyebrow rise" style="--d:1">Before I say anything</span>
+          <h2 class="h-l rise" style="--d:2">Phones out.<br><span class="tally">Scan this.</span></h2>
+          <p class="lede rise" style="--d:3">Pick a language. <strong>This talk is being interpreted into it right now</strong>, by the platform I'm about to show you.</p>
+          <div class="langrow rise" style="--d:4"><span>EN</span><span>DE</span><span>HI</span><span>MR</span><span>VI</span><span>ZH</span><span>JA</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>~0:40. Before walking on: start floor transcription, translation and the AI voice on ots26.</li><li>"Raise your hand if you can already read me in another language." Then: "Keep it open. We'll come back to it."</li></ul></aside>
+  </section>
+
+  <!-- problem -->
   <section class="slide" data-name="The problem">
     <div class="wrap">
-      <span class="eyebrow rise">The problem</span>
-      <h2 class="hand rise" style="--d:1">Interpretation at events still ships in a truck.</h2>
-      <div class="strike rise" style="--d:2">
-        <div><b style="--d:0">Soundproof booths</b><p>Built at every venue.</p></div>
-        <div><b style="--d:1">IR receivers</b><p>Handed out, collected, recharged.</p></div>
-        <div><b style="--d:2">A sound technician</b><p>Mixing every channel by hand.</p></div>
-        <div><b style="--d:3">Remote attendees</b><p>Left with nothing.</p></div>
+      <div class="problem-grid">
+        <div style="display:flex;flex-direction:column;gap:3vh">
+          <span class="eyebrow rise">The problem</span>
+          <h2 class="h-l rise" style="--d:1">Interpretation still ships in a truck.</h2>
+          <p class="lede rise" style="--d:2">Booths, receivers, racks and a technician for every venue. Small and community events skip it, so the people who need it most go without.</p>
+          <h2 class="punch rise" style="--d:4">What if all of it was <span class="tally">a link?</span></h2>
+        </div>
+        <figure class="legacy rise" style="--d:3"><img src="@@img:legacy.jpg@@" alt="Illustration of a legacy hardware interpretation booth: a huge soundproof booth, rented headsets and receivers, days of cable setup, and audio only with no captions or transcripts."></figure>
       </div>
-      <h2 class="punch rise" style="--d:9">What if all of it was <span class="tally">a link?</span></h2>
     </div>
-    <aside class="notes"><ul><li>Pause while the lines cross out. Then the punchline.</li><li>Under a minute.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:45. Let the picture get its laugh. Four pains: footprint, rentals, setup, audio only.</li><li>Land the punchline, then pause.</li></ul></aside>
   </section>
+
 
   <!-- 03 -->
   <section class="slide" data-name="About me">
@@ -398,7 +458,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>90 seconds, max. A story, not a CV.</li><li>Bangkok: first met the community. Paris: Wikimania and UNESCO, rooms full of people who need more than one language. Germany: working with mentors.</li></ul></aside>
+    <aside class="notes"><ul><li>~1:15. A story, not a CV.</li><li>Bangkok: first met the community. Paris: Wikimania and UNESCO, rooms full of people who need more than one language. Germany: working with mentors.</li></ul></aside>
   </section>
 
   <!-- 04 -->
@@ -429,39 +489,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         <div><b>Listener</b><span>scan, pick a language, listen</span></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>That's a real screenshot of the booth. Point at the pins quickly; the demo shows them for real.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:40. That's a real screenshot of the booth. Point at the pins quickly; the demo shows them for real.</li></ul></aside>
   </section>
 
-  <!-- 05 -->
-  <section class="slide" data-name="Two ways to interpret">
-    <div class="wrap">
-      <span class="eyebrow rise">Two ways to interpret</span>
-      <h2 class="h-l rise" style="--d:1">People where you have them.<br><span class="sig">AI where you don't.</span></h2>
-      <div class="modes">
-        <div class="mode rise" style="--d:2">
-          <span class="when">Human interpreters</span>
-          <h3>The booth, in a browser</h3>
-          <ul>
-            <li>Professional interpreters, on site or remote</li>
-            <li>Active and backup per language, swapping every 20–30 min</li>
-            <li>Booth chat and a live floor monitor</li>
-            <li>Sub-second audio to every listener</li>
-          </ul>
-        </div>
-        <div class="mode ai rise" style="--d:3">
-          <span class="when">AI interpretation</span>
-          <h3>Speech → text → speech</h3>
-          <ul>
-            <li>Live captions of the floor</li>
-            <li>Translated captions in many languages</li>
-            <li>A synthetic voice reading the translation</li>
-            <li>Tuned per room with a persona, style and glossary</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>Both run in the same room at once: German from a human booth, Japanese from the AI.</li><li>Frame AI as coverage, not replacement.</li></ul></aside>
-  </section>
 
   <!-- 06 -->
   <section class="slide" data-name="Everything in the box">
@@ -507,7 +537,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       </div>
       <div class="legend rise" style="--d:7"><span><i style="background:var(--tally)"></i>live in the demo, next</span><span><i style="background:var(--line)"></i>ask me after</span></div>
     </div>
-    <aside class="notes"><ul><li>Don't read it. 30–45 seconds: "This is everything. The orange columns, you'll see live."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:30. Don't read it: "This is everything. The orange columns, you'll see live."</li></ul></aside>
   </section>
 
   <!-- 07 -->
@@ -530,14 +560,33 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>20 seconds to scan. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li></ul></aside>
+    <aside class="notes"><ul><li>~4:30, the centrepiece. Phones should already be on the listener page from the cold open. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li></ul></aside>
+  </section>
+
+  <!-- deep dive -->
+  <section class="slide" data-name="Deep dive · latency">
+    <div class="wrap">
+      <span class="eyebrow rise">One problem, in depth</span>
+      <h2 class="h-m rise" style="--d:1">Interpreters already run 2–3 s behind.<br><span class="tally">The network can't add more.</span></h2>
+      <div class="versions">
+        <div class="ver rise" style="--d:2"><span class="when">14 MAY · v1</span><h3>Python carries the audio</h3><p>Flask, Socket.IO and aiortc. The server decoded and relayed every packet.</p><span class="tag">CPU-bound, one process in the path</span></div>
+        <div class="ver rise" style="--d:3"><span class="when">24 MAY · v2 · #78</span><h3>A media server takes over</h3><p>The browser publishes WHIP straight to MediaMTX. Listeners still play HLS.</p><span class="tag">seconds behind: HLS buffers segments</span></div>
+        <div class="ver now rise" style="--d:4"><span class="when">28–31 MAY · v3 · #81</span><h3>WebRTC both ways</h3><p>WHIP in, WHEP out. FastAPI only coordinates; Python never touches audio.</p><span class="tag">under a second, mouth to ear</span></div>
+      </div>
+      <div class="budget rise" style="--d:5" aria-label="Approximate delay a listener hears behind the speaker">
+        <div class="budget-row"><span>HLS playback</span><div class="track"><i class="evs" style="width:25%">interpreter ~2.5 s</i><i class="net" style="width:60%">transport ~6 s</i></div></div>
+        <div class="budget-row"><span>WHEP playback</span><div class="track"><i class="evs" style="width:25%">interpreter ~2.5 s</i><i class="fast" style="width:5%"></i></div></div>
+        <div class="axis"><span></span><div><span>0 s</span><span>5 s</span><span>10 s · typical values</span></div></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>~1:30. This is the engineering story. Three rewrites in three weeks.</li><li>Ear-voice span: a simultaneous interpreter lags the speaker by 2–3 seconds. Add HLS on top and listeners laugh at a joke after the slide has moved.</li><li>The fix wasn't a faster frontend: it was taking Python out of the media path.</li></ul></aside>
   </section>
 
   <!-- 08 -->
   <section class="slide" data-name="How it works">
     <div class="wrap">
       <span class="eyebrow rise">How it works</span>
-      <h2 class="h-m rise" style="--d:1">Mouth to ear in <span class="tally">under a second.</span></h2>
+      <h2 class="h-m rise" style="--d:1">Where v3 landed: <span class="tally">two planes.</span></h2>
       <div class="diagram rise" style="--d:2">
         <svg viewBox="0 0 1200 560" role="img" aria-label="Audio flows from the interpreter's browser over WHIP into MediaMTX and out over WHEP to listeners' phones. MediaMTX also feeds the AI pipeline over RTSP, which sends captions and voice to phones over WebSocket. FastAPI coordinates everything but never carries audio.">
           <!-- control plane -->
@@ -582,7 +631,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       </div>
       <div class="arch-foot rise" style="--d:3"><span><b>Media plane</b> MediaMTX moves the audio</span><span><b>Control plane</b> Python coordinates, never relays</span><span><b>Floor sources</b> Jitsi agent · OBS · ATEM · vMix</span></div>
     </div>
-    <aside class="notes"><ul><li>Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
+    <aside class="notes"><ul><li>~1:00. Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
   </section>
 
   <!-- 09 -->
@@ -605,20 +654,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
           <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
           <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
         </div></div>
-        <div class="rise" style="--d:4"><h3>AI</h3><div class="logos">
-          <div class="lg">@@svg:openai@@<span>OpenAI</span></div>
-          <div class="lg">@@svg:anthropic@@<span>Anthropic</span></div>
-          <div class="lg">@@svg:googlegemini@@<span>Gemini</span></div>
-          <div class="lg">@@svg:nvidia@@<span>NVIDIA Parakeet</span></div>
-          <div class="lg">@@svg:elevenlabs@@<span>ElevenLabs</span></div>
-          <div class="lg"><span class="word">Deepgram</span><span>Nova · Aura</span></div>
-          <div class="lg">@@svg:huggingface@@<span>NLLB · Whisper</span></div>
-          <div class="lg">@@svg:onnx@@<span>Supertonic</span></div>
-        </div></div>
       </div>
       <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
     </div>
-    <aside class="notes"><ul><li>Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:20. Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
   </section>
 
   <!-- 10 -->
@@ -632,7 +671,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         <div class="problem rise" style="--d:4"><span class="big">0</span><h3>Roles from the client</h3><p>The browser never says who it is. Roles come from the server session, so a modified client can't promote itself.</p></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:30. Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
   </section>
 
   <!-- 11 -->
@@ -669,7 +708,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:40. Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
   </section>
 
   <!-- 12 -->
@@ -691,7 +730,31 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+    <aside class="notes"><ul><li>~0:40. Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+  </section>
+
+  <!-- open source -->
+  <section class="slide" data-name="Open source">
+    <div class="wrap">
+      <div class="oss">
+        <div class="browser rise">
+          <div class="bar"><i></i><i></i><i></i><span>github.com/fossasia/voxbento</span></div>
+          <img src="@@img:github.jpg@@" alt="The fossasia/voxbento repository on GitHub: 1.5k stars, 113 forks, 66 contributors, 657 commits">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3vh">
+          <span class="eyebrow rise" style="--d:1">Built in the open</span>
+          <h2 class="h-m rise" style="--d:2">A GSoC project became <span class="tally">a community.</span></h2>
+          <div class="oss-stats rise" style="--d:3">
+            <div><b>1.5k+</b><span>stars</span></div>
+            <div><b>66</b><span>contributors</span></div>
+            <div><b>113</b><span>forks</span></div>
+            <div><b>657</b><span>commits</span></div>
+          </div>
+          <p class="lede rise" style="--d:4">Apache 2.0. Anyone can run it at their event, fork it, or send the next PR. That's the whole point.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>~0:45. Open source is why a student project can serve real events: 66 people have shipped code into it.</li><li>Invite: "Good first issues are labelled."</li></ul></aside>
   </section>
 
   <!-- 13 -->
@@ -704,7 +767,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         <div class="lesson rise" style="--d:3"><h3>Small PRs, reviewed in the open.</h3><p>600+ of them across FOSSASIA. Each one taught me something about the code or the people.</p></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>Thank your mentors by name here.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:30. Thank your mentors by name here.</li></ul></aside>
   </section>
 
   <!-- 14 -->
@@ -723,7 +786,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>Adjust these to your real roadmap.</li><li>End on an ask: "Run it at your event."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:15. Adjust these to your real roadmap.</li><li>End on an ask: "Run it at your event."</li></ul></aside>
   </section>
 
   <!-- 15 -->
