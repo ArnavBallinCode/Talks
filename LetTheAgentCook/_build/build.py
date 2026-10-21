@@ -11,12 +11,12 @@ Reads the sources next to this file and writes LetTheAgentCook/index.html:
 
 Markers inside slides.html:
 
-  <pre class="code" data-lang="js" data-title="src/split.js" data-focus="1-3|5-9">
+  <pre class="code sm" data-lang="js" data-title="src/split.js" data-focus="1-3|5-9">
   raw code, no HTML escaping needed
   </pre>
       Syntax-highlighted at build time, one <span class="ln"> per line. data-focus lists the line
-      ranges that light up on successive presses of the next key. Languages: js, sol, json, bash,
-      md, text, diff.
+      ranges that light up on successive presses of the next key. Add sm, xs or lg after "code" to change the size.
+      Languages: js, sol, json, bash, md, text, diff.
 
   @@qr:https://example.com@@
       An inline QR code SVG.
@@ -127,7 +127,7 @@ def highlight(code: str, lang: str) -> list[str]:
 
 
 def code_block(m: re.Match) -> str:
-    attrs, body = m.group(1), m.group(2)
+    extra, attrs, body = m.group(1) or "", m.group(2), m.group(3)
     lang = re.search(r'data-lang="([^"]+)"', attrs).group(1)
     title = re.search(r'data-title="([^"]*)"', attrs)
     code = textwrap.dedent(body.strip("\n")).rstrip()
@@ -135,7 +135,7 @@ def code_block(m: re.Match) -> str:
     attrs = re.sub(r'\s*data-title="[^"]*"', "", attrs)
     caption = (f'<figcaption><span>{html.escape(title.group(1))}</span><span class="lang">{lang}</span></figcaption>'
                if title else "")
-    return f'<figure class="codeblock">{caption}<pre class="code"{attrs}><code>{lines}</code></pre></figure>'
+    return f'<figure class="codeblock">{caption}<pre class="code{extra}"{attrs}><code>{lines}</code></pre></figure>'
 
 
 def qr(m: re.Match) -> str:
@@ -152,7 +152,7 @@ def qr(m: re.Match) -> str:
 
 def main() -> None:
     read = lambda name: (HERE / name).read_text(encoding="utf-8")
-    slides = re.sub(r'<pre class="code"([^>]*)>(.*?)</pre>', code_block, read("slides.html"), flags=re.S)
+    slides = re.sub(r'<pre class="code( [^"]*)?"([^>]*)>(.*?)</pre>', code_block, read("slides.html"), flags=re.S)
     slides = re.sub(r"@@qr:([^@]+)@@", qr, slides)
     page = (read("shell.html")
             .replace("@@css@@", read("deck.css"))

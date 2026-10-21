@@ -90,7 +90,7 @@ kbd { font: 500 .9em var(--f-mono); padding: .1em .45em; border: 1px solid var(-
 .kicker { display: flex; align-items: center; gap: 1rem; font: 500 1.1rem var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--ember); }
 .kicker b { display: inline-grid; place-items: center; min-width: 2.6rem; height: 2.6rem; padding: 0 .6rem; border: 1px solid var(--ember); border-radius: .5rem; font-weight: 700; letter-spacing: 0; }
 .kicker .violet { color: var(--violet); }
-.title { font-weight: 800; font-stretch: 112%; font-size: 4.3rem; line-height: 1.02; letter-spacing: -.025em; text-wrap: balance; max-width: 26ch; }
+.title { font-weight: 800; font-stretch: 112%; font-size: 4.3rem; line-height: 1.02; letter-spacing: -.025em; text-wrap: balance; max-width: 31ch; }
 .title em, .hero em, .big em { font-family: var(--f-serif); font-style: italic; font-weight: 400; font-stretch: 100%; letter-spacing: -.01em; color: var(--flame); }
 .lede { font-size: 1.85rem; line-height: 1.45; color: var(--ink-2); max-width: 54ch; text-wrap: pretty; }
 .lede strong, .points strong { color: var(--ink); font-weight: 650; }
@@ -142,8 +142,9 @@ code.i { font: 500 .9em var(--f-mono); color: var(--flame); background: var(--em
 .codeblock { margin: 0; background: #0a0908; border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; display: flex; flex-direction: column; min-width: 0; box-shadow: 0 2rem 4rem rgba(0, 0, 0, .35); }
 .codeblock figcaption { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 1.3rem; background: var(--panel); border-bottom: 1px solid var(--line); font: 500 1.05rem var(--f-mono); color: var(--ink-2); }
 .codeblock figcaption .lang { color: var(--dim); text-transform: uppercase; letter-spacing: .12em; font-size: .9rem; align-self: center; }
-.code { margin: 0; padding: 1rem 0 1.1rem; font: 400 1.42rem/1.58 var(--f-mono); color: var(--ink-2); white-space: pre; overflow: hidden; tab-size: 2; }
-.code.sm { font-size: 1.25rem; }
+.code { margin: 0; padding: .8rem 0 .9rem; font: 400 1.42rem/1.58 var(--f-mono); color: var(--ink-2); white-space: pre; overflow: hidden; tab-size: 2; }
+.code.sm { font-size: 1.25rem; line-height: 1.5; }
+.code.xs { font-size: 1.14rem; line-height: 1.5; }
 .code.lg { font-size: 1.6rem; }
 .code .ln { display: block; padding: 0 1.4rem; transition: opacity .35s ease, background-color .35s ease; }
 .code.focusing .ln { opacity: .24; }
@@ -202,10 +203,10 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 /* ── specific slides ──────────────────────────────────── */
 /* 01 title */
-.title-slide { justify-content: flex-end; padding-bottom: 5rem; }
+.title-slide { justify-content: flex-end; padding-bottom: 3.4rem; }
 #embers, #embers2 { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .title-slide > :not(canvas), .finale > :not(canvas) { position: relative; z-index: 1; }
-.hero { font-weight: 900; font-stretch: 125%; font-size: 10.6rem; line-height: .86; letter-spacing: -.045em; }
+.hero { margin-bottom: .6rem; font-weight: 900; font-stretch: 125%; font-size: 10.6rem; line-height: .86; letter-spacing: -.045em; }
 .hero em { font-size: 1.12em; letter-spacing: -.02em; background: linear-gradient(180deg, #ffd27a 10%, var(--ember) 70%, var(--coal)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .08em; }
 .hero .fire { font-style: normal; font-size: .7em; vertical-align: .12em; margin-left: .15em; }
 .subtitle { font-size: 2.6rem; font-weight: 500; font-stretch: 105%; color: var(--ink-2); letter-spacing: -.01em; }
@@ -213,7 +214,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 .byline a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-2); }
 
 /* 02 question */
-.versus { display: grid; grid-template-columns: 1fr auto 1.25fr; gap: 3rem; align-items: center; }
+.versus { display: grid; grid-template-columns: 17rem 1fr; gap: 2rem; align-items: center; }
 .lane { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .lane span { font: 500 1.35rem var(--f-mono); padding: .7rem 1.1rem; border-radius: .7rem; border: 1px solid var(--line-2); color: var(--ink-2); }
 .lane i { font-style: normal; color: var(--dim); font-size: 1.6rem; }
@@ -238,7 +239,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 .layers li span { font: 500 1.05rem var(--f-mono); color: var(--mute); }
 
 /* 05 map */
-.map { --cols: 1.05fr 1.5fr 1.4fr 1.35fr; }
+.map > div { font-size: 1.3rem; padding: .5rem 0; }
 .questions { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; }
 
 /* 07 load order */
@@ -256,6 +257,8 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 /* 13 proposals */
 .proposal { --cols: 1.05fr 2fr 1.45fr .75fr; }
+.proposal > div { font-size: 1.32rem; padding: .7rem 0; }
+.compact-cards .card { padding: 1.1rem 1.5rem; gap: .5rem; }
 .verdict { font: 700 1rem var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: .2rem .6rem; border-radius: .35rem; justify-self: start; }
 .verdict.yes { color: var(--char); background: var(--ok); }
 .verdict.no { color: var(--bad); border: 1px solid rgba(255, 122, 133, .5); }
@@ -356,8 +359,11 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 /* ── small screens: a scrolling article instead of a stage ── */
 @media (max-width: 760px) {
   html { font-size: 8.6px; }
-  body { display: block; height: auto; overflow: auto; }
-  .stage { width: auto; height: auto; overflow: visible; background: var(--char); }
+  body { display: block; place-items: normal; height: auto; overflow: auto; }
+  .stage { width: 100%; height: auto; overflow: visible; background: var(--char); }
+  .slide a, .byline, .links a, .qr-card small, code.i, .table code, .facts code { overflow-wrap: anywhere; }
+  .tree { overflow-x: auto; font-size: 1.5rem; }
+  svg.diagram { min-width: 0; }
   .stage::after { display: none; }
   .deck { position: static; }
   .slide, .slide.is-past { position: relative; inset: auto; opacity: 1; visibility: visible; transform: none; padding: 52px 16px; gap: 22px; border-bottom: 1px solid var(--line); }
@@ -368,7 +374,8 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   .code.focusing .ln.on { background: none; box-shadow: none; }
   .cols, .cols.w60, .cols.w40, .versus, .where, .finale-grid, .facts { grid-template-columns: 1fr; }
   .facts > div + div { padding-left: 0; border-left: 0; }
-  .pipeline { grid-template-columns: 1fr 1fr; }
+  .pipeline { grid-template-columns: 1fr 1fr !important; }
+  .cols[style] { grid-template-columns: 1fr !important; }
   .pipeline .stepcard { min-height: 0; }
   .pipeline .stepcard::after { display: none; }
   .table > div { grid-template-columns: 1fr; gap: 4px; }
@@ -384,6 +391,8 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   .table > div { font-size: 1.8rem; }
   .card p { font-size: 1.7rem; }
   .facts dd, .facts .v { font-size: 1.6rem; }
+  .kicker, .label, .chip, .facts dt, .table .th, .codeblock figcaption, .verdict, .disclaimer, .pipeline .stepcard .n, .pipeline .stepcard .via, .byline, .links, .tree .tag, .issue header, .issue .calc small, .layers li span, .where .rank, .where code, .quote small, .qr-card small { font-size: 1.4rem; }
+  .small, .pipeline .stepcard p { font-size: 1.6rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

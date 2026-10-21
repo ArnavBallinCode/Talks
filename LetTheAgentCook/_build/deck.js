@@ -131,6 +131,15 @@
     buttons[i].focus();
   }
   $("overviewClose").addEventListener("click", () => overview.close());
+  overview.addEventListener("keydown", (e) => {
+    const buttons = [...grid.querySelectorAll("button")];
+    const at = buttons.indexOf(document.activeElement);
+    const move = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (move && at !== -1) {
+      e.preventDefault();
+      buttons[Math.min(Math.max(at + move, 0), buttons.length - 1)].focus();
+    }
+  });
 
   // ── presenter window ──────────────────────────────────
   let presenter = null;

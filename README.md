@@ -4,6 +4,7 @@ Slides from my talks and workshops, published at **https://arnavballincode.githu
 
 | Talk | Slides |
 |---|---|
+| Let the Agent Cook 🔥 · Building AI-native developer workflows (workshop, [hands-on repo](https://github.com/ArnavBallinCode/let-the-agent-cook)) | [/LetTheAgentCook/](https://arnavballincode.github.io/Talks/LetTheAgentCook/) |
 | Open Tech Summit 2026 · VoxBento | [/OpenTechSummit2026/](https://arnavballincode.github.io/Talks/OpenTechSummit2026/) |
 
 ## Adding a talk
@@ -34,3 +35,19 @@ uv run --no-project --with qrcode==7.4.2 python OpenTechSummit2026/_build/build.
 
 The rebuilt file is the body of the page; `OpenTechSummit2026/index.html` adds the
 `<!doctype html>`, charset, viewport and description tags around it.
+
+## Let the Agent Cook deck
+
+Arrow keys, space or a clicker to move (each press also steps through builds and code highlights),
+**N** speaker notes, **P** presenter window with timer and pacing, **O** all slides, **F** full
+screen, **B** black screen, a number then **Enter** to jump. On phones it becomes a scrolling page.
+
+Edit the sources in `LetTheAgentCook/_build/` (slides and notes are in `slides.html`), then rebuild
+the complete page:
+
+```bash
+uv run --no-project --with qrcode==7.4.2 python LetTheAgentCook/_build/build.py
+```
+
+This writes `LetTheAgentCook/index.html` directly, with syntax highlighting and the QR code inlined.
+The exercises live in [ArnavBallinCode/let-the-agent-cook](https://github.com/ArnavBallinCode/let-the-agent-cook).
