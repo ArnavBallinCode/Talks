@@ -355,6 +355,128 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .term .m { color: var(--signal); }
 .term .u { color: var(--ink); }
 
+
+/* ── problem (no strike-through) ── */
+.strike.plain b::after { content: none; }
+.strike.plain p { font-size: .9em; }
+
+/* ── meet ── */
+.flow { display: grid; grid-template-columns: 1fr auto 1.25fr auto 1fr; gap: 1.2em; align-items: stretch; }
+.flow > * { min-width: 0; }
+.flow .arrow { align-self: center; font-family: var(--f-mono); color: var(--tally); font-size: 1.6em; }
+.node { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1.1em 1.2em; display: flex; flex-direction: column; gap: .45em; }
+.node .k { font-family: var(--f-mono); font-size: .7em; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.node h3 { font-size: 1.35em; }
+.node p { color: var(--mute); font-size: .9em; }
+.node.split { padding: 0; display: grid; grid-template-rows: 1fr 1fr; gap: 0; overflow: hidden; }
+.node.split > div { padding: .9em 1.2em; display: flex; flex-direction: column; gap: .3em; }
+.node.split > div + div { border-top: 1px solid var(--line); }
+.node.split .human .k { color: var(--tally); }
+.node.split .ai .k { color: var(--signal); }
+.who { display: flex; flex-wrap: wrap; gap: 2.4em; }
+.who div { display: flex; flex-direction: column; }
+.who b { font-family: var(--f-display); font-size: 1.15em; }
+.who span { color: var(--mute); font-size: .85em; }
+
+/* ── real UX ── */
+.ux { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 2.4vw; align-items: center; }
+.ux > * { min-width: 0; }
+.ux .browser { transform: none; }
+.shot-cap { font-family: var(--f-mono); font-size: .7em; color: var(--mute); margin-top: .6em; line-height: 1.9; }
+.keys b { display: inline-grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 50%; background: var(--tally); color: var(--night); font-weight: 500; margin: 0 .3em 0 .6em; }
+.keys b:first-child { margin-left: 0; }
+.pin.dot { padding: .25em; }
+.phone-shot { position: relative; height: min(60vh, 560px); aspect-ratio: 780 / 1640; max-width: 100%; border: 9px solid var(--bezel); border-radius: 30px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, .55), 0 0 0 1px var(--line); background: var(--ink); }
+.phone-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.todo-shot { height: min(60vh, 560px); aspect-ratio: 780 / 1640; max-width: 100%; border: 2px dashed var(--tally); border-radius: 30px; display: flex; flex-direction: column; justify-content: center; gap: .6em; padding: 1.2em; color: var(--mute); font-size: .78em; }
+.todo-shot b { font-family: var(--f-mono); color: var(--tally); letter-spacing: .1em; }
+
+/* ── architecture ── */
+.d-media { stroke: var(--tally); stroke-width: 3; fill: none; }
+.d-aip { stroke: var(--signal); stroke-width: 2.5; fill: none; }
+.d-ctlp { stroke: var(--mute); stroke-width: 1.5; fill: none; stroke-dasharray: 5 6; }
+.d-mon { stroke: var(--mute); stroke-width: 1.5; fill: none; stroke-dasharray: 2 6; }
+.d-labm { fill: var(--mute); font-family: var(--f-mono); font-size: 14px; }
+.d-app { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+.legend-row { display: flex; gap: 2em; flex-wrap: wrap; font-family: var(--f-mono); font-size: .72em; color: var(--mute); }
+.legend-row i { display: inline-block; width: 2em; height: 0; vertical-align: middle; margin-right: .5em; border-top: 3px solid var(--tally); }
+.legend-row .ai i { border-top: 3px solid var(--signal); }
+.legend-row .ctl i { border-top: 2px dashed var(--mute); }
+
+/* ── challenges ── */
+.challenge { display: grid; grid-template-columns: 1.15fr .85fr; gap: 3.5vw; align-items: start; }
+.challenge > * { min-width: 0; }
+.pdwte { display: flex; flex-direction: column; }
+.pdwte div { display: grid; grid-template-columns: 6.5em 1fr; gap: 1em; padding: .55em 0; border-top: 1px solid var(--line); }
+.pdwte dt, .pdwte .k { font-family: var(--f-mono); font-size: .72em; letter-spacing: .08em; text-transform: uppercase; color: var(--tally); padding-top: .2em; }
+.pdwte p { color: var(--ink); font-size: .92em; }
+.pdwte p span { color: var(--mute); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7em; }
+.steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .8em 1em; display: flex; flex-direction: column; gap: .2em; }
+.steps li.now { border-color: var(--tally); }
+.steps .when { font-family: var(--f-mono); font-size: .68em; color: var(--mute); }
+.steps b { font-weight: 600; }
+.steps span { color: var(--mute); font-size: .85em; }
+.delays { border: 1px dashed var(--line); border-radius: 12px; padding: .8em 1em; display: flex; flex-direction: column; gap: .35em; font-size: .8em; color: var(--mute); }
+.delays b { color: var(--ink); font-weight: 500; }
+.funnel { display: flex; flex-direction: column; gap: .5em; align-items: stretch; }
+.funnel div { border-radius: 10px; padding: .7em 1em; display: flex; justify-content: space-between; align-items: baseline; gap: 1em; background: var(--panel); border: 1px solid var(--line); }
+.funnel div:nth-child(2) { margin-inline: 8%; }
+.funnel div:nth-child(3) { margin-inline: 16%; }
+.funnel div:last-child { margin-inline: 26%; border-color: var(--tally); }
+.funnel b { font-family: var(--f-display); font-size: 1.6em; font-variant-numeric: tabular-nums; }
+.funnel div:last-child b { color: var(--tally); }
+.funnel span { color: var(--mute); font-size: .8em; text-align: right; }
+
+/* ── AI ── */
+.ai-chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.ai-chain > div { padding: 1em 1.1em; display: flex; flex-direction: column; gap: .35em; min-width: 0; }
+.ai-chain > div + div { border-left: 1px solid var(--line); }
+.ai-chain .k { font-family: var(--f-mono); font-size: .68em; letter-spacing: .1em; color: var(--signal); text-transform: uppercase; }
+.ai-chain h3 { font-size: 1.2em; }
+.ai-chain p { color: var(--mute); font-size: .82em; }
+.ai-chain .loc { font-family: var(--f-mono); font-size: .68em; color: var(--ink); }
+.ai-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vw; }
+.ai-cols > div { min-width: 0; display: flex; flex-direction: column; gap: .5em; }
+.ai-cols h3 { font-family: var(--f-mono); font-weight: 500; font-size: .75em; letter-spacing: .1em; text-transform: uppercase; color: var(--tally); }
+.ai-cols ul { margin: 0; padding-left: 1.1em; color: var(--mute); display: flex; flex-direction: column; gap: .3em; font-size: .92em; }
+.ai-cols li b { color: var(--ink); font-weight: 500; }
+
+/* ── contributions ── */
+.contrib { display: grid; grid-template-columns: .62fr 1.38fr; gap: 3vw; align-items: start; }
+.contrib > * { min-width: 0; }
+.contrib .photos { height: min(34vh, 300px); }
+.contrib .photo { width: 62%; padding: 6px 6px 22px; }
+.contrib .photo figcaption { font-size: 10px; bottom: 5px; }
+.me-line { font-family: var(--f-mono); font-size: .72em; color: var(--signal); line-height: 1.6; }
+.nums { display: grid; grid-template-columns: 1fr 1fr; gap: .8em 1.2em; }
+.nums b { display: block; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.6rem, 4.6vmin, 3rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.nums div:first-child b { color: var(--tally); }
+.nums span { font-family: var(--f-mono); font-size: .64em; color: var(--mute); text-transform: uppercase; letter-spacing: .06em; }
+.cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em 1.6em; }
+.cgrid > div { border-top: 2px solid var(--line); padding-top: .6em; min-width: 0; }
+.cgrid h3 { font-family: var(--f-mono); font-weight: 500; font-size: .72em; letter-spacing: .1em; text-transform: uppercase; color: var(--tally); margin-bottom: .4em; }
+.cgrid ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .3em; font-size: .84em; }
+.cgrid li { color: var(--ink); }
+.cgrid li span { font-family: var(--f-mono); font-size: .8em; color: var(--mute); }
+
+/* ── next ── */
+.plan { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.plan li { display: grid; grid-template-columns: 6.5em 1fr; gap: 1em; padding: .8em 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.plan .tag { font-family: var(--f-mono); font-size: .68em; color: var(--night); background: var(--tally); border-radius: 999px; padding: .15em .6em; justify-self: start; letter-spacing: .06em; }
+.plan b { display: block; font-family: var(--f-display); font-size: 1.25em; font-weight: 600; }
+.plan span { color: var(--mute); font-size: .9em; }
+.invite { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; }
+.invite div { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .8em 1em; display: flex; flex-direction: column; gap: .2em; min-width: 0; }
+.invite b { font-weight: 600; }
+.invite span { color: var(--mute); font-size: .82em; word-break: break-word; }
+
+/* ── appendix ── */
+.app-divider .h-xl { -webkit-text-stroke: 2px var(--line); color: transparent; }
+.app-list { columns: 2; column-gap: 3em; color: var(--mute); font-family: var(--f-mono); font-size: .8em; }
+.app-list li { margin-bottom: .4em; }
+.caveat { font-family: var(--f-mono); font-size: .7em; color: var(--mute); }
+
 /* channel strip */
 .strip {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -383,13 +505,16 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   .slide { position: relative; inset: auto; opacity: 1; visibility: visible; padding-block: 56px; border-bottom: 1px solid var(--line); overflow: hidden; }
   .slide:first-child { min-height: 80vh; }
   .strip, .notes-panel { display: none; }
-  .about, .product, .demo-grid, .problem-grid, .versions, .oss, .integ, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
+  .about, .product, .demo-grid, .problem-grid, .versions, .oss, .integ, .flow, .ux, .challenge, .ai-chain, .ai-cols, .contrib, .cgrid, .invite, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
   .fmap { grid-template-columns: 1fr 1fr; }
   .strike { grid-template-columns: 1fr 1fr; }
   .browser { transform: none; }
   .photos { height: 70vw; }
   .phone { margin-inline: auto; }
   .qmark { font-size: 9rem; }
+  .link + .link, .ai-chain > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .flow .arrow { display: none; }
+  .phone-shot, .todo-shot { height: auto; width: min(70vw, 300px); }
 }
 @media (max-width: 460px) { .fmap, .strike { grid-template-columns: 1fr; } .pin { display: none; } }
 @media (prefers-reduced-motion: reduce) {
@@ -402,7 +527,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 <main class="deck" id="deck">
 
   <!-- 01 -->
-  <section data-act="The hook" class="slide is-active" data-name="On air">
+  <section data-act="Opening" class="slide is-active" data-name="On air">
     <canvas id="wave" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="title-row">
@@ -411,148 +536,96 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       </div>
       <h1 class="h-xl"><span id="lang">Every language,</span><br><span class="tally">one room.</span></h1>
       <p class="langtag" id="langtag" aria-hidden="true">EN</p>
-      <p class="lede"><strong>Open-source simultaneous interpretation in the browser.</strong> Interpreters speak, AI fills the gaps, and every listener hears it on their own phone in under a second.</p>
-      <div class="byline"><span>Arnav Angarkar</span><span>GSoC 2026 · FOSSASIA</span><span>voxbento.com</span></div>
+      <p class="lede"><strong>Open-source simultaneous interpretation in the browser.</strong> Human interpreters or an AI pipeline, streamed to every listener's phone over WebRTC.</p>
+      <div class="byline"><span>Arnav Angarkar</span><span>IIIT Dharwad · GSoC 2026 with FOSSASIA</span><span>Open Tech Summit 2026</span></div>
     </div>
-    <aside class="notes"><ul><li>~0:20. Let the headline cycle through two or three languages, then go straight to the next slide.</li></ul></aside>
-  </section>
-
-  <!-- cold open -->
-  <section data-act="The hook" class="slide" data-name="Cold open">
-    <div class="wrap">
-      <div class="demo-grid">
-        <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
-        <div style="display:flex;flex-direction:column;gap:2.4vh;min-width:0">
-          <span class="eyebrow rise" style="--d:1">Before I say anything</span>
-          <h2 class="h-l rise" style="--d:2">Phones out.<br><span class="tally">Scan this.</span></h2>
-          <p class="lede rise" style="--d:3">Pick a language. <strong>This talk is being interpreted into it right now</strong>, by the platform I'm about to show you.</p>
-          <div class="langrow rise" style="--d:4"><span>EN</span><span>DE</span><span>HI</span><span>MR</span><span>VI</span><span>ZH</span><span>JA</span></div>
-        </div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~0:40. Before walking on: start floor transcription, translation and the AI voice on ots26.</li><li>"Raise your hand if you can already read me in another language." Then: "Keep it open. We'll come back to it."</li></ul></aside>
+    <aside class="notes"><ul><li>~0:15. Name, one line on what VoxBento is. Let the headline cycle once, then move on.</li><li>Transition: "Before the software, the problem."</li></ul></aside>
   </section>
 
   <!-- problem -->
-  <section data-act="The hook" class="slide" data-name="The problem">
+  <section data-act="Opening" class="slide" data-name="The problem">
     <div class="wrap">
-      <div class="problem-grid">
-        <div style="display:flex;flex-direction:column;gap:3vh">
-          <span class="eyebrow rise">The problem</span>
-          <h2 class="h-l rise" style="--d:1">Interpretation still ships in a truck.</h2>
-          <p class="lede rise" style="--d:2">Booths, receivers, racks and a technician for every venue. Small and community events skip it, so the people who need it most go without.</p>
-          <h2 class="punch rise" style="--d:4">What if all of it was <span class="tally">a link?</span></h2>
-        </div>
-        <figure class="legacy rise" style="--d:3"><img src="@@img:legacy.jpg@@" alt="Illustration of a legacy hardware interpretation booth: a huge soundproof booth, rented headsets and receivers, days of cable setup, and audio only with no captions or transcripts."></figure>
+      <span class="eyebrow rise">The problem</span>
+      <h2 class="h-l rise" style="--d:1">Multilingual events are <span class="tally">hard to run.</span></h2>
+      <div class="strike rise plain" style="--d:2">
+        <div><b>Equipment and setup</b><p>On-site interpretation often means booths, receivers and audio routing per room.</p></div>
+        <div><b>Coordination</b><p>Interpreters typically hand over every 20–30 minutes, and someone has to manage who is on air.</p></div>
+        <div><b>Cost</b><p>Hardware, rentals and technicians scale with every language and every room.</p></div>
+        <div><b>Reach</b><p>Remote attendees and smaller community events are often left out entirely.</p></div>
       </div>
+      <h2 class="punch rise" style="--d:4">What if a listener only needed <span class="tally">a browser?</span></h2>
     </div>
-    <aside class="notes"><ul><li>~0:45. Let the picture get its laugh. Four pains: footprint, rentals, setup, audio only.</li><li>Land the punchline, then pause.</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~1:15. Four pressures. Keep it grounded: not every setup has all four.</li>
+      <li>Point at Reach last: that's the gap I care about most, community events like this one.</li>
+      <li>Transition: the punchline question, then "That's VoxBento."</li>
+    </ul></aside>
   </section>
 
-
-  <!-- 03 -->
-  <section data-act="The hook" class="slide" data-name="About me">
-    <div class="wrap">
-      <div class="about">
-        <div class="photos rise">
-          <figure class="photo" style="margin:0"><img src="@@img:bkk.jpg@@" alt="Arnav speaking at FOSSASIA Summit in Bangkok"><figcaption>BANGKOK · MAR</figcaption></figure>
-          <figure class="photo" style="margin:0"><img src="@@img:unesco.jpg@@" alt="Arnav at UNESCO in Paris"><figcaption>PARIS · JUL</figcaption></figure>
-          <figure class="photo" style="margin:0"><img src="@@img:de.jpg@@" alt="Arnav with Mario and Saksham in Germany"><figcaption>GERMANY · AUG</figcaption></figure>
-        </div>
-        <div class="me">
-          <span class="eyebrow rise">Who's talking</span>
-          <h2 class="h-l rise" style="--d:1">Hi, I'm Arnav.</h2>
-          <p class="school rise" style="--d:2">3rd-year student · IIIT Dharwad · GSoC 2026 with FOSSASIA</p>
-          <ul class="roles rise" style="--d:3">
-            <li><b>Built VoxBento</b><span>and maintain it</span></li>
-            <li><b>Core developer</b><span>Eventyay</span></li>
-            <li><b>Built Eventyay Business</b><span>plans and billing</span></li>
-            <li><b>And more</b><span>Star-Me and other FOSSASIA tools</span></li>
-          </ul>
-          <div class="big-stat rise" style="--d:4"><b id="prs">600+</b><span>pull requests across FOSSASIA</span></div>
-        </div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~1:15. A story, not a CV.</li><li>Bangkok: first met the community. Paris: Wikimania and UNESCO, rooms full of people who need more than one language. Germany: working with mentors.</li></ul></aside>
-  </section>
-
-  <!-- 04 -->
+  <!-- meet -->
   <section data-act="The product" class="slide" data-name="Meet VoxBento">
     <div class="wrap">
-      <span class="eyebrow rise">Meet VoxBento</span>
-      <h2 class="h-m rise" style="--d:1">Three browser tabs. <span class="tally">Zero installs.</span></h2>
-      <div class="product">
-        <div class="browser rise" style="--d:2">
-          <div class="bar"><i></i><i></i><i></i><span>voxbento.com/interpreter/fossasia-2027/de</span></div>
-          <img src="@@img:booth.jpg@@" alt="The real VoxBento interpreter booth: Jitsi floor feed, pass mic button, participants, booth chat and diagnostics">
-          <span class="pin" style="left:24%;top:46%;--d:0"><b>1</b>Floor feed</span>
-          <span class="pin" style="left:38%;top:7%;--d:1"><b>2</b>Pass mic</span>
-          <span class="pin" style="right:6%;top:44%;--d:2"><b>3</b>Booth chat</span>
-          <span class="pin" style="right:8%;top:20%;--d:3"><b>4</b>Who's live</span>
+      <span class="eyebrow rise">The solution</span>
+      <h2 class="h-m rise" style="--d:1">VoxBento is an open-source, browser-first interpretation platform: <span class="tally">human or AI-assisted interpretation, on every listener's phone.</span></h2>
+      <div class="flow rise" style="--d:2">
+        <div class="node"><span class="k">In the room</span><h3>The speaker</h3><p>Floor audio from a meeting feed or the venue's mixer.</p></div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="node split">
+          <div class="human"><span class="k">Human</span><h3>Interpreter in a browser booth</h3></div>
+          <div class="ai"><span class="k">AI-assisted</span><h3>Speech → text → translation → voice</h3></div>
         </div>
-        <div class="phone rise" style="--d:3" aria-label="Listener view on a phone">
-          <div class="ph-top"><span>Big Hall</span><span class="ph-live">LIVE</span></div>
-          <div class="ph-title">FOSSASIA Summit<br>Keynote</div>
-          <div class="ph-langs"><span>EN</span><span class="on">DE</span><span>HI</span><span>MR</span><span>VI</span><span>ZH</span><span>JA</span></div>
-          <div class="bars" id="bars"></div>
-          <div class="ph-cap"><p class="src" id="capSrc">Welcome everyone to FOSSASIA.</p><p class="tr" id="capTr">Willkommen bei FOSSASIA.</p></div>
-        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="node"><span class="k">Listener</span><h3>Their own phone</h3><p>Picks a language. Gets audio, and captions where enabled.</p></div>
       </div>
-      <div class="legend-3 rise" style="--d:4">
-        <div><b>Interpreter</b><span>the real booth, left</span></div>
-        <div><b>Coordinator</b><span>Mission Control, every booth at once</span></div>
-        <div><b>Listener</b><span>scan, pick a language, listen</span></div>
+      <div class="who rise" style="--d:3">
+        <div><b>Interpreters</b><span>go live from a browser tab</span></div>
+        <div><b>Coordinators</b><span>see every booth and choose who is on air</span></div>
+        <div><b>Listeners</b><span>open a link, no app to install</span></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:40. That's a real screenshot of the booth. Point at the pins quickly; the demo shows them for real.</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~0:30. Read the one sentence. Then left to right: floor, interpretation (human or AI), listener.</li>
+      <li>Transition: "Here's what that looks like for real."</li>
+    </ul></aside>
   </section>
 
-
-  <!-- 06 -->
-  <section data-act="The product" class="slide" data-name="Everything in the box">
+  <!-- real UX -->
+  <section data-act="The product" class="slide" data-name="Real screens">
     <div class="wrap">
-      <span class="eyebrow rise">Everything in the box</span>
-      <h2 class="h-m rise" style="--d:1">The whole platform, on one slide.</h2>
-      <div class="fmap">
-        <div class="fcol demo rise" style="--d:2"><h3>Booth</h3><ul>
-          <li><b>Go live from a browser</b>WHIP, no plugins</li>
-          <li><b>Mic test + level meter</b></li>
-          <li><b>Active / backup handoff</b></li>
-          <li><b>Booth chat</b></li>
-          <li><b>Floor monitor</b>self-hosted Jitsi</li>
-        </ul></div>
-        <div class="fcol demo rise" style="--d:3"><h3>Listeners</h3><ul>
-          <li><b>QR link, pick a language</b></li>
-          <li><b>Sub-second playback</b>WHEP, auto-reconnect</li>
-          <li><b>Live + translated captions</b></li>
-          <li><b>Embeddable player</b>for event sites</li>
-          <li><b>Join codes</b></li>
-        </ul></div>
-        <div class="fcol demo rise" style="--d:4"><h3>AI interpretation</h3><ul>
-          <li><b>Floor transcription</b>5 speech engines</li>
-          <li><b>LLM translation</b>persona + style</li>
-          <li><b>Glossary CSV</b>keeps "FOSSASIA" as FOSSASIA</li>
-          <li><b>AI voice</b>cloud or offline</li>
-          <li><b>Transcript export</b></li>
-        </ul></div>
-        <div class="fcol rise" style="--d:5"><h3>Organisers</h3><ul>
-          <li><b>Mission Control</b>all rooms, all booths</li>
-          <li><b>Setup wizard</b>event → rooms → booths</li>
-          <li><b>Invite links by role</b></li>
-          <li><b>OBS / ATEM / vMix ingest</b></li>
-          <li><b>YouTube relay</b>RTMPS</li>
-        </ul></div>
-        <div class="fcol rise" style="--d:6"><h3>Platform</h3><ul>
-          <li><b>REST API + OAuth</b>Eventyay integration</li>
-          <li><b>Webhooks</b></li>
-          <li><b>Developer apps</b></li>
-          <li><b>VoxBento Local</b>offline desktop app</li>
-          <li><b>Self-hostable</b>Docker Compose</li>
-        </ul></div>
+      <span class="eyebrow rise">The real product</span>
+      <h2 class="h-m rise" style="--d:1">Two screens do most of the work.</h2>
+      <div class="ux">
+        <figure class="rise" style="margin:0;--d:2">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><span>voxbento.com/interpreter/…/de</span></div>
+            <img src="@@img:booth.jpg@@" alt="Real VoxBento interpreter booth: live status, pass mic and unmute controls, the Jitsi floor feed, participants, booth audio volume and booth chat.">
+            <span class="pin dot" style="left:10%;top:3%;--d:0" aria-hidden="true"><b>1</b></span>
+            <span class="pin dot" style="left:49%;top:3%;--d:1" aria-hidden="true"><b>2</b></span>
+            <span class="pin dot" style="left:46%;top:50%;--d:2" aria-hidden="true"><b>3</b></span>
+            <span class="pin dot" style="right:2%;top:47%;--d:3" aria-hidden="true"><b>4</b></span>
+          </div>
+          <figcaption class="shot-cap">Interpreter booth · real screenshot<br><span class="keys"><b>1</b> live status <b>2</b> pass mic <b>3</b> floor feed (Jitsi) <b>4</b> booth chat</span></figcaption>
+        </figure>
+        <figure class="rise" style="margin:0;--d:3">
+          <div class="phone-shot">
+            <img src="@@img:listener.jpg@@" alt="Real VoxBento listener page on a phone for OpenTech Summit 2026: room select set to Main Stage, a source audio language select, a waiting status, and a captions mode select.">
+            <span class="pin dot" style="right:4%;top:40%;--d:4" aria-hidden="true"><b>5</b></span>
+            <span class="pin dot" style="right:4%;top:52%;--d:5" aria-hidden="true"><b>6</b></span>
+            <span class="pin dot" style="right:4%;top:82%;--d:6" aria-hidden="true"><b>7</b></span>
+          </div>
+          <figcaption class="shot-cap">Listener · real, ots26<br><span class="keys"><b>5</b> room <b>6</b> language <b>7</b> captions</span></figcaption>
+        </figure>
+        <figure class="rise" style="margin:0;--d:4">
+          <div class="todo-shot" role="note"><b>TODO</b>Capture in rehearsal: the listener page with <em>Translated</em> captions arriving during a live session.<span>Replace this card before the talk.</span></div>
+          <figcaption class="shot-cap">Live captions · to capture</figcaption>
+        </figure>
       </div>
-      <div class="legend rise" style="--d:7"><span><i style="background:var(--tally)"></i>live in the demo, next</span><span><i style="background:var(--line)"></i>ask me after</span></div>
     </div>
-    <aside class="notes"><ul><li>~0:30. Don't read it: "This is everything. The orange columns, you'll see live."</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~0:45. Booth: 1 live status, 2 pass mic to your partner, 3 the floor you're interpreting, 4 chat with your booth partner.</li>
+      <li>Listener: 5 room, 6 language (here German, English, Hindi), 7 captions: original, translated or stacked.</li>
+      <li>Transition: "Now let's do it live."</li>
+    </ul></aside>
   </section>
 
   <!-- 07 -->
@@ -561,292 +634,266 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       <div class="demo-grid">
         <div class="qr-card rise">@@qr:https://voxbento.com/listener/ots26?code=8GC9CF@@<p>voxbento.com/listener/ots26</p></div>
         <div style="display:flex;flex-direction:column;gap:2vh;min-width:0">
-          <span class="eyebrow rise" style="--d:1">Live demo · phones out</span>
-          <h2 class="h-l rise" style="--d:2">Scan it.<br><span class="tally">You're the audience.</span></h2>
+          <span class="eyebrow rise" style="--d:1">Live demo · scan once I'm live</span>
+          <h2 class="h-l rise" style="--d:2">Scan it.<br><span class="tally">Pick a language.</span></h2>
           <ol class="runorder rise" style="--d:3">
-            <li class="act">Act 1 · human booth</li>
-            <li><b>I go live from the booth</b><em>you hear me</em></li>
-            <li><b>Backup interpreter takes over</b><em>Mission Control</em></li>
-            <li class="act">Act 2 · AI interpreter</li>
-            <li><b>Floor transcription on</b><em>captions</em></li>
-            <li><b>Translated captions</b><em>pick a language</em></li>
-            <li><b>The AI voice speaks</b><em>no booth needed</em></li>
+            <li><b>Open the prepared booth</b><em>ots26 · Main Stage</em></li>
+            <li><b>Go live as the interpreter</b><em>floor feed playing</em></li>
+            <li><b>Scan and join as a listener</b><em>second device</em></li>
+            <li><b>Pick a language</b><em>German · English · Hindi</em></li>
+            <li><b>Hear the live interpretation</b><em>WebRTC playback</em></li>
+            <li><b>Show captions and translation</b><em>if running</em></li>
           </ol>
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~4:30, the centrepiece. Phones should already be on the listener page from the cold open. Headphones on the booth tab to avoid feedback.</li><li>If Wi-Fi dies: switch to the recording, no apology.</li><li>Say "FOSSASIA" and "pull request" in act 2; the glossary keeps them.</li><li>Close the demo on: "That was under a second. How?"</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~4:00. Before the talk: booth open, floor source running, floor transcription and translation started, second device on the listener page.</li>
+      <li>1 Open the ots26 booth. 2 Go live FIRST: listeners who join before the interpreter is live get no audio until they reload (issue #692). 3 Then invite the room to scan. 4 Pick German, English or Hindi. 5 Speak; point at the phone. 6 Switch captions to Translated. 7 Back to slides: "So how does that work?"</li>
+      <li>Fallback, no audio: tell people to reload; show the booth's live status and Mission Control instead.</li>
+      <li>Fallback, AI not producing output: say so plainly, skip step 6, continue.</li>
+      <li>Fallback, QR fails: read out voxbento.com/listener/ots26 (code 8GC9CF).</li>
+      <li>Never present a recording as live. If you play one, say "recorded in rehearsal".</li>
+    </ul></aside>
   </section>
 
-  <!-- deep dive -->
-  <section data-act="Under the hood" class="slide" data-name="Deep dive · latency">
+  <!-- architecture -->
+  <section data-act="Under the hood" class="slide" data-name="Architecture">
     <div class="wrap">
-      <span class="eyebrow rise">Under the hood · 1 / 5 · Latency</span>
-      <h2 class="h-m rise" style="--d:1">That was under a second.<br><span class="tally">It wasn't always.</span></h2>
-      <p class="lede rise" style="--d:1">Interpreters already run 2–3 s behind the speaker, so the network can't add more. It took three versions in three weeks.</p>
-      <div class="versions">
-        <div class="ver rise" style="--d:2"><span class="when">14 MAY · v1</span><h3>Python carries the audio</h3><p>Flask, Socket.IO and aiortc. The server decoded and relayed every packet.</p><span class="tag">CPU-bound, one process in the path</span></div>
-        <div class="ver rise" style="--d:3"><span class="when">24 MAY · v2 · #78</span><h3>A media server takes over</h3><p>The browser publishes WHIP straight to MediaMTX. Listeners still play HLS.</p><span class="tag">seconds behind: HLS buffers segments</span></div>
-        <div class="ver now rise" style="--d:4"><span class="when">28–31 MAY · v3 · #81</span><h3>WebRTC both ways</h3><p>WHIP in, WHEP out. FastAPI only coordinates; Python never touches audio.</p><span class="tag">under a second, mouth to ear</span></div>
-      </div>
-      <div class="budget rise" style="--d:5" aria-label="Approximate delay a listener hears behind the speaker">
-        <div class="budget-row"><span>HLS playback</span><div class="track"><i class="evs" style="width:25%">interpreter ~2.5 s</i><i class="net" style="width:60%">transport ~6 s</i></div></div>
-        <div class="budget-row"><span>WHEP playback</span><div class="track"><i class="evs" style="width:25%">interpreter ~2.5 s</i><i class="fast" style="width:5%"></i></div></div>
-        <div class="axis"><span></span><div><span>0 s</span><span>5 s</span><span>10 s · typical values</span></div></div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~1:30. Bridge from the demo: "What you just heard was under a second behind me. It wasn't always."</li><li>Ear-voice span: a simultaneous interpreter lags the speaker by 2–3 seconds. Add HLS on top and listeners laugh at a joke after the slide has moved.</li><li>The fix wasn't a faster frontend: it was taking Python out of the media path. Next slide: where v3 landed.</li></ul></aside>
-  </section>
-
-  <!-- 08 -->
-  <section data-act="Under the hood" class="slide" data-name="How it works">
-    <div class="wrap">
-      <span class="eyebrow rise">Under the hood · 2 / 5 · Architecture</span>
-      <h2 class="h-m rise" style="--d:1">Where v3 landed: <span class="tally">two planes.</span></h2>
+      <span class="eyebrow rise">How it works</span>
+      <h2 class="h-m rise" style="--d:1">Media, AI and control <span class="tally">take different paths.</span></h2>
       <div class="diagram rise" style="--d:2">
-        <svg viewBox="0 0 1200 560" role="img" aria-label="Audio flows from the interpreter's browser over WHIP into MediaMTX and out over WHEP to listeners' phones. MediaMTX also feeds the AI pipeline over RTSP, which sends captions and voice to phones over WebSocket. FastAPI coordinates everything but never carries audio.">
-          <!-- control plane -->
-          <rect class="d-ctl" x="2" y="2" width="1196" height="72" rx="14"/>
-          @@svgat:fastapi:26:21:30@@
-          <text class="d-t" x="70" y="46" style="font-size:20px">FastAPI control plane</text>
-          <text class="d-s" x="1174" y="44" text-anchor="end">booths · roles · chat · handoff · publish tickets — never audio</text>
-          <path class="d-tick" d="M160 74V150"/><path class="d-tick" d="M1040 74V150"/>
+        <svg viewBox="0 0 1200 560" role="img" aria-label="Floor audio and the interpreter's browser publish to MediaMTX over WHIP (floor sources may also use RTMPS). Listeners play from MediaMTX over WHEP. The interpreter monitors the floor through a receive-only Jitsi view. A FastAPI app holds booth state and authorises publishes when MediaMTX asks. Its AI workers read a copy of a channel over RTSP and send captions and synthetic speech to listeners over WebSocket.">
+          <defs>
+            <marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+            <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-s"/></marker>
+          </defs>
+          <rect class="d-node" x="20" y="40" width="270" height="100" rx="14"/>
+          <text class="d-t" x="42" y="82">Floor audio</text>
+          <text class="d-s" x="42" y="110">Jitsi agent · venue encoder</text>
 
-          <!-- nodes -->
-          <rect class="d-node" x="30" y="150" width="260" height="150" rx="16"/>
-          <text class="d-t" x="56" y="208">Interpreter</text>
-          <text class="d-s" x="56" y="236">any browser</text>
-          <text class="d-s" x="56" y="260">mic · Jitsi floor feed</text>
+          <rect class="d-node" x="20" y="250" width="270" height="110" rx="14"/>
+          <text class="d-t" x="42" y="294">Interpreter</text>
+          <text class="d-s" x="42" y="322">browser tab</text>
 
-          <rect class="d-hub" x="460" y="140" width="280" height="170" rx="20"/>
-          <image class="d-mtx" href="@@img:mediamtx.png@@" x="490" y="190" width="220" height="46"/>
-          <text class="d-s" x="600" y="270" text-anchor="middle">one path per language</text>
+          <rect class="d-hub" x="470" y="90" width="260" height="210" rx="18"/>
+          <image class="d-mtx" href="@@img:mediamtx.png@@" x="500" y="150" width="200" height="42"/>
+          <text class="d-s" x="600" y="232" text-anchor="middle">one path per language</text>
+          <text class="d-s" x="600" y="254" text-anchor="middle">+ a floor path</text>
 
-          <rect class="d-node" x="910" y="150" width="260" height="150" rx="16"/>
-          <text class="d-t" x="936" y="208">Listeners</text>
-          <text class="d-s" x="936" y="236">any phone</text>
-          <text class="d-s" x="936" y="260">audio · captions · voice</text>
+          <rect class="d-node" x="910" y="140" width="270" height="110" rx="14"/>
+          <text class="d-t" x="932" y="184">Listener</text>
+          <text class="d-s" x="932" y="212">phone browser</text>
 
-          <!-- media path -->
-          <path class="d-rail" d="M290 225H460"/><path class="d-flow" d="M290 225H460"/>
-          <text class="d-lab" x="375" y="208" text-anchor="middle">WHIP</text>
-          <path class="d-rail" d="M740 225H910"/><path class="d-flow" d="M740 225H910"/>
-          <text class="d-lab" x="825" y="208" text-anchor="middle">WHEP</text>
+          <rect class="d-app" x="400" y="390" width="400" height="150" rx="16"/>
+          <text class="d-t" x="420" y="426" style="font-size:20px">FastAPI app</text>
+          <rect class="d-chip" x="420" y="446" width="170" height="36" rx="18"/><text class="d-chipt" x="505" y="469" text-anchor="middle">booth state</text>
+          <rect class="d-chip" x="606" y="446" width="174" height="36" rx="18"/><text class="d-chipt" x="693" y="469" text-anchor="middle">publish auth</text>
+          <rect class="d-chip" x="420" y="492" width="360" height="36" rx="18" style="stroke:var(--signal)"/><text class="d-chipt" x="600" y="515" text-anchor="middle">AI workers: speech → translate → voice</text>
 
-          <!-- AI branch -->
-          <path class="d-rail" d="M600 310V400"/><path class="d-flow-s" d="M600 310V400"/>
-          <text class="d-labs" x="614" y="362">RTSP</text>
-          <rect class="d-ai" x="390" y="400" width="420" height="120" rx="18"/>
-          <text class="d-t" x="600" y="444" text-anchor="middle" style="font-size:20px">AI pipeline</text>
-          <rect class="d-chip" x="418" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="473" y="485" text-anchor="middle">speech</text>
-          <rect class="d-chip" x="545" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="600" y="485" text-anchor="middle">translate</text>
-          <rect class="d-chip" x="672" y="462" width="110" height="36" rx="18"/><text class="d-chipt" x="727" y="485" text-anchor="middle">voice</text>
-          <path class="d-rail" d="M810 460H1040V300"/><path class="d-flow-s" d="M810 460H1040V300"/>
-          <text class="d-labs" x="925" y="446" text-anchor="middle">WebSocket</text>
+          <path class="d-media" d="M290 90H380V150H466" marker-end="url(#am)"/>
+          <text class="d-lab" x="300" y="80">WHIP · RTMPS</text>
+          <path class="d-media" d="M290 305H380V240H466" marker-end="url(#am)"/>
+          <text class="d-lab" x="300" y="296">WHIP</text>
+          <path class="d-media" d="M730 195H906" marker-end="url(#am)"/>
+          <text class="d-lab" x="790" y="182">WHEP</text>
+
+          <path class="d-mon" d="M155 140V246"/>
+          <text class="d-labm" x="166" y="200">monitors via</text>
+          <text class="d-labm" x="166" y="218">Jitsi (receive-only)</text>
+
+          <path class="d-aip" d="M560 300V386" marker-end="url(#aa)"/>
+          <text class="d-labs" x="572" y="350">RTSP copy</text>
+          <path class="d-aip" d="M800 510H1045V254" marker-end="url(#aa)"/>
+          <text class="d-labs" x="820" y="534">WebSocket: captions + AI voice</text>
+
+          <path class="d-ctlp" d="M155 360V465H396"/>
+          <text class="d-labm" x="166" y="455">booth state (WebSocket)</text>
+          <path class="d-ctlp" d="M680 300V386"/>
+          <text class="d-labm" x="692" y="350">asks: may this publish?</text>
         </svg>
       </div>
-      <div class="arch-foot rise" style="--d:3"><span><b>Media plane</b> MediaMTX moves the audio</span><span><b>Control plane</b> Python coordinates, never relays</span><span><b>Floor sources</b> Jitsi agent · OBS · ATEM · vMix</span></div>
+      <div class="legend-row rise" style="--d:3"><span><i></i>media (WebRTC)</span><span class="ai"><i></i>AI path</span><span class="ctl"><i></i>control</span></div>
     </div>
-    <aside class="notes"><ul><li>~1:00. "This is v3." Trace one word: your mouth → WHIP → MediaMTX → WHEP → their ear.</li><li>Blue branch: the same audio feeds the AI over RTSP.</li><li>Land it: "Low latency is an architecture decision, not a frontend feature."</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~2:00. Orange first: interpreter's browser publishes WHIP to MediaMTX; listeners pull WHEP. Interpreter audio never passes through Python.</li>
+      <li>Grey: FastAPI holds booth state over WebSockets, and MediaMTX asks it before accepting a publish.</li>
+      <li>Blue: AI workers in the FastAPI process read a copy of a channel (usually the floor) over RTSP, and push captions and synthetic speech over WebSockets. So AI audio does go through Python, the human path doesn't.</li>
+      <li>Transition: "It didn't start like this."</li>
+    </ul></aside>
   </section>
 
-  <!-- 10 -->
-  <section data-act="Under the hood" class="slide" data-name="The hard parts">
+  <!-- challenge 1 -->
+  <section data-act="Under the hood" class="slide" data-name="Challenge · media path">
     <div class="wrap">
-      <span class="eyebrow rise">Under the hood · 3 / 5 · Going live safely</span>
-      <h2 class="h-m rise" style="--d:1">Fast isn't enough. <span class="tally">Live has to be safe.</span></h2>
-      <div class="problems">
-        <div class="problem rise" style="--d:2"><span class="big">1</span><h3>One voice per channel</h3><p>Two interpreters live at once means listeners hear both. MediaMTX replaces the old publisher, and the booth registry decides who's active.</p></div>
-        <div class="problem rise" style="--d:3"><span class="big">30 s</span><h3>Tickets, not open mics</h3><p>Going live redeems a single-use ticket. It expires in 30 seconds and only opens that booth's path, for the active interpreter.</p></div>
-        <div class="problem rise" style="--d:4"><span class="big">0</span><h3>Roles from the client</h3><p>The browser never says who it is. Roles come from the server session, so a modified client can't promote itself.</p></div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~0:30. Bridge: "Once audio is fast, the risk moves to who's allowed on air." Pick two if you're running long. Handoff is the one people remember.</li></ul></aside>
-  </section>
-
-  <!-- 11 -->
-  <section data-act="Under the hood" class="slide" data-name="AI engines">
-    <div class="wrap">
-      <span class="eyebrow rise">Under the hood · 4 / 5 · The AI branch</span>
-      <h2 class="h-m rise" style="--d:1">The blue branch. <span class="sig">Swap any engine, or run it all offline.</span></h2>
-      <div class="engines">
-        <div class="stage rise" style="--d:2">
-          <header><h3>Hear</h3><span>SPEECH → TEXT</span></header>
-          <div class="eng"><i class="dot"></i><b>Faster-Whisper <span class="offline">offline</span></b><small>runs on CPU</small></div>
-          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>gpt-4o-transcribe · whisper-1 · realtime</small></div>
-          <div class="eng"><i class="dot"></i><b>Deepgram</b><small>nova-2</small></div>
-          <div class="eng">@@svg:nvidia@@<b>NVIDIA Parakeet</b><small>CTC · RNNT</small></div>
-          <div class="eng">@@svg:elevenlabs@@<b>ElevenLabs</b><small>scribe v2 realtime</small></div>
+      <span class="eyebrow rise">Engineering challenge 1 of 2</span>
+      <h2 class="h-m rise" style="--d:1">Getting Python <span class="tally">out of the media path.</span></h2>
+      <div class="challenge">
+        <div class="pdwte rise" style="--d:2">
+          <div><span class="k">Problem</span><p>v1 relayed interpreter audio through Python (aiortc), and listeners played HLS, which buffers whole segments before playing.</p></div>
+          <div><span class="k">Decision</span><p>Publish WHIP straight to MediaMTX, play back over WHEP, and keep FastAPI for coordination only.</p></div>
+          <div><span class="k">Why</span><p>WebRTC plays packets as they arrive; Python stops being a bottleneck for every listener.</p></div>
+          <div><span class="k">Trade-off</span><p>WebRTC needs a reachable UDP port for ICE, and each listener holds a connection to MediaMTX. HLS caches through a CDN more easily.</p></div>
+          <div><span class="k">Evidence</span><p>The migration PRs below, and the old HLS config: 1 s segments with a 3-segment buffer. <span>Delay hasn't been benchmarked yet.</span></p></div>
         </div>
-        <div class="stage rise" style="--d:3">
-          <header><h3>Translate</h3><span>TEXT → TEXT</span></header>
-          <div class="eng">@@svg:huggingface@@<b>NLLB <span class="offline">offline</span></b><small>200 languages · CTranslate2</small></div>
-          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>GPT-4o · GPT-4o mini</small></div>
-          <div class="eng">@@svg:anthropic@@<b>Anthropic</b><small>Claude Sonnet · Haiku</small></div>
-          <div class="eng">@@svg:googlegemini@@<b>Google Gemini</b><small>2.5 Flash · 2.5 Pro</small></div>
-          <div class="eng"><i class="dot"></i><b>Groq</b><small>Llama 3.3 70B</small></div>
-        </div>
-        <div class="stage rise" style="--d:4">
-          <header><h3>Speak</h3><span>TEXT → VOICE</span></header>
-          <div class="eng">@@svg:onnx@@<b>Supertonic <span class="offline">offline</span></b><small>ONNX, on your machine</small></div>
-          <div class="eng"><i class="dot"></i><b>Deepgram Aura-2</b><small>voices in en · de · it · nl · ja</small></div>
-          <div class="extras" style="margin-top:1em">
-            <span class="chip">room persona + style</span>
-            <span class="chip">glossary: only matching terms reach the prompt</span>
-            <span class="chip">captions and voice share one translation</span>
+        <div style="display:flex;flex-direction:column;gap:1em">
+          <ol class="steps rise" style="--d:3">
+            <li><span class="when">MAY 14 · v1 · #20 #23</span><b>Flask + Socket.IO + aiortc</b><span>Python in the audio path</span></li>
+            <li><span class="when">MAY 24 · v2 · #56 #78</span><b>WHIP into MediaMTX</b><span>listeners still on HLS</span></li>
+            <li class="now"><span class="when">MAY 28 – JUN 5 · v3 · #81 #93 #117</span><b>FastAPI + WHEP playback</b><span>aiortc, Flask and the HLS fallback removed</span></li>
+          </ol>
+          <div class="delays rise" style="--d:4">
+            <span><b>Startup delay</b> — time until the first audio plays</span>
+            <span><b>Media delay</b> — interpreter's mic to listener's ear</span>
+            <span><b>Interpretation delay</b> — adds the interpreter's or AI's own lag</span>
           </div>
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:40. Bridge: "Remember the blue branch on the diagram? Here's what's inside it." Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~1:00. Problem → decision → why → trade-off. All five PRs are mine.</li>
+      <li>Be precise: this change cut media delay. It doesn't change interpretation delay; a human interpreter still lags the speaker.</li>
+      <li>Honest line: "I haven't benchmarked it yet. Measuring all three delays is next."</li>
+      <li>Transition: "Second problem: what we send to the AI."</li>
+    </ul></aside>
   </section>
 
-  <!-- 09 -->
-  <section data-act="Under the hood" class="slide" data-name="Built with">
+  <!-- challenge 2 -->
+  <section data-act="Under the hood" class="slide" data-name="Challenge · glossary">
     <div class="wrap">
-      <span class="eyebrow rise">Under the hood · 5 / 5 · The parts</span>
-      <h2 class="h-m rise" style="--d:1">Boring, proven, <span class="tally">open</span> parts.</h2>
-      <div class="stack">
-        <div class="rise" style="--d:2"><h3>Media</h3><div class="logos">
-          <div class="lg"><img src="@@img:mediamtx.png@@" alt="MediaMTX"><span>WHIP · WHEP · RTSP</span></div>
-          <div class="lg">@@svg:webrtc@@<span>WebRTC</span></div>
-          <div class="lg">@@svg:jitsi@@<span>Jitsi Meet</span></div>
-          <div class="lg">@@svg:ffmpeg@@<span>FFmpeg</span></div>
-        </div></div>
-        <div class="rise" style="--d:3"><h3>Backend</h3><div class="logos">
-          <div class="lg">@@svg:fastapi@@<span>FastAPI</span></div>
-          <div class="lg">@@svg:python@@<span>Python 3.13</span></div>
-          <div class="lg">@@svg:uv@@<span>uv</span></div>
-          <div class="lg">@@svg:postgresql@@<span>PostgreSQL</span></div>
-          <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
-          <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
-        </div></div>
-      </div>
-      <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
-    </div>
-    <aside class="notes"><ul><li>~0:20. Recap, closes the tech section. Fast slide. "Every piece here is open source or swappable."</li></ul></aside>
-  </section>
-
-  <!-- 12 -->
-  <section data-act="Beyond the booth" class="slide" data-name="VoxBento Local">
-    <div class="wrap">
-      <div class="local">
-        <div style="display:flex;flex-direction:column;gap:2.6vh">
-          <span class="eyebrow rise">Beyond the booth · VoxBento Local</span>
-          <h2 class="h-l rise" style="--d:1">Your meeting <span class="sig">never leaves</span> your laptop.</h2>
-          <ul class="local-points rise" style="--d:2">
-            <li>@@svg:apple@@<div><b>On-device AI</b><span>Whisper for transcripts, Qwen for minutes and action items</span></div></li>
-            <li>@@svg:nvidia@@<div><b>Uses your GPU</b><span>Metal on Apple Silicon, CUDA on Windows and Linux</span></div></li>
-            <li>@@svg:linux@@<div><b>Every desktop</b><span>macOS, Windows and Linux builds</span></div></li>
-          </ul>
+      <span class="eyebrow rise">Engineering challenge 2 of 2</span>
+      <h2 class="h-m rise" style="--d:1">Big glossaries, <span class="tally">small prompts.</span></h2>
+      <div class="challenge">
+        <div class="pdwte rise" style="--d:2">
+          <div><span class="k">Problem</span><p>Organisers upload thousands of terms ("FOSSASIA", "pull request"). Sending all of them with every caption segment makes LLM calls slower and costlier.</p></div>
+          <div><span class="k">Decision</span><p>Per segment and language: keep terms that appear in the text, prefer booth over room over event entries, always keep priority ≥ 90, cap at 80.</p></div>
+          <div><span class="k">Why</span><p>A bounded prompt keeps provider latency and token cost predictable, however large the glossary.</p></div>
+          <div><span class="k">Trade-off</span><p>Exact and phrase matching can miss inflected forms. The local NLLB model ignores glossaries and persona entirely.</p></div>
+          <div><span class="k">Evidence</span><p>A test with 10,000 matching terms stays at 80 entries and keeps the event loop responsive. <span>tests/test_ai_interpretation.py · PR #888</span></p></div>
         </div>
-        <div class="term rise" style="--d:3">
-          <div class="bar"><i></i><i></i><i></i><span>Terminal — zsh</span></div>
-          <pre id="term" aria-label="Install VoxBento Local with Homebrew"></pre>
+        <div class="funnel rise" style="--d:3" aria-label="Glossary narrowing from up to 5,000 uploaded rows to at most 80 terms in the prompt">
+          <div><b>5,000</b><span>max rows per upload</span></div>
+          <div><b>this language</b><span>+ entries marked "all"</span></div>
+          <div><b>in this segment</b><span>+ priority ≥ 90</span></div>
+          <div><b>≤ 80</b><span>terms in the prompt</span></div>
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:40. Bridge: "The same AI pipeline, without a network." Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~1:00. This is why "FOSSASIA" stayed "FOSSASIA" in the demo (with a cloud LLM provider).</li>
+      <li>Trade-off out loud: NLLB has no prompt, so local translation can't use the glossary.</li>
+      <li>Transition: "That's one stage of the AI pipeline. Here's all of it."</li>
+    </ul></aside>
   </section>
 
-  <!-- integrations -->
-  <section data-act="Beyond the booth" class="slide" data-name="Integrations">
+  <!-- AI -->
+  <section data-act="Under the hood" class="slide" data-name="AI and local inference">
     <div class="wrap">
-      <div class="integ">
-        <div style="display:flex;flex-direction:column;gap:2.8vh">
-          <span class="eyebrow rise">Beyond the booth · Integrations</span>
-          <h2 class="h-l rise" style="--d:1">Plugs into <span class="tally">any</span> event platform.</h2>
-          <p class="lede rise" style="--d:2">Eventyay already does. The whole booth lifecycle is an API, so your ticketing, app or website can run interpretation without anyone opening our admin.</p>
-          <div class="plugs rise" style="--d:3">
-            <span class="plug real"><img src="@@img:eventyay.svg@@" alt="">Eventyay</span>
-            <span class="plug">your ticketing</span>
-            <span class="plug">your event app</span>
-            <span class="plug">your website</span>
+      <span class="eyebrow rise">AI-assisted interpretation</span>
+      <h2 class="h-m rise" style="--d:1">One pipeline, <span class="sig">your choice of engine at each stage.</span></h2>
+      <div class="ai-chain rise" style="--d:2">
+        <div><span class="k">1 · Listen</span><h3>Audio copy</h3><p>ffmpeg reads a channel over RTSP</p><span class="loc">always on your server</span></div>
+        <div><span class="k">2 · Transcribe</span><h3>Speech to text</h3><p>Deepgram, OpenAI, ElevenLabs, NVIDIA</p><span class="loc">or faster-whisper on CPU</span></div>
+        <div><span class="k">3 · Translate</span><h3>LLM or NLLB</h3><p>OpenAI, Anthropic, Gemini, Groq</p><span class="loc">or NLLB via CTranslate2</span></div>
+        <div><span class="k">4 · Speak (optional)</span><h3>Text to speech</h3><p>Deepgram Aura</p><span class="loc">or Supertonic via ONNX</span></div>
+      </div>
+      <div class="ai-cols">
+        <div class="rise" style="--d:3"><h3>Why configurable</h3><ul>
+          <li><b>Cost:</b> pick per room, not per platform</li>
+          <li><b>Privacy:</b> keep transcripts on your own server</li>
+          <li><b>Languages:</b> no single provider covers every language well</li>
+        </ul></div>
+        <div class="rise" style="--d:4"><h3>What "local" means here</h3><ul>
+          <li>Each stage <b>can</b> run on your own server</li>
+          <li>Model weights download on first use</li>
+          <li>Listeners still need a network connection</li>
+          <li>Local NLLB ignores persona and glossary</li>
+        </ul></div>
+      </div>
+    </div>
+    <aside class="notes"><ul>
+      <li>~1:00. Walk the four stages once. Don't read the provider names; the full list is in the appendix.</li>
+      <li>Precise wording: a local model is not an offline event. Listeners and WebRTC still need the network.</li>
+      <li>Transition: "So what part of this did I build?"</li>
+    </ul></aside>
+  </section>
+
+  <!-- contributions -->
+  <section data-act="Wrap-up" class="slide" data-name="My contributions">
+    <div class="wrap">
+      <span class="eyebrow rise">My contributions</span>
+      <div class="contrib">
+        <div style="display:flex;flex-direction:column;gap:2vh">
+          <div class="photos rise" style="--d:1">
+            <figure class="photo" style="margin:0"><img src="@@img:bkk.jpg@@" alt="Arnav speaking at FOSSASIA Summit in Bangkok"><figcaption>BANGKOK</figcaption></figure>
+            <figure class="photo" style="margin:0"><img src="@@img:unesco.jpg@@" alt="Arnav at UNESCO in Paris"><figcaption>PARIS</figcaption></figure>
+            <figure class="photo" style="margin:0"><img src="@@img:de.jpg@@" alt="Arnav with Mario and Saksham in Germany"><figcaption>GERMANY</figcaption></figure>
           </div>
-          <ul class="apis rise" style="--d:4">
-            <li><b>OAuth 2.0 apps</b><span>scoped tokens, e.g. events:write</span></li>
-            <li><b>REST API v1</b><span>events, rooms, booths, transcription</span></li>
-            <li><b>Signed webhooks</b><span>HMAC-SHA256 on every delivery</span></li>
-            <li><b>Embeddable player</b><span>drop it into any event page</span></li>
-          </ul>
-        </div>
-        <div class="term rise" style="--d:3">
-          <div class="bar"><i></i><i></i><i></i><span>your platform → VoxBento</span></div>
-          <pre><span class="c"># create the event, then a booth per language</span>
-<span class="m">POST</span> <span class="u">/api/v1/events/</span>
-<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/booths/de</span>
-
-<span class="c"># AI captions for the floor</span>
-<span class="m">POST</span> <span class="u">…/booths/de/transcription/start</span>
-
-<span class="c"># a listener link for every ticket holder</span>
-<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/listener-token</span>
-
-<span class="c"># we call you back when a session goes live</span>
-<span class="ok">←</span> <span class="u">session.status_changed</span>  <span class="c">X-VoxBento-Signature</span>
-
-<span class="c"># after the talk</span>
-<span class="m">GET</span>  <span class="u">…/booths/de/transcripts/export</span></pre>
-        </div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~0:40. "Eventyay creates booths and hands out listener links through this API. Any platform can do the same."</li></ul></aside>
-  </section>
-
-  <!-- open source -->
-  <section data-act="Beyond the booth" class="slide" data-name="Open source">
-    <div class="wrap">
-      <div class="oss">
-        <div class="browser rise">
-          <div class="bar"><i></i><i></i><i></i><span>github.com/fossasia/voxbento</span></div>
-          <img src="@@img:github.jpg@@" alt="The fossasia/voxbento repository on GitHub: 1.5k stars, 113 forks, 66 contributors, 657 commits">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:3vh">
-          <span class="eyebrow rise" style="--d:1">Beyond the booth · Built in the open</span>
-          <h2 class="h-m rise" style="--d:2">A GSoC project became <span class="tally">a community.</span></h2>
-          <div class="oss-stats rise" style="--d:3">
-            <div><b>1.5k+</b><span>stars</span></div>
-            <div><b>66</b><span>contributors</span></div>
-            <div><b>113</b><span>forks</span></div>
-            <div><b>657</b><span>commits</span></div>
+          <p class="me-line rise" style="--d:2">Arnav Angarkar · 3rd year, IIIT Dharwad<br>GSoC 2026 with FOSSASIA</p>
+          <div class="nums rise" style="--d:3">
+            <div><b id="prs">265</b><span>merged PRs in VoxBento, of 501</span></div>
+            <div><b>249</b><span>others' PRs reviewed</span></div>
+            <div><b>621</b><span>merged PRs across FOSSASIA</span></div>
+            <div><b>66</b><span>contributors in total</span></div>
           </div>
-          <p class="lede rise" style="--d:4">Apache 2.0. Anyone can run it at their event, fork it, or send the next PR. That's the whole point.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2vh">
+          <h2 class="h-m rise" style="--d:1">What I built, <span class="tally">as one of 66.</span></h2>
+          <div class="cgrid rise" style="--d:2">
+            <div><h3>Features I implemented</h3><ul>
+              <li>WHIP ingest and WHEP playback <span>#56 #93</span></li>
+              <li>FastAPI migration off Flask and aiortc <span>#79–#81</span></li>
+              <li>Speech-to-text and TTS providers <span>#128 #140 #205 #211</span></li>
+              <li>OAuth developer API <span>#376–#391</span> · glossary prompts <span>#888</span></li>
+            </ul></div>
+            <div><h3>Workflows I improved</h3><ul>
+              <li>Listener page redesign <span>#278</span></li>
+              <li>Interpreter booth layout <span>#111 #295</span></li>
+              <li>Roles defined in one place <span>#923</span></li>
+              <li>Secure program stream ingest <span>#725</span></li>
+            </ul></div>
+            <div><h3>Bugs and performance</h3><ul>
+              <li>One Whisper model in memory, no OOM <span>#132</span></li>
+              <li>N+1 booth queries removed <span>#187</span></li>
+              <li>Shared HTTP client <span>#302</span> · TTS config cache <span>#226</span></li>
+            </ul></div>
+            <div><h3>Testing, reviews, collaboration</h3><ul>
+              <li>Characterisation and edge-case tests <span>#186 #594</span></li>
+              <li>Docker build + smoke tests in CI <span>#95</span></li>
+              <li>249 reviews and 165 issues filed in VoxBento</li>
+            </ul></div>
+          </div>
         </div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:45. Open source is why a student project can serve real events: 66 people have shipped code into it.</li><li>Invite: "Good first issues are labelled."</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~1:00. Say clearly: this is a team project, 66 contributors. These are the parts I built.</li>
+      <li>Credit: single-use publish tickets (#796) and the RTMPS relay (#804) were Sanket Kokate's work.</li>
+      <li>Numbers are from GitHub search on 21 Oct 2026; re-check on the day.</li>
+      <li>Transition: "Here's what's next, and where you come in."</li>
+    </ul></aside>
   </section>
 
-  <!-- 13 -->
-  <section data-act="Wrap-up" class="slide" data-name="Lessons">
+  <!-- what next -->
+  <section data-act="Wrap-up" class="slide" data-name="What next">
     <div class="wrap">
-      <span class="eyebrow rise">What I learned</span>
-      <div class="lessons">
-        <div class="lesson rise" style="--d:1"><h3>Latency is an architecture decision.</h3><p>No amount of frontend tuning fixes audio that takes the long way round.</p></div>
-        <div class="lesson rise" style="--d:2"><h3>Keep Python out of the audio path.</h3><p>Python coordinates. A media server moves the audio.</p></div>
-        <div class="lesson rise" style="--d:3"><h3>Small PRs, reviewed in the open.</h3><p>600+ of them across FOSSASIA. Each one taught me something about the code or the people.</p></div>
+      <span class="eyebrow rise">What next</span>
+      <h2 class="h-m rise" style="--d:1">Three priorities. <span class="tally">One invitation.</span></h2>
+      <ul class="plan rise" style="--d:2">
+        <li><span class="tag">PLANNED</span><div><b>Organiser-friendly program audio</b><span>First-party, guided setup for venue and broadcast feeds. Issues #746, #751.</span></div></li>
+        <li><span class="tag">PLANNED</span><div><b>Hardened security and reliability</b><span>Close the open [SECURITY] and listener-reconnect issues, e.g. #809, #925, #692.</span></div></li>
+        <li><span class="tag">PLANNED</span><div><b>Better local AI</b><span>Shared model cache and a robust NLLB lifecycle. Issue #299.</span></div></li>
+      </ul>
+      <div class="invite rise" style="--d:3">
+        <div><b>Try it</b><span>voxbento.com</span></div>
+        <div><b>Contribute</b><span>github.com/fossasia/voxbento · good first issues labelled</span></div>
+        <div><b>Run it at your event</b><span>self-host with Docker Compose, or talk to me after</span></div>
       </div>
     </div>
-    <aside class="notes"><ul><li>~0:30. Thank your mentors by name here.</li></ul></aside>
-  </section>
-
-  <!-- 14 -->
-  <section data-act="Wrap-up" class="slide" data-name="What next?">
-    <div class="wrap">
-      <div class="next">
-        <div class="qmark rise" aria-hidden="true">?</div>
-        <div style="display:flex;flex-direction:column;gap:2.4vh;min-width:0">
-          <span class="eyebrow rise" style="--d:1">What next?</span>
-          <h2 class="h-l rise" style="--d:2">The booth is open.</h2>
-          <ul class="rise" style="--d:3">
-            <li><b>Local → live</b><span>Publish channels from VoxBento Local straight to a VoxBento event.</span></li>
-            <li><b>More languages, more voices</b><span>Better offline models for languages the cloud ignores.</span></li>
-            <li><b>Your event</b><span>Run it at your conference, then tell us what broke.</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <aside class="notes"><ul><li>~0:15. Adjust these to your real roadmap.</li><li>End on an ask: "Run it at your event."</li></ul></aside>
+    <aside class="notes"><ul>
+      <li>~0:30. Three priorities, all open issues today. Say "planned", not "coming".</li>
+      <li>The ask: try it, pick a good first issue, or run it at your event.</li>
+    </ul></aside>
   </section>
 
   <!-- 15 -->
@@ -874,8 +921,260 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
         </a>
       </div>
     </div>
-    <aside class="notes"><ul><li>Leave this up for Q&amp;A.</li></ul></aside>
+    <aside class="notes"><ul><li>~0:15. Thank FOSSASIA and your mentors. Leave this up for Q&amp;A.</li></ul></aside>
   </section>
+  <!-- appendix -->
+  <section data-act="Appendix" class="slide app-divider" data-name="Appendix">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup slides</span>
+      <h2 class="h-xl rise" style="--d:1">Appendix</h2>
+      <ul class="app-list rise" style="--d:2">
+        <li>Full feature list</li><li>Engines and models</li><li>Technology stack</li><li>Going live safely</li>
+        <li>Integrations and API</li><li>VoxBento Local</li><li>Open source on GitHub</li><li>The legacy booth, illustrated</li><li>Lessons</li>
+      </ul>
+    </div>
+    <aside class="notes"><ul><li>Only for Q&amp;A. Jump here with End, then step back.</li></ul></aside>
+  </section>
+
+  <!-- 06 -->
+  <section data-act="Appendix" class="slide" data-name="Everything in the box">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup · full feature list</span>
+      <h2 class="h-m rise" style="--d:1">The whole platform, on one slide.</h2>
+      <div class="fmap">
+        <div class="fcol demo rise" style="--d:2"><h3>Booth</h3><ul>
+          <li><b>Go live from a browser</b>WHIP, no plugins</li>
+          <li><b>Mic test + level meter</b></li>
+          <li><b>Active / backup handoff</b></li>
+          <li><b>Booth chat</b></li>
+          <li><b>Floor monitor</b>self-hosted Jitsi</li>
+        </ul></div>
+        <div class="fcol demo rise" style="--d:3"><h3>Listeners</h3><ul>
+          <li><b>QR link, pick a language</b></li>
+          <li><b>WebRTC playback</b>WHEP, auto-reconnect</li>
+          <li><b>Live + translated captions</b></li>
+          <li><b>Embeddable player</b>for event sites</li>
+          <li><b>Join codes</b></li>
+        </ul></div>
+        <div class="fcol demo rise" style="--d:4"><h3>AI interpretation</h3><ul>
+          <li><b>Floor transcription</b>5 speech engines</li>
+          <li><b>LLM translation</b>persona + style</li>
+          <li><b>Glossary CSV</b>keeps "FOSSASIA" as FOSSASIA</li>
+          <li><b>AI voice</b>cloud or local model</li>
+          <li><b>Transcript export</b></li>
+        </ul></div>
+        <div class="fcol rise" style="--d:5"><h3>Organisers</h3><ul>
+          <li><b>Mission Control</b>all rooms, all booths</li>
+          <li><b>Setup wizard</b>event → rooms → booths</li>
+          <li><b>Invite links by role</b></li>
+          <li><b>OBS / ATEM / vMix ingest</b></li>
+          <li><b>YouTube relay</b>RTMPS</li>
+        </ul></div>
+        <div class="fcol rise" style="--d:6"><h3>Platform</h3><ul>
+          <li><b>REST API + OAuth</b>Eventyay integration</li>
+          <li><b>Webhooks</b></li>
+          <li><b>Developer apps</b></li>
+          <li><b>VoxBento Local</b>offline desktop app</li>
+          <li><b>Self-hostable</b>Docker Compose</li>
+        </ul></div>
+      </div>
+      <div class="legend rise" style="--d:7"><span><i style="background:var(--tally)"></i>shown in the demo</span><span><i style="background:var(--line)"></i>not demoed today</span></div>
+    </div>
+    <aside class="notes"><ul><li>Backup. Don't read it: "This is everything. The orange columns, you'll see live."</li></ul></aside>
+  </section>
+
+  <!-- 11 -->
+  <section data-act="Appendix" class="slide" data-name="AI engines">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup · engines and models</span>
+      <h2 class="h-m rise" style="--d:1">Supported engines. <span class="sig">"Local" runs on your server.</span></h2>
+      <div class="engines">
+        <div class="stage rise" style="--d:2">
+          <header><h3>Hear</h3><span>SPEECH → TEXT</span></header>
+          <div class="eng"><i class="dot"></i><b>Faster-Whisper <span class="offline">local</span></b><small>runs on CPU</small></div>
+          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>gpt-4o-transcribe · whisper-1 · realtime</small></div>
+          <div class="eng"><i class="dot"></i><b>Deepgram</b><small>nova-2</small></div>
+          <div class="eng">@@svg:nvidia@@<b>NVIDIA Parakeet</b><small>CTC · RNNT</small></div>
+          <div class="eng">@@svg:elevenlabs@@<b>ElevenLabs</b><small>scribe v2 realtime</small></div>
+        </div>
+        <div class="stage rise" style="--d:3">
+          <header><h3>Translate</h3><span>TEXT → TEXT</span></header>
+          <div class="eng">@@svg:huggingface@@<b>NLLB <span class="offline">local</span></b><small>CTranslate2 · no prompt, so no glossary</small></div>
+          <div class="eng">@@svg:openai@@<b>OpenAI</b><small>GPT-4o · GPT-4o mini</small></div>
+          <div class="eng">@@svg:anthropic@@<b>Anthropic</b><small>Claude Sonnet · Haiku</small></div>
+          <div class="eng">@@svg:googlegemini@@<b>Google Gemini</b><small>2.5 Flash · 2.5 Pro</small></div>
+          <div class="eng"><i class="dot"></i><b>Groq</b><small>Llama 3.3 70B · OpenAI-compatible</small></div>
+        </div>
+        <div class="stage rise" style="--d:4">
+          <header><h3>Speak</h3><span>TEXT → VOICE</span></header>
+          <div class="eng">@@svg:onnx@@<b>Supertonic <span class="offline">local</span></b><small>ONNX, on your machine</small></div>
+          <div class="eng"><i class="dot"></i><b>Deepgram Aura-2</b><small>voices in en · de · it · nl · ja</small></div>
+          <div class="extras" style="margin-top:1em">
+            <span class="chip">room persona + style</span>
+            <span class="chip">glossary: only matching terms reach the prompt</span>
+            <span class="chip">captions and voice share one translation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup for provider questions. Don't read every model. "Pick per room, swap any stage, or run all three stages with zero cloud."</li></ul></aside>
+  </section>
+
+  <!-- 09 -->
+  <section data-act="Appendix" class="slide" data-name="Built with">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup · technology stack</span>
+      <h2 class="h-m rise" style="--d:1">Boring, proven, <span class="tally">open</span> parts.</h2>
+      <div class="stack">
+        <div class="rise" style="--d:2"><h3>Media</h3><div class="logos">
+          <div class="lg"><img src="@@img:mediamtx.png@@" alt="MediaMTX"><span>WHIP · WHEP · RTSP</span></div>
+          <div class="lg">@@svg:webrtc@@<span>WebRTC</span></div>
+          <div class="lg">@@svg:jitsi@@<span>Jitsi Meet</span></div>
+          <div class="lg">@@svg:ffmpeg@@<span>FFmpeg</span></div>
+        </div></div>
+        <div class="rise" style="--d:3"><h3>Backend</h3><div class="logos">
+          <div class="lg">@@svg:fastapi@@<span>FastAPI</span></div>
+          <div class="lg">@@svg:python@@<span>Python 3.13</span></div>
+          <div class="lg">@@svg:uv@@<span>uv</span></div>
+          <div class="lg">@@svg:postgresql@@<span>PostgreSQL</span></div>
+          <div class="lg">@@svg:sqlite@@<span>SQLite</span></div>
+          <div class="lg">@@svg:docker@@<span>Docker Compose</span></div>
+        </div></div>
+      </div>
+      <p class="lede rise" style="--d:5">Plain ES modules on the front end. No framework, no build step for the UI.</p>
+    </div>
+    <aside class="notes"><ul><li>Backup. "Every piece here is open source or swappable."</li></ul></aside>
+  </section>
+
+  <!-- 10 -->
+  <section data-act="Appendix" class="slide" data-name="The hard parts">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup · going live safely</span>
+      <h2 class="h-m rise" style="--d:1">Fast isn't enough. <span class="tally">Live has to be safe.</span></h2>
+      <div class="problems">
+        <div class="problem rise" style="--d:2"><span class="big">1</span><h3>One voice per channel</h3><p>Two interpreters live at once means listeners hear both. MediaMTX replaces the old publisher, and the booth registry decides who's active.</p></div>
+        <div class="problem rise" style="--d:3"><span class="big">30 s</span><h3>Tickets, not open mics</h3><p>Going live redeems a single-use ticket. It expires in 30 seconds and only opens that booth's path, for the active interpreter. Tickets live in memory, so this assumes one portal replica. Built by Sanket Kokate (#796).</p></div>
+        <div class="problem rise" style="--d:4"><span class="big">0</span><h3>Roles from the client</h3><p>The browser never says who it is. Roles come from the server session, so a modified client can't promote itself.</p></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup. Credit #796 to Sanket Kokate. Handoff is the one people remember.</li></ul></aside>
+  </section>
+
+  <!-- integrations -->
+  <section data-act="Appendix" class="slide" data-name="Integrations">
+    <div class="wrap">
+      <div class="integ">
+        <div style="display:flex;flex-direction:column;gap:2.8vh">
+          <span class="eyebrow rise">Backup · integrations and API</span>
+          <h2 class="h-l rise" style="--d:1">Built to plug into <span class="tally">event platforms.</span></h2>
+          <p class="lede rise" style="--d:2">Eventyay integrates through invite tokens and subtitle WebSocket URLs (#333). OAuth apps can create events, booths and listener links through the API.</p>
+          <div class="plugs rise" style="--d:3">
+            <span class="plug real"><img src="@@img:eventyay.svg@@" alt="">Eventyay</span>
+            <span class="plug">your ticketing</span>
+            <span class="plug">your event app</span>
+            <span class="plug">your website</span>
+          </div>
+          <ul class="apis rise" style="--d:4">
+            <li><b>OAuth 2.0 apps</b><span>scoped tokens, e.g. events:write</span></li>
+            <li><b>REST API v1</b><span>events, rooms, booths, listener links</span></li>
+            <li><b>Signed webhooks</b><span>HMAC-SHA256 on every delivery</span></li>
+            <li><b>Embeddable player</b><span>drop it into any event page</span></li>
+          </ul>
+        </div>
+        <div class="term rise" style="--d:3">
+          <div class="bar"><i></i><i></i><i></i><span>your platform → VoxBento</span></div>
+          <pre><span class="c"># create the event, then a booth per language</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/booths/de</span>
+
+<span class="c"># a listener link for every ticket holder</span>
+<span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/listener-token</span>
+
+<span class="c"># we call you back when a booth goes live</span>
+<span class="ok">←</span> <span class="u">session.status_changed</span>  <span class="c">X-VoxBento-Signature</span>
+
+<span class="c"># known gaps: transcription routes (#507),</span>
+<span class="c"># GET /events/{slug} (#619)</span></pre>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup. Mention the known gaps if asked about API completeness.</li></ul></aside>
+  </section>
+
+  <!-- 12 -->
+  <section data-act="Appendix" class="slide" data-name="VoxBento Local">
+    <div class="wrap">
+      <div class="local">
+        <div style="display:flex;flex-direction:column;gap:2.6vh">
+          <span class="eyebrow rise">Backup · VoxBento Local, a separate desktop app</span>
+          <h2 class="h-l rise" style="--d:1">Your meeting <span class="sig">never leaves</span> your laptop.</h2>
+          <ul class="local-points rise" style="--d:2">
+            <li>@@svg:apple@@<div><b>On-device AI</b><span>Whisper for transcripts, Qwen for minutes and action items</span></div></li>
+            <li>@@svg:nvidia@@<div><b>Uses your GPU</b><span>Metal on Apple Silicon, CUDA on Windows and Linux, per the download page</span></div></li>
+            <li>@@svg:linux@@<div><b>Every desktop</b><span>macOS via Homebrew; Windows and Linux installers on GitHub (v0.1.14)</span></div></li>
+          </ul>
+        </div>
+        <div class="term rise" style="--d:3">
+          <div class="bar"><i></i><i></i><i></i><span>Terminal — zsh</span></div>
+          <pre id="term" aria-label="Install VoxBento Local with Homebrew"></pre>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup. A separate app from the web platform, for private meeting notes. Install it live if there's time, or let the terminal type itself.</li><li>Downloads for every platform: voxbento.com/local</li></ul></aside>
+  </section>
+
+  <!-- open source -->
+  <section data-act="Appendix" class="slide" data-name="Open source">
+    <div class="wrap">
+      <div class="oss">
+        <div class="browser rise">
+          <div class="bar"><i></i><i></i><i></i><span>github.com/fossasia/voxbento</span></div>
+          <img src="@@img:github.jpg@@" alt="The fossasia/voxbento repository on GitHub: 1.5k stars, 113 forks, 66 contributors, 657 commits">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3vh">
+          <span class="eyebrow rise" style="--d:1">Backup · built in the open</span>
+          <h2 class="h-m rise" style="--d:2">A GSoC project became <span class="tally">a community.</span></h2>
+          <div class="oss-stats rise" style="--d:3">
+            <div><b>1.5k+</b><span>stars</span></div>
+            <div><b>66</b><span>contributors</span></div>
+            <div><b>113</b><span>forks</span></div>
+            <div><b>657</b><span>commits</span></div>
+          </div>
+          <p class="lede rise" style="--d:4">Apache 2.0. Anyone can run it at their event, fork it, or send the next PR. That's the whole point.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup. Open source is why a student project can serve real events: 66 people have shipped code into it.</li><li>Invite: "Good first issues are labelled."</li></ul></aside>
+  </section>
+
+  <!-- legacy illustration -->
+  <section data-act="Appendix" class="slide" data-name="Legacy booth, illustrated">
+    <div class="wrap">
+      <div class="problem-grid">
+        <div style="display:flex;flex-direction:column;gap:3vh">
+          <span class="eyebrow rise">Backup · illustration</span>
+          <h2 class="h-m rise" style="--d:1">A traditional on-site setup, drawn for an earlier talk.</h2>
+          <p class="caveat rise" style="--d:2">An illustration, not a survey. Many events use some of this, not all of it.</p>
+        </div>
+        <figure class="legacy rise" style="--d:2"><img src="@@img:legacy.jpg@@" alt="Illustration of a legacy hardware interpretation booth: a large soundproof booth, rented headsets and receivers, cable setup, and audio only."></figure>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Only if someone asks what the hardware approach looks like.</li></ul></aside>
+  </section>
+
+  <!-- 13 -->
+  <section data-act="Appendix" class="slide" data-name="Lessons">
+    <div class="wrap">
+      <span class="eyebrow rise">Backup · what I learned</span>
+      <div class="lessons">
+        <div class="lesson rise" style="--d:1"><h3>Latency is an architecture decision.</h3><p>No amount of frontend tuning fixes audio that takes the long way round.</p></div>
+        <div class="lesson rise" style="--d:2"><h3>Keep Python out of the interpreter's audio path.</h3><p>Python coordinates. A media server moves the human audio; AI workers read a copy.</p></div>
+        <div class="lesson rise" style="--d:3"><h3>Small PRs, reviewed in the open.</h3><p>621 merged across FOSSASIA. Each one taught me something about the code or the people.</p></div>
+      </div>
+    </div>
+    <aside class="notes"><ul><li>Backup.</li></ul></aside>
+  </section>
+
 </main>
 
 <nav class="strip" aria-label="Slide controls">
@@ -972,54 +1271,29 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
     }, 350);
   }, 2400);
 
-  // About: count up the PR number
-  enterHooks["About me"] = () => {
+  // Contributions: count up the merged PR number
+  enterHooks["My contributions"] = () => {
     const el = document.getElementById("prs");
     if (still) return;
     const t0 = performance.now();
     const tick = (t) => {
-      const p = Math.min((t - t0) / 1400, 1);
-      el.textContent = Math.round(600 * (1 - Math.pow(1 - p, 3))) + (p === 1 ? "+" : "");
+      const p = Math.min((t - t0) / 1200, 1);
+      el.textContent = Math.round(265 * (1 - Math.pow(1 - p, 3)));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
   };
 
-  // Phone: audio bars and rolling captions
-  const barBox = document.getElementById("bars");
-  for (let k = 0; k < 22; k++) { const b = document.createElement("i"); b.style.setProperty("--k", k * 7 % 11); barBox.appendChild(b); }
-  const caps = [
-    ["Welcome everyone to FOSSASIA.", "Willkommen bei FOSSASIA."],
-    ["Today we're talking about live interpretation.", "Heute sprechen wir über Live-Dolmetschen."],
-    ["Every listener picks their own language.", "Jede Person wählt ihre eigene Sprache."],
-    ["And it all runs in the browser.", "Und alles läuft im Browser."],
-  ];
-  const capSrc = document.getElementById("capSrc");
-  const capTr = document.getElementById("capTr");
-  let ci = 0, typing = null;
-  function nextCaption() {
-    ci = (ci + 1) % caps.length;
-    const [src, tr] = caps[ci];
-    capSrc.textContent = src;
-    if (still) { capTr.textContent = tr; return; }
-    clearInterval(typing);
-    let n = 0;
-    typing = setInterval(() => { capTr.textContent = tr.slice(0, ++n); if (n >= tr.length) clearInterval(typing); }, 38);
-  }
-  setInterval(nextCaption, 3200);
-
   // Local: the terminal types the Homebrew install
   const term = document.getElementById("term");
   const script = [
+    ["c", "# macOS, with Homebrew\n"],
     ["p", "$ "], ["t", "brew tap ArnavBallinCode/voxa\n"],
-    ["o", "==> Tapping arnavballincode/voxa\n"],
     ["p", "$ "], ["t", "brew install --cask voxa\n"],
-    ["o", "==> Downloading Voxa.dmg\n==> Moving App 'Voxa.app' to '/Applications/Voxa.app'\n"],
-    ["ok", "✔ voxa was successfully installed!\n"],
     ["p", "$ "], ["t", "open -a Voxa\n"],
     ["c", "\n# blocked by Gatekeeper? the app is unsigned for now:\n"],
     ["p", "$ "], ["t", "xattr -cr /Applications/Voxa.app\n"],
-    ["c", "# update later: brew upgrade --cask voxa\n# other platforms: voxbento.com/local"],
+    ["c", "\n# update later: brew upgrade --cask voxa\n# Windows and Linux: voxbento.com/local"],
   ];
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const cls = { p: "p", o: "c", ok: "ok", c: "c", t: "" };
