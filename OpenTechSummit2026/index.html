@@ -530,6 +530,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   .link + .link, .ai-chain > div + div { border-left: 0; border-top: 1px solid var(--line); }
   .flow .arrow { display: none; }
   .phone-shot, .todo-shot { height: auto; width: min(70vw, 300px); }
+  .slide::before { display: none; }
+  #wave { position: relative; inset: auto; order: 2; height: 110px; margin-top: 24px; }
 }
 @media (max-width: 460px) { .fmap, .strike { grid-template-columns: 1fr; } .pin { display: none; } }
 @media (prefers-reduced-motion: reduce) {

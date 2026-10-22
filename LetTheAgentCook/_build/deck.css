@@ -32,7 +32,7 @@
 }
 
 * { box-sizing: border-box; }
-html { font-size: min(1vw, calc(100vh / 56.25)); height: 100%; }
+html { font-size: min(1vw, calc(100vh / 56.25)); height: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0; height: 100%; overflow: hidden;
   display: grid; place-items: center;
@@ -101,7 +101,7 @@ kbd { font: 500 .9em var(--f-mono); padding: .1em .45em; border: 1px solid var(-
 .violet { color: var(--violet); }
 .ok { color: var(--ok); }
 .bad { color: var(--bad); }
-code.i { font: 500 .9em var(--f-mono); color: var(--flame); background: var(--ember-soft); padding: .05em .35em; border-radius: .3em; }
+code.i { font: 500 .9em var(--f-mono); color: var(--flame); background: var(--ember-soft); padding: .05em .35em; border-radius: .3em; white-space: nowrap; }
 
 .points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.1rem; font-size: 1.65rem; line-height: 1.4; color: var(--ink-2); }
 .points li { display: grid; grid-template-columns: 1.8rem 1fr; }
@@ -141,6 +141,7 @@ code.i { font: 500 .9em var(--f-mono); color: var(--flame); background: var(--em
 /* ── code ──────────────────────────────────────────────── */
 .codeblock { margin: 0; background: #0a0908; border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; display: flex; flex-direction: column; min-width: 0; box-shadow: 0 2rem 4rem rgba(0, 0, 0, .35); }
 .codeblock figcaption { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 1.3rem; background: var(--panel); border-bottom: 1px solid var(--line); font: 500 1.05rem var(--f-mono); color: var(--ink-2); }
+.codeblock figcaption > span:first-child { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .codeblock figcaption .lang { color: var(--dim); text-transform: uppercase; letter-spacing: .12em; font-size: .9rem; align-self: center; }
 .code { margin: 0; padding: .8rem 0 .9rem; font: 400 1.42rem/1.58 var(--f-mono); color: var(--ink-2); white-space: pre; overflow: hidden; tab-size: 2; }
 .code.sm { font-size: 1.25rem; line-height: 1.5; }
@@ -168,6 +169,7 @@ code.i { font: 500 .9em var(--f-mono); color: var(--flame); background: var(--em
 .term .codeblock figcaption { justify-content: flex-start; gap: 1.2rem; }
 
 /* ── diagrams ─────────────────────────────────────────── */
+.figure-scroll { min-width: 0; }
 svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--f-display); }
 .diagram text { fill: var(--ink-2); font-size: 22px; }
 .diagram .t-lg { font-size: 28px; font-weight: 750; fill: var(--ink); }
@@ -230,7 +232,10 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 .issue header .open { color: var(--ok); border: 1px solid rgba(127, 224, 166, .45); border-radius: 99rem; padding: .15rem .8rem; }
 .issue h3 { padding: 1.4rem 1.6rem .4rem; font-size: 2.2rem; font-weight: 750; font-stretch: 105%; line-height: 1.15; }
 .issue .meta { padding: 0 1.6rem 1.2rem; display: flex; gap: .7rem; }
-.issue .calc { display: grid; grid-template-columns: repeat(4, auto) 1fr; gap: 1rem; align-items: baseline; padding: 1.4rem 1.6rem 1.6rem; border-top: 1px solid var(--line); font: 600 2.6rem var(--f-mono); }
+.issue .calc { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 1rem; align-items: baseline; padding: 1.3rem 1.6rem 1.2rem; border-top: 1px solid var(--line); font: 600 2.4rem var(--f-mono); }
+.issue .calc > span { white-space: nowrap; }
+.issue .gloss { padding: 1.1rem 1.6rem 1.3rem; border-top: 1px solid var(--line); font-size: 1.25rem; line-height: 1.45; color: var(--mute); }
+.issue .gloss b { color: var(--ink-2); font-weight: 650; }
 .issue .calc small { font: 500 1rem var(--f-mono); color: var(--mute); display: block; letter-spacing: .1em; }
 .issue .calc .lost { color: var(--bad); }
 .layers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; counter-reset: layer; }
@@ -303,7 +308,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 .qr-card:hover { transform: translateY(-.4rem) rotate(-.6deg); }
 .qr-card .qr-svg { display: block; width: 100%; height: auto; aspect-ratio: 1; }
 .qr-card b { font-size: 1.8rem; font-weight: 800; font-stretch: 110%; }
-.qr-card small { font: 600 1.15rem var(--f-mono); word-break: break-all; }
+.qr-card small { font: 600 1.15rem var(--f-mono); line-height: 1.4; }
 .links { display: flex; flex-direction: column; gap: .8rem; font: 500 1.35rem var(--f-mono); }
 .links a { color: var(--ink-2); text-decoration: none; display: flex; gap: 1rem; align-items: baseline; }
 .links a span { color: var(--ember); font-size: .85em; min-width: 6.5rem; letter-spacing: .1em; text-transform: uppercase; }
@@ -357,11 +362,13 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 .overview footer { padding: 14px 22px; border-top: 1px solid var(--line); font: 400 13px/1.9 var(--f-mono); color: var(--mute); }
 
 /* ── small screens: a scrolling article instead of a stage ── */
-@media (max-width: 760px) {
-  html { font-size: 8.6px; }
+/* Phones, and tablets held upright, get a scrolling article; keep this query in sync with deck.js. */
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
+  html { font-size: clamp(8.6px, 1.4vw, 12px); }
   body { display: block; place-items: normal; height: auto; overflow: auto; }
   .stage { width: 100%; height: auto; overflow: visible; background: var(--char); }
-  .slide a, .byline, .links a, .qr-card small, code.i, .table code, .facts code { overflow-wrap: anywhere; }
+  .slide a, .byline, .links a, .table code, .facts code { overflow-wrap: anywhere; }
+  code.i { white-space: normal; overflow-wrap: anywhere; }
   .tree { overflow-x: auto; font-size: 1.5rem; }
   svg.diagram { min-width: 0; }
   .stage::after { display: none; }
@@ -378,14 +385,22 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   .cols[style] { grid-template-columns: 1fr !important; }
   .pipeline .stepcard { min-height: 0; }
   .pipeline .stepcard::after { display: none; }
-  .table > div { grid-template-columns: 1fr; gap: 4px; }
+  .table > div { grid-template-columns: 1fr; gap: 3px; padding: 14px 0; }
+  .table > div > :first-child { color: var(--ink); font-weight: 700; }
+  .table > div > :not(:first-child):not(.verdict) { color: var(--mute); }
+  .figure-scroll { overflow-x: auto; margin-inline: -16px; padding: 0 16px 6px; }
+  .figure-scroll svg.diagram { min-width: 760px; }
+  .figure-scroll svg.diagram[viewBox="0 0 620 420"] { min-width: 0; }
+  .figure-scroll::after { content: "← scroll the diagram sideways →"; display: block; margin-top: 8px; font: 500 1.3rem var(--f-mono); color: var(--dim); }
+  .figure-scroll:has(svg[viewBox="0 0 620 420"])::after { display: none; }
+  .issue .calc { font-size: 2.2rem; grid-template-columns: repeat(3, auto); row-gap: 1.4rem; justify-content: start; column-gap: 2.4rem; }
   .table .th { display: none; }
   .code { overflow-x: auto; font-size: 1.5rem; }
   .hero { font-size: 8rem; }
   .title { font-size: 4.2rem; }
   .big, .opener .big { font-size: 5rem; }
   .opener .count { display: none; }
-  .title-slide { min-height: 88vh; }
+  .title-slide { min-height: min(88svh, 720px); }
   .lede { font-size: 2rem; }
   .points { font-size: 1.9rem; }
   .table > div { font-size: 1.8rem; }
@@ -393,6 +408,9 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   .facts dd, .facts .v { font-size: 1.6rem; }
   .kicker, .label, .chip, .facts dt, .table .th, .codeblock figcaption, .verdict, .disclaimer, .pipeline .stepcard .n, .pipeline .stepcard .via, .byline, .links, .tree .tag, .issue header, .issue .calc small, .layers li span, .where .rank, .where code, .quote small, .qr-card small { font-size: 1.4rem; }
   .small, .pipeline .stepcard p { font-size: 1.6rem; }
+  .card[style] { min-height: 0 !important; }
+  .tree { font-size: 1.3rem; }
+  .tree .tag { font-size: 1rem; margin-left: .5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,13 +1,13 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const scrollMode = () => matchMedia("(max-width: 760px)").matches;
+  const scrollMode = () => matchMedia("(max-width: 760px), (orientation: portrait) and (max-width: 1100px)").matches;
   const slides = [...document.querySelectorAll(".slide")];
   const total = slides.length;
   const pad = (n) => String(n).padStart(2, "0");
 
   // A slide's builds: elements with data-step="n", and code blocks whose data-focus ranges
-  // light up one per step (starting at data-focus-start, default 1).
+  // light up one per step (starting at data-focus-start, default 1), then clear.
   const parseRanges = (spec) =>
     spec.split("|").map((part) => {
       const lines = new Set();
@@ -27,7 +27,8 @@
     s.querySelectorAll("pre.code[data-focus]").forEach((pre) => {
       pre._ranges = parseRanges(pre.dataset.focus);
       pre._start = +(pre.dataset.focusStart || 1);
-      steps = Math.max(steps, pre._start + pre._ranges.length - 1);
+      // one press per highlighted range, then one more to show the whole block again
+      steps = Math.max(steps, pre._start + pre._ranges.length);
     });
     s._steps = steps;
   });
@@ -291,8 +292,10 @@
 
   const m = /^#(\d+)(?:\.(\d+))?$/.exec(location.hash);
   go(m ? +m[1] - 1 : 0, m && m[2] ? +m[2] : 0);
+  // On phones every slide is on the page: a deep link scrolls to its slide.
+  if (m && scrollMode()) slides[i].scrollIntoView();
   addEventListener("hashchange", () => {
     const h = /^#(\d+)(?:\.(\d+))?$/.exec(location.hash);
-    if (h && +h[1] - 1 !== i) go(+h[1] - 1, h[2] ? +h[2] : 0);
+    if (h && (+h[1] - 1 !== i || +(h[2] || 0) !== step)) go(+h[1] - 1, h[2] ? +h[2] : 0);
   });
 })();

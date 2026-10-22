@@ -50,9 +50,10 @@
         <h3>Splits leave dust: 100 wei across three maintainers only pays out 99</h3>
         <div class="meta"><span class="chip">bug</span><span class="chip">good first issue</span></div>
         <div class="calc">
-          <span><small>3334 bps</small>33</span><span><small>3333 bps</small>+ 33</span><span><small>3333 bps</small>+ 33</span><span><small>total</small>= 99</span>
-          <span class="lost"><small>LOST</small>1 wei</span>
+          <span><small>33.34%</small>33</span><span><small>33.33%</small>+ 33</span><span><small>33.33%</small>+ 33</span><span><small>paid</small>= 99</span>
+          <span class="lost"><small>lost</small>1 wei</span>
         </div>
+        <p class="gloss"><b>tipjar</b> is the workshop's sample app: it splits donations between maintainers. <b>wei</b> is the smallest unit of ETH. Shares are in <b>basis points</b>: 100 bps = 1%.</p>
       </article>
       <ol class="layers">
         <li style="--h:1" data-step="1">A plain agent<span>it can fix it… its way</span></li>
@@ -66,7 +67,7 @@
     <p class="small rise" style="--d:2">Follow along: <a href="https://github.com/ArnavBallinCode/let-the-agent-cook">github.com/ArnavBallinCode/let-the-agent-cook</a> · sample project <code class="i">tipjar</code> · zero dependencies · synthetic data only</p>
   </div>
   <aside class="notes"><ul>
-    <li>~1:30. tipjar splits donations between maintainers. Amounts are bigint wei. The bug: integer division drops a wei.</li>
+    <li>~1:30. tipjar is the sample project: a tiny Node library that splits donations between maintainers. Amounts are in wei, the smallest unit of ETH (10<sup>18</sup> wei = 1 ETH); shares are basis points (10,000 bps = 100%). The bug: each share is rounded down, so 100 wei split 33.34/33.33/33.33% pays 99 and one wei vanishes.</li>
     <li>It's small on purpose: a good first issue with a checkable answer. <code>npm run verify:task</code> runs 8 acceptance checks; it fails now.</li>
     <li>Press through the layers: this is the whole talk. Each layer changes how the agent handles the same issue.</li>
     <li>Later we'll apply the same workflow to a Solidity contract.</li>
@@ -79,7 +80,7 @@
   <div class="kicker"><b>01</b> Anatomy</div>
   <h2 class="title">An agent is a <em>loop</em>, not a model</h2>
   <div class="body" style="gap:1rem">
-    <svg class="diagram rise" style="--d:1" viewBox="0 0 1400 500" role="img" aria-labelledby="anat-t anat-d">
+    <div class="figure-scroll"><svg class="diagram rise" style="--d:1" viewBox="0 0 1400 500" role="img" aria-labelledby="anat-t anat-d">
       <title id="anat-t">The agent loop</title>
       <desc id="anat-d">The context window feeds the model. The model's tool calls pass a permission gate, run as tools on your machine, and the results return to the context through verification.</desc>
       <defs>
@@ -123,7 +124,7 @@
       <text x="1130" y="438" class="t-mono">results</text>
       <rect x="520" y="424" width="470" height="52" rx="26" class="box-hot"/>
       <text x="755" y="458" class="t-flame" text-anchor="middle" style="font-weight:700">✓ verify: tests · diff · review</text>
-    </svg>
+    </svg></div>
     <p class="small">The model is the chef. Everything else is the kitchen you build: <strong class="flame">what it can see</strong>, <strong class="flame">what it may touch</strong>, and <strong class="flame">how you check the dish</strong>.</p>
   </div>
   <aside class="notes"><ul>
@@ -335,7 +336,7 @@ license: MIT
     <div class="pipeline" style="grid-template-columns:repeat(7,1fr)">
       <div class="stepcard" data-step="1"><span class="n">01</span><h3>Inspect</h3><p>README, CONTRIBUTING, AGENTS.md, scripts, tests, CI, git log</p><span class="via">plan mode · read-only</span></div>
       <div class="stepcard" data-step="2"><span class="n">02</span><h3>Spot patterns</h3><p>What's repeated, multi-step, or easy to get wrong?</p><span class="via">cite files</span></div>
-      <div class="stepcard" data-step="3"><span class="n">03</span><h3>Propose 3–5</h3><p>Each with a trigger, a reason and its steps</p><span class="via">name + description</span></div>
+      <div class="stepcard" data-step="3"><span class="n">03</span><h3>Propose <span style="white-space:nowrap">3–5</span></h3><p>Each with a trigger, a reason and its steps</p><span class="via">name + description</span></div>
       <div class="stepcard human" data-step="4"><span class="n">04</span><h3>You approve</h3><p>Edit, merge, reject. Rules go to CLAUDE.md, musts to hooks.</p><span class="via">human gate</span></div>
       <div class="stepcard" data-step="5"><span class="n">05</span><h3>Generate</h3><p>SKILL.md, plus references only where they earn their place</p><span class="via">.claude/skills/</span></div>
       <div class="stepcard" data-step="6"><span class="n">06</span><h3>Verify</h3><p>Every command found in the repo and run. Nothing invented.</p><span class="via">npm run check</span></div>
@@ -521,8 +522,8 @@ claude --permission-mode plan
     <div class="where">
       <div class="card" data-step="1"><span class="rank">Personal</span><h3>Just you, every repo</h3><code>~/.claude/skills/&lt;name&gt;/</code><p>Your habits and general workflows.</p></div>
       <div class="card hot" data-step="2"><span class="rank">Project</span><h3>Everyone who clones</h3><code>.claude/skills/&lt;name&gt;/</code><p>This codebase's commands and conventions. Commit it.</p></div>
-      <div class="card" data-step="3"><span class="rank">Plugin</span><h3>Everyone who installs</h3><code>&lt;plugin&gt;/skills/&lt;name&gt;/</code><p>Bundles skills, agents, hooks, MCP. Runs as <code class="i">/plugin:skill</code>.</p></div>
-      <div class="card v" data-step="4"><span class="rank">Portable</span><h3>Any compatible agent</h3><code>agentskills.io/specification</code><p>An open format. Claude Code's extra fields are optional extensions.</p></div>
+      <div class="card" data-step="3"><span class="rank">Plugin</span><h3>Everyone who installs</h3><code>&lt;plugin&gt;/skills/&lt;name&gt;/</code><p>Bundles skills, agents, hooks and MCP. Skills run as <code class="i">/plugin:skill</code></p></div>
+      <div class="card v" data-step="4"><span class="rank">Portable</span><h3>Any compatible agent</h3><code>agentskills.io</code><p>An open format. Claude Code's extra fields are optional extensions.</p></div>
     </div>
     <dl class="facts" data-step="5">
       <div><dt>Name clash</dt><dd>enterprise &gt; personal &gt; project. Plugins are namespaced, so they never clash.</dd></div>
@@ -588,7 +589,7 @@ Projected token cost
   <div class="kicker"><b>06</b> <span class="violet">Model Context Protocol</span></div>
   <h2 class="title">Host, client, <em>server</em></h2>
   <div class="body" style="gap:1.6rem">
-    <svg class="diagram rise" style="--d:1;max-height:23rem" viewBox="0 0 1400 410" role="img" aria-labelledby="mcp-t mcp-d">
+    <div class="figure-scroll"><svg class="diagram rise" style="--d:1;max-height:23rem" viewBox="0 0 1400 410" role="img" aria-labelledby="mcp-t mcp-d">
       <title id="mcp-t">MCP architecture</title>
       <desc id="mcp-d">Claude Code is the host. It runs one MCP client per server. The GitHub MCP server is remote over HTTP and reads the GitHub API; a filesystem server runs locally over stdio; your own server can use any transport.</desc>
       <rect x="10" y="10" width="640" height="390" rx="22" class="box"/>
@@ -628,7 +629,7 @@ Projected token cost
       <rect x="1150" y="40" width="230" height="84" rx="14" class="box"/><text x="1265" y="90" text-anchor="middle">GitHub API</text>
       <rect x="1150" y="162" width="230" height="84" rx="14" class="box"/><text x="1265" y="212" text-anchor="middle">Files on disk</text>
       <rect x="1150" y="284" width="230" height="84" rx="14" class="box"/><text x="1265" y="334" text-anchor="middle">Your API · DB</text>
-    </svg>
+    </svg></div>
     <div class="cols compact-cards" style="grid-template-columns:repeat(3,1fr);gap:1.4rem">
       <div class="card v" data-step="1"><span class="label violet">Tools · the model decides</span><p>Actions with a permission prompt: <code class="i">mcp__github__issue_read</code></p></div>
       <div class="card" data-step="2"><span class="label">Resources · you attach</span><p>Data you mention: <code class="i">@server:protocol://path</code></p></div>
@@ -688,7 +689,7 @@ claude mcp list
   <div class="kicker"><b>06</b> <span class="violet">A live MCP integration</span></div>
   <h2 class="title">One tool call, <em>end to end</em></h2>
   <div class="body">
-    <svg class="diagram" viewBox="0 0 1400 540" role="img" aria-labelledby="seq-t seq-d">
+    <div class="figure-scroll"><svg class="diagram" viewBox="0 0 1400 540" role="img" aria-labelledby="seq-t seq-d">
       <title id="seq-t">MCP tool-call sequence</title>
       <desc id="seq-d">You ask Claude to triage issue 1. Claude asks Claude Code to call issue_read. Claude Code asks your permission, then calls the GitHub MCP server, which calls the GitHub API. The JSON result flows back into Claude's context, and Claude's next step is to run the pr-triage skill and reproduce the bug.</desc>
       <defs>
@@ -732,7 +733,7 @@ claude mcp list
         <rect x="250" y="484" width="340" height="48" rx="24" class="box-hot"/>
         <text x="420" y="515" text-anchor="middle" class="t-flame" style="font-size:20px;font-weight:700">next: /pr-triage → reproduce</text>
       </g>
-    </svg>
+    </svg></div>
   </div>
   <aside class="notes"><ul>
     <li>~2:00. Press through the four builds. 1: the model asks for a tool; it can't call GitHub itself. 2: the permission prompt names the exact tool. 3: client, server, API, back. 4: the result is just text in the context, and it drives the next step.</li>
@@ -777,7 +778,7 @@ claude mcp list
     <div class="cols" style="grid-template-columns:repeat(5,1fr);gap:1.2rem;align-items:stretch">
       <div class="card" data-step="1"><span class="label">You + Claude</span><h3>Conversation</h3><p>Everything said and every tool result. Manage it with <code class="i">/compact</code> and <code class="i">/clear</code>.</p></div>
       <div class="card" data-step="2"><span class="label">Claude proposes</span><h3>Plan</h3><p>Plan mode reads but can't edit. Edits start when you approve. <code class="i">Shift+Tab</code></p></div>
-      <div class="card v" data-step="3"><span class="label violet">Claude writes</span><h3>Auto memory</h3><p><code class="i">~/.claude/projects/&lt;project&gt;/memory/</code>. First 200 lines of MEMORY.md each session. This machine only.</p></div>
+      <div class="card v" data-step="3"><span class="label violet">Claude writes</span><h3>Auto memory</h3><p>Notes in your home folder, per repo. The first 200 lines of MEMORY.md load each session. This machine only.</p></div>
       <div class="card hot" data-step="4"><span class="label ember">You write</span><h3>Skills</h3><p>Procedures, versioned in the repo, loaded when relevant.</p></div>
       <div class="card hot" data-step="5"><span class="label ember">You write</span><h3>Instructions</h3><p>Rules, versioned in the repo, loaded every session.</p></div>
     </div>
@@ -795,7 +796,7 @@ claude mcp list
   <h2 class="title">Fresh eyes, <em>separate context</em></h2>
   <div class="body">
     <div class="cols w40 mid">
-      <svg class="diagram rise" style="--d:1" viewBox="0 0 620 420" role="img" aria-labelledby="sub-t sub-d">
+      <div class="figure-scroll"><svg class="diagram rise" style="--d:1" viewBox="0 0 620 420" role="img" aria-labelledby="sub-t sub-d">
         <title id="sub-t">Subagent context isolation</title>
         <desc id="sub-d">The main session has a full context. It sends a short brief to the subagent, which starts with a fresh context containing its own prompt, CLAUDE.md and git status, and returns only a summary.</desc>
         <defs>
@@ -821,7 +822,7 @@ claude mcp list
         <text x="520" y="300" class="t-violet" text-anchor="middle" style="font-size:20px;font-weight:700">fresh context</text>
         <path d="M430 290 H346" class="link-hot" marker-end="url(#sub-ah)"/>
         <text x="388" y="320" class="t-mono t-ember" text-anchor="middle">summary</text>
-      </svg>
+      </svg></div>
       <div class="stack">
 <pre class="code sm" data-lang="md" data-title=".claude/agents/code-reviewer.md">
 ---
@@ -851,7 +852,7 @@ model: sonnet
   <div class="kicker"><b>07</b> Hooks</div>
   <h2 class="title">Instructions are advice. <em>Hooks are guarantees.</em></h2>
   <div class="body" style="gap:1.6rem">
-    <svg class="diagram rise" style="--d:1" viewBox="0 0 1400 150" role="img" aria-labelledby="hook-t">
+    <div class="figure-scroll"><svg class="diagram rise" style="--d:1" viewBox="0 0 1400 150" role="img" aria-labelledby="hook-t">
       <title id="hook-t">Hook events in a session: SessionStart, UserPromptSubmit, PreToolUse (exit 2 blocks the call), the tool runs, PostToolUse (exit 2 sends stderr to Claude), Stop.</title>
       <path d="M100 60 H1300" class="link"/>
       <rect x="10" y="32" width="180" height="56" rx="28" class="box"/><text x="100" y="67" text-anchor="middle" style="font-size:20px">SessionStart</text>
@@ -862,7 +863,7 @@ model: sonnet
       <rect x="1145" y="32" width="150" height="56" rx="28" class="box"/><text x="1220" y="67" text-anchor="middle" style="font-size:20px">Stop</text>
       <text x="575" y="126" text-anchor="middle" class="t-mono t-ember">exit 2 → blocked</text>
       <text x="1010" y="126" text-anchor="middle" class="t-mono t-ember">exit 2 → Claude sees why</text>
-    </svg>
+    </svg></div>
     <div class="cols w60">
 <pre class="code sm" data-lang="json" data-title=".claude/settings.json" data-focus="3-4|5-6">
 {
@@ -998,7 +999,7 @@ function release(address payable account) external {
 </pre>
         </div>
         <ul class="points tight">
-          <li><span><code class="i">contracts/CLAUDE.md</code> → <code class="i">/smart-contract-review</code> → a failing test as evidence → fix → you review</span></li>
+          <li><span>Rules from <code class="i">contracts/CLAUDE.md</code>, the <code class="i">smart-contract-review</code> skill, a failing test as evidence, a fix, then your review.</span></li>
           <li><span>Local EVM, synthetic accounts. <strong>No RPC, no keys, no deploys.</strong></span></li>
           <li><span>An AI review is not an audit.</span></li>
         </ul>
@@ -1050,7 +1051,7 @@ function release(address payable account) external {
     <a class="qr-card rise" style="--d:3" href="https://github.com/ArnavBallinCode/let-the-agent-cook">
       @@qr:https://github.com/ArnavBallinCode/let-the-agent-cook@@
       <b>Labs, skills, prompts</b>
-      <small>github.com/ArnavBallinCode/let-the-agent-cook</small>
+      <small>github.com/ArnavBallinCode/<br>let-the-agent-cook</small>
     </a>
   </div>
   <aside class="notes"><ul>
