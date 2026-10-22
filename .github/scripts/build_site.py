@@ -29,6 +29,8 @@ def meta(page: str, pattern: str) -> str:
 def pretty(folder: str) -> str:
     if folder.lower() == "collegetalks":
         return "College Talks"
+    if folder == "DistributedKeyValueStore":
+        return "Distributed Key-Value Store"
     # OpenTechSummit2026 -> Open Tech Summit 2026
     return re.sub(r"(?<=[a-z])(?=[A-Z0-9])|(?<=[0-9])(?=[A-Z])", " ", folder).replace("-", " ").replace("_", " ")
 
