@@ -1,9 +1,9 @@
 """Assemble the GitHub Pages site.
 
-Every top-level folder that holds an index.html is a talk. It is copied to
-_site/<folder>/ and listed on the generated landing page at _site/index.html.
-Folders and files whose names start with "_" or "." (sources, build scripts)
-are not published.
+Every top-level folder (and category subfolders like collegetalks/*) that holds an
+index.html is a talk. It is copied to _site/ and listed on the generated landing
+page at _site/index.html.
+Folders and files whose names start with "_" or "." are not published.
 """
 from __future__ import annotations
 
@@ -27,6 +27,8 @@ def meta(page: str, pattern: str) -> str:
 
 
 def pretty(folder: str) -> str:
+    if folder.lower() == "collegetalks":
+        return "College Talks"
     # OpenTechSummit2026 -> Open Tech Summit 2026
     return re.sub(r"(?<=[a-z])(?=[A-Z0-9])|(?<=[0-9])(?=[A-Z])", " ", folder).replace("-", " ").replace("_", " ")
 
@@ -42,25 +44,48 @@ def last_updated(folder: Path) -> str:
 def collect() -> list[dict[str, str]]:
     talks = []
     for folder in sorted(ROOT.iterdir()):
-        if not folder.is_dir() or skip(folder.name) or not (folder / "index.html").exists():
+        if not folder.is_dir() or skip(folder.name):
             continue
-        page = (folder / "index.html").read_text(encoding="utf-8", errors="ignore")[:20000]
-        talks.append({
-            "slug": folder.name,
-            "event": pretty(folder.name),
-            "title": meta(page, r"<title>(.*?)</title>") or pretty(folder.name),
-            "description": meta(page, r'<meta\s+name="description"\s+content="(.*?)"'),
-            "date": last_updated(folder),
-        })
+
+        # Check for category subfolders with nested talks (e.g. collegetalks/ConsistentHashing)
+        nested_talks = [
+            sub for sub in sorted(folder.iterdir())
+            if sub.is_dir() and not skip(sub.name) and (sub / "index.html").exists()
+        ]
+
+        if nested_talks:
+            for sub in nested_talks:
+                page = (sub / "index.html").read_text(encoding="utf-8", errors="ignore")[:20000]
+                talks.append({
+                    "slug": f"{folder.name}/{sub.name}",
+                    "event": f"{pretty(folder.name)} · {pretty(sub.name)}",
+                    "title": meta(page, r"<title>(.*?)</title>") or f"{pretty(folder.name)}: {pretty(sub.name)}",
+                    "description": meta(page, r'<meta\s+name="description"\s+content="(.*?)"'),
+                    "date": last_updated(sub) or last_updated(folder),
+                })
+
+        # If the folder has its own index.html and no nested talks, index it directly
+        elif (folder / "index.html").exists():
+            page = (folder / "index.html").read_text(encoding="utf-8", errors="ignore")[:20000]
+            talks.append({
+                "slug": folder.name,
+                "event": pretty(folder.name),
+                "title": meta(page, r"<title>(.*?)</title>") or pretty(folder.name),
+                "description": meta(page, r'<meta\s+name="description"\s+content="(.*?)"'),
+                "date": last_updated(folder),
+            })
+
     talks.sort(key=lambda t: t["date"], reverse=True)
     return talks
 
 
-def copy_talk(slug: str) -> None:
-    shutil.copytree(
-        ROOT / slug, SITE / slug,
-        ignore=lambda _dir, names: [n for n in names if skip(n)],
-    )
+def copy_talks() -> None:
+    for folder in sorted(ROOT.iterdir()):
+        if folder.is_dir() and not skip(folder.name):
+            shutil.copytree(
+                folder, SITE / folder.name,
+                ignore=lambda _dir, names: [n for n in names if skip(n)],
+            )
 
 
 def landing(talks: list[dict[str, str]]) -> str:
@@ -118,9 +143,8 @@ def main() -> None:
     if SITE.exists():
         shutil.rmtree(SITE)
     SITE.mkdir()
+    copy_talks()
     talks = collect()
-    for t in talks:
-        copy_talk(t["slug"])
     (SITE / "index.html").write_text(landing(talks), encoding="utf-8")
     (SITE / ".nojekyll").write_text("")
     print(f"Built {len(talks)} talk(s): {', '.join(t['slug'] for t in talks)}")
