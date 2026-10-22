@@ -1525,28 +1525,43 @@ aside.notes { display: none !important; }
        ==================================================================== -->
   <section data-act="Conclusion" class="slide" data-name="Conclusion">
     <div class="wrap">
-      <span class="eyebrow rise">Conclusion</span>
+      <span class="eyebrow rise">Conclusion &amp; Artifacts</span>
       <h2 class="h-l rise" style="--d:1">System Defended: <span class="tally">Reproducible C++ Engine</span></h2>
       <div class="clean-grid-2 rise" style="--d:2">
-        <div class="card">
-          <b>Verified C++ Codebase (in <code>code/</code>)</b>
-          <p style="font-family: var(--f-mono); font-size: .88em; line-height: 1.8;">
-            📁 <strong>code/include/consistent_hash_ring.hpp</strong><br>
-            📁 <strong>code/include/cuckoo_hash.hpp</strong><br>
-            📁 <strong>code/include/bloom_filter.hpp</strong><br>
-            📁 <strong>code/include/distributed_kv.hpp</strong><br>
-            ⚙️ Compile: <code>cd code &amp;&amp; make run</code>
-          </p>
+        <div class="card" style="gap: .8em;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <b style="color:var(--tally); font-size:1.05em;">Verified C++ Implementation</b>
+            <span style="font-family:var(--f-mono); font-size:.76em; color:var(--emerald); background:rgba(52,211,153,.1); padding:2px 8px; border-radius:4px; border:1px solid rgba(52,211,153,.3);">C++17 Benchmark Suite</span>
+          </div>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .55em; font-family: var(--f-mono); font-size: .84em; line-height:1.5;">
+            <li><a href="https://github.com/ArnavBallinCode/Talks/blob/main/collegetalks/DistributedKeyValueStore/code/include/consistent_hash_ring.hpp" target="_blank" rel="noopener" style="color:var(--signal); text-decoration:none;">📄 consistent_hash_ring.hpp</a> <span style="color:var(--mute); font-size:.85em;">(Vnodes &amp; Ring Topology)</span></li>
+            <li><a href="https://github.com/ArnavBallinCode/Talks/blob/main/collegetalks/DistributedKeyValueStore/code/include/cuckoo_hash.hpp" target="_blank" rel="noopener" style="color:var(--signal); text-decoration:none;">📄 cuckoo_hash.hpp</a> <span style="color:var(--mute); font-size:.85em;">(O(1) Evictions &amp; Cycle Rehash)</span></li>
+            <li><a href="https://github.com/ArnavBallinCode/Talks/blob/main/collegetalks/DistributedKeyValueStore/code/include/bloom_filter.hpp" target="_blank" rel="noopener" style="color:var(--signal); text-decoration:none;">📄 bloom_filter.hpp</a> <span style="color:var(--mute); font-size:.85em;">(0% False Negative Gatekeeper)</span></li>
+            <li><a href="https://github.com/ArnavBallinCode/Talks/blob/main/collegetalks/DistributedKeyValueStore/code/include/distributed_kv.hpp" target="_blank" rel="noopener" style="color:var(--signal); text-decoration:none;">📄 distributed_kv.hpp</a> <span style="color:var(--mute); font-size:.85em;">(End-to-End Cluster Pipeline)</span></li>
+            <li><a href="https://github.com/ArnavBallinCode/Talks/blob/main/collegetalks/DistributedKeyValueStore/code/src/main.cpp" target="_blank" rel="noopener" style="color:var(--signal); text-decoration:none;">📄 main.cpp</a> <span style="color:var(--mute); font-size:.85em;">(Verification Benchmark Suite)</span></li>
+          </ul>
+          <div style="border-top: 1px solid var(--line); padding-top: .75em; display:flex; flex-wrap:wrap; gap:.8em; align-items:center;">
+            <a href="https://github.com/ArnavBallinCode/Talks/tree/main/collegetalks/DistributedKeyValueStore/code" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:.5em; text-decoration:none; padding:.5em 1em; font-size:.84em; font-weight:600;">
+              💻 Browse Full Code on GitHub &rarr;
+            </a>
+            <span style="font-family:var(--f-mono); font-size:.78em; color:var(--mute);">Terminal: <code>cd code &amp;&amp; make run</code></span>
+          </div>
         </div>
-        <div class="card highlight" style="border-color: var(--tally);">
-          <b>Key Oral Defense Takeaway</b>
-          <p>We demonstrated that the synthesis of Consistent Hashing (routing), Bloom Filters (short-circuiting), and Cuckoo Hashing (storage) delivers deterministic, predictable latency in large-scale distributed systems.</p>
+        <div class="card highlight" style="border-color: var(--tally); justify-content: center; gap: 1.1em;">
+          <b style="font-size: 1.05em; color: var(--tally);">Key Oral Defense Takeaway</b>
+          <p style="line-height: 1.65;">
+            We demonstrated that the synthesis of <strong>Consistent Hashing</strong> (routing tier), <strong>Bloom Filters</strong> (short-circuiting tier), and <strong>Cuckoo Hashing</strong> (storage tier) eliminates worst-case latency cliffs, guarantees strictly <span class="math"><i>O</i>(1)</span> table reads, and minimizes cluster migration churn to <span class="math">1 / (<i>N</i> + 1)</span>.
+          </p>
+          <div style="background: rgba(255,179,64,.08); border: 1px solid var(--tally); border-radius: 8px; padding: .8em 1em; font-size: .88em; color: var(--ink);">
+            💡 <em>"Theoretical bounds mathematically proven; empirical performance benchmarked and defended."</em>
+          </div>
         </div>
       </div>
     </div>
     <aside class="notes">
       <ul>
-        <li>Wrap up: Offer to run `cd code && make run` in terminal to demonstrate the working benchmarks live.</li>
+        <li>Wrap up: Offer to open the terminal and execute `cd code && make run` to demonstrate live benchmarks in front of the professor.</li>
+        <li>Point out the GitHub links for full reproducibility and documentation integrity.</li>
       </ul>
     </aside>
   </section>
