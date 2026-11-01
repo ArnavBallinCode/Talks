@@ -397,6 +397,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 .todo-shot { height: min(60vh, 560px); aspect-ratio: 780 / 1640; max-width: 100%; border: 2px dashed var(--tally); border-radius: 30px; display: flex; flex-direction: column; justify-content: center; gap: .6em; padding: 1.2em; color: var(--mute); font-size: .78em; }
 .todo-shot b { font-family: var(--f-mono); color: var(--tally); letter-spacing: .1em; }
 
+/* ── caption overlays ── */
+.overlay-shots { display: grid; grid-template-columns: .62fr 1fr 1fr; gap: 1.4em; align-items: start; }
+.overlay-shots figure { margin: 0; min-width: 0; }
+.overlay-shots img { display: block; width: 100%; height: 36vh; object-fit: contain; object-position: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.overlay-shots figcaption { margin-top: .8em; font-size: .85em; line-height: 1.4; color: var(--mute); }
+.overlay-shots b { display: block; color: var(--ink); font-weight: 600; margin-bottom: .25em; }
+.overlay-shots .step-no { color: var(--tally); font-family: var(--f-mono); margin-right: .4em; }
+.overlay-output { font-family: var(--f-mono); font-size: .78em; color: var(--signal); }
+
 /* ── architecture ── */
 .d-media { stroke: var(--tally); stroke-width: 3; fill: none; }
 .d-aip { stroke: var(--signal); stroke-width: 2.5; fill: none; }
@@ -517,6 +526,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
   .slide:first-child { min-height: 80vh; }
   .strip, .notes-panel { display: none; }
   .about, .product, .demo-grid, .problem-grid, .versions, .oss, .integ, .flow, .ux, .challenge, .ai-chain, .ai-cols, .contrib, .cgrid, .invite, .modes, .problems, .engines, .local, .lesson, .next, .connect, .stack { grid-template-columns: 1fr; }
+  .overlay-shots { grid-template-columns: 1fr; }
+  .overlay-shots img { height: auto; max-height: 65vh; }
   .fmap { grid-template-columns: 1fr 1fr; }
   .strike { grid-template-columns: 1fr 1fr; }
   .browser { transform: none; }
@@ -643,6 +654,37 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
       <li>~0:45. Booth: 1 live status, 2 pass mic to your partner, 3 the floor you're interpreting, 4 chat with your booth partner.</li>
       <li>Listener: 5 room, 6 language (here German, English, Hindi), 7 captions: original, translated or stacked.</li>
       <li>Transition: "Now let's do it live."</li>
+    </ul></aside>
+  </section>
+
+  <!-- caption overlays · screenshots captured 1 November 2026 -->
+  <section data-act="The product" class="slide" data-name="Caption overlays">
+    <div class="wrap">
+      <span class="eyebrow rise">Live broadcast</span>
+      <h2 class="h-m rise" style="--d:1">Caption overlays for <span class="tally">vMix &amp; OBS</span></h2>
+      <div class="overlay-shots">
+        <figure class="rise" style="--d:2">
+          <img src="@@img:program_audio.png@@" alt="VoxBento program audio sender with audio input and browser tab options, sharing instructions, and sound check controls.">
+          <figcaption><b><span class="step-no">1</span>Send program audio</b>Use an audio input or share a browser tab with audio.</figcaption>
+        </figure>
+        <figure class="rise" style="--d:3">
+          <img src="@@img:caption_overlay.png@@" alt="VoxBento caption overlay editor with a transparent preview, room and language selector, position, font size, background opacity and line count controls.">
+          <figcaption><b><span class="step-no">2</span>Style the captions</b>Choose a room and language; set position, font size, opacity and lines.</figcaption>
+        </figure>
+        <figure class="rise" style="--d:4">
+          <img src="@@img:overlay_languages.png@@" alt="VoxBento Captions on the stream panel with Copy URL controls for original, English, German, Hindi and Vietnamese captions, plus OBS and vMix browser source instructions.">
+          <figcaption><b><span class="step-no">3</span>Add the overlay URL</b>Paste into a 1920 × 1080 browser source in vMix or OBS.</figcaption>
+        </figure>
+      </div>
+      <p class="overlay-output rise" style="--d:5">Transparent output · separate source for each room and language</p>
+    </div>
+    <aside class="notes"><ul>
+      <li>~0:45. VoxBento now provides caption overlay URLs directly for vMix and OBS. Feed program audio from a sound desk, microphone or another browser tab; keep the sender tab open.</li>
+      <li>Choose the room and caption language, then adjust position, font size, background opacity and number of lines. Copy the overlay URL into a 1920 × 1080 browser source; use a separate source for each room and language.</li>
+      <li>The overlay editor's test captions stay in its preview and do not appear on the live output. Live captions require the relevant transcription or translation source to be running.</li>
+      <li>These are setup screenshots captured on 1 November 2026: the sender shows an error and the overlay preview is waiting for captions. Demonstrate live output only when the source is running.</li>
+      <li>Source images: Desktop screenshots at 1:41:13 PM, 4:59:36 PM and 5:00:25 PM, 1 November 2026.</li>
+      <li>Transition: "Let's try VoxBento live."</li>
     </ul></aside>
   </section>
 
