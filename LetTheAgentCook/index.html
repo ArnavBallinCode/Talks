@@ -492,7 +492,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Opening" data-title="Today's dish" data-at="1:30">
+<section class="slide" data-act="Opening" data-title="Today's dish" data-at="1:00">
   <div class="kicker"><b>00</b> Today's dish</div>
   <h2 class="title">One real issue. <em>Seven ingredients.</em></h2>
   <div class="body">
@@ -587,7 +587,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Anatomy" data-title="Seven ingredients" data-at="5:30">
+<section class="slide" data-act="Anatomy" data-title="Seven ingredients" data-at="5:00">
   <div class="kicker"><b>01</b> The pantry</div>
   <h2 class="title">Seven ingredients, <em>one kitchen</em></h2>
   <div class="body" style="gap:1.1rem">
@@ -612,7 +612,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 02 · INSTRUCTIONS ═════════════════════════ -->
 
-<section class="slide" data-act="Instructions" data-title="Repository instructions" data-at="7:00">
+<section class="slide" data-act="Instructions" data-title="Repository instructions" data-at="6:00">
   <div class="kicker"><b>02</b> Repository instructions</div>
   <h2 class="title">Tell it how <em>your</em> kitchen runs</h2>
   <div class="body">
@@ -635,7 +635,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Instructions" data-title="What loads, and when" data-at="9:00">
+<section class="slide" data-act="Instructions" data-title="What loads, and when" data-at="7:30">
   <div class="kicker"><b>02</b> Repository instructions</div>
   <h2 class="title">What loads, <em>and when</em></h2>
   <div class="body">
@@ -668,7 +668,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 03 · SKILLS ═════════════════════════ -->
 
-<section class="slide" data-act="Skills" data-title="Anatomy of a skill" data-at="11:00">
+<section class="slide" data-act="Skills" data-title="Anatomy of a skill" data-at="9:00">
   <div class="kicker"><b>03</b> Skills</div>
   <h2 class="title">A skill is a <em>recipe card</em></h2>
   <div class="body">
@@ -700,7 +700,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Skills" data-title="Progressive disclosure" data-at="12:45">
+<section class="slide" data-act="Skills" data-title="Progressive disclosure" data-at="10:30">
   <div class="kicker"><b>03</b> Skills</div>
   <h2 class="title">Loaded only <em>when it's needed</em></h2>
   <div class="body">
@@ -734,9 +734,17 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
+<section class="slide" data-act="Token budget" data-title="Read the token dashboard" data-at="12:00"><div class="kicker"><b>03</b> Tokens &amp; cost</div><h2 class="title">5.23 billion tokens. <em>What counts?</em></h2><div class="body"><div class="cols" style="grid-template-columns:1.6fr 1fr;align-items:center"><img src="assets/token-usage-30-days.png" alt="User-supplied 30-day usage dashboard: 5.23B processed tokens across 188 sessions, 5.03B cached input, 161M uncached input, 30.7M cache writes and 16.7M output" style="width:100%;max-height:32rem;object-fit:contain"><div class="stack"><div class="card"><h3>Repeated context adds up</h3><p>5.03B cache reads · about 96% of displayed processed tokens.</p></div><div class="card"><h3>Usage ≠ your invoice</h3><p>The dashboard reports $9,231.27 cache savings. Some models are unpriced; subscriptions and API billing differ.</p></div></div></div></div><aside class="notes"><p>Read the screenshot as aggregated processing over 188 sessions, not 5.23 billion unique words. Inputs can be counted again on successive model calls. Rounded categories sum to about 5.2384B; do not force exact reconciliation with 5.23B. The screenshot alone cannot establish the accounting rules, actual bill or comparable provider prices. Unpriced does not mean free. Cache savings is a dashboard estimate against its baseline, not money paid back.</p><p>Budget: one minute. Full workshop remains 45 minutes; see updated timeline.</p></aside></section>
+
+<section class="slide" data-act="Token budget" data-title="Input, output and cache" data-at="13:00"><div class="kicker"><b>03</b> Tokens &amp; cost</div><h2 class="title">Four buckets. <em>Different prices.</em></h2><div class="body"><div class="cols"><div class="stack"><div class="card"><h3>Uncached input · 161M</h3><p>Instructions, conversation, files and tool results processed without a cache hit.</p></div><div class="card"><h3>Cache read · 5.03B</h3><p>Reuse of a matching stored prompt prefix. Usually cheaper input; still part of context.</p></div></div><div class="stack"><div class="card"><h3>Cache write · 30.7M</h3><p>Work stored for later reuse. Some models charge a distinct write rate.</p></div><div class="card"><h3>Output · 16.7M</h3><p>Generated responses and tool requests. Reasoning-token accounting depends on the model.</p></div></div></div><p class="small">Token cost = Σ (tokens in each non-overlapping billing category ÷ 1M × its rate). Add applicable tool fees.</p></div><aside class="notes"><p>Input is everything supplied to a model call, not just the sentence you typed. Tool results become later input; generated text can become later conversation input. Normalize provider usage first: some input totals already include cached tokens. Never charge those twice. Rates depend on model, provider and cache lifetime. API-equivalent estimates do not establish subscription charges.</p><p>Budget: one minute. Full workshop remains 45 minutes; see updated timeline.</p></aside></section>
+
+<section class="slide" data-act="Token budget" data-title="How caching works" data-at="14:00"><div class="kicker"><b>03</b> Tokens &amp; cost</div><h2 class="title">Reuse the prefix. <em>Generate a new answer.</em></h2><div class="body"><div class="stack"><div class="card"><h3>Call 1</h3><p>Project rules + tool definitions + issue → process eligible input and populate cache.</p></div><div class="card hot"><h3>Call 2</h3><p>Same prefix + new test output → reuse eligible prefix; process new material; generate the next response.</p></div><div class="card"><h3>Hypothetical rates, not a price quote</h3><p>100k tokens at $2/M = $0.20 uncached.<br>90k at $0.20/M cached + 10k at $2/M = $0.038 input.<br>Output, earlier cache writes and other fees are additional.</p></div></div><p class="small">Cache eligibility, matching, lifetime and rates vary. A cache hit does not shrink the context window.</p></div><aside class="notes"><p>This caches reusable computation, not a saved answer. A prefix is the beginning of the prompt. Stable instructions and tool definitions help reuse; changing an earlier portion can invalidate later reuse. A new request can still generate a different answer. Harnesses often manage cache policy; asking the model to cache something is not an API configuration. API builders should check model-specific controls. Sources: https://developers.openai.com/api/docs/guides/prompt-caching and https://platform.claude.com/docs/en/build-with-claude/prompt-caching .</p><p>Budget: one minute. Full workshop remains 45 minutes; see updated timeline.</p></aside></section>
+
+<section class="slide" data-act="Token budget" data-title="Spend fewer tokens per verified fix" data-at="15:00"><div class="kicker"><b>03</b> Tokens &amp; cost</div><h2 class="title">Less irrelevant context. <em>Fewer repeated loops.</em></h2><div class="body"><div class="cols"><ul class="points tight"><li><span><strong>Scope the task.</strong> Issue, relevant paths, acceptance criteria.</span></li><li><span><strong>Search before reading.</strong> Target files; avoid dumping the whole repository.</span></li><li><span><strong>Load skills on demand.</strong> Short standing rules; references when needed.</span></li><li><span><strong>Trim tool output.</strong> Summaries plus full failures; retain complete logs on disk.</span></li></ul><ul class="points tight"><li><span><strong>Keep useful continuity.</strong> Same task in one session; summarize before a fresh task.</span></li><li><span><strong>Delegate selectively.</strong> Narrow brief and report; extra agents repeat setup.</span></li><li><span><strong>Check with purpose.</strong> Focused tests, required full checks; rerun after meaningful changes.</span></li><li><span><strong>Measure outcomes.</strong> Cost, time and correctness per completed task.</span></li></ul></div><p class="small">Compaction reduces retained history, may lose details and change cache reuse. Save decisions and test commands first.</p></div><aside class="notes"><p>One-minute audience exercise: rewrite “Read everything and fix it” as “Investigate issues/42.json; start with split.js and its tests; keep bigint; run the required checks; report changed files and test summaries.” Clear criteria prevent expensive retries. A cheap model that repeatedly fails can cost more per completed task. Keep necessary evidence and verification. Cache optimizes repeated input cost; reducing irrelevant context optimizes token volume. Do not retain a huge stale conversation solely to chase cache hits.</p><p>Budget: one minute. Full workshop remains 45 minutes; see updated timeline.</p></aside></section>
+
 <!-- ═════════════════════════ 04 · GENERATE ═════════════════════════ -->
 
-<section class="slide opener" data-act="Generate skills" data-title="Let the repo write its skills" data-at="14:00">
+<section class="slide opener" data-act="Generate skills" data-title="Let the repo write its skills" data-at="16:00">
   <span class="count" aria-hidden="true">04</span>
   <div class="kicker rise"><b>04</b> The main course</div>
   <h2 class="big rise" style="--d:1">Let the repository <em>write</em> its own skills.</h2>
@@ -747,7 +755,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide dim-steps" data-act="Generate skills" data-title="The generation loop" data-at="14:30">
+<section class="slide dim-steps" data-act="Generate skills" data-title="The generation loop" data-at="16:20">
   <div class="kicker"><b>04</b> Generate skills</div>
   <h2 class="title">Propose, <em>approve</em>, generate, verify</h2>
   <div class="body">
@@ -768,7 +776,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Generate skills" data-title="The prompt" data-at="16:00">
+<section class="slide" data-act="Generate skills" data-title="The prompt" data-at="17:00">
   <div class="kicker"><b>04</b> Generate skills</div>
   <h2 class="title">The prompt</h2>
   <div class="body">
@@ -793,7 +801,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Generate skills" data-title="What it proposes" data-at="17:30">
+<section class="slide" data-act="Generate skills" data-title="What it proposes" data-at="18:00">
   <div class="kicker"><b>04</b> Generate skills · live</div>
   <h2 class="title">Phase 1: <em>what it found</em></h2>
   <div class="body" style="gap:1.4rem">
@@ -815,7 +823,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Generate skills" data-title="Generated ≠ trusted" data-at="20:00">
+<section class="slide" data-act="Generate skills" data-title="Generated ≠ trusted" data-at="21:00">
   <div class="kicker"><b>04</b> Generate skills</div>
   <h2 class="title">Generated <em>≠</em> trusted</h2>
   <div class="body">
@@ -841,7 +849,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Generate skills" data-title="Should it fire?" data-at="21:30">
+<section class="slide" data-act="Generate skills" data-title="Should it fire?" data-at="22:00">
   <div class="kicker"><b>04</b> Generate skills</div>
   <h2 class="title">Should it <em>fire?</em></h2>
   <div class="body" style="gap:1.6rem">
@@ -866,7 +874,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Generate skills" data-title="Project → portable" data-at="22:15">
+<section class="slide" data-act="Generate skills" data-title="Project → portable" data-at="22:30">
   <div class="kicker"><b>04</b> Generate skills</div>
   <h2 class="title">Project skill → <em>portable</em> skill</h2>
   <div class="body">
@@ -914,7 +922,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Share skills" data-title="Discover and install safely" data-at="25:00">
+<section class="slide" data-act="Share skills" data-title="Discover and install safely" data-at="24:00">
   <div class="kicker"><b>05</b> Discover and install</div>
   <h2 class="title">Install like you'd add a <em>dependency</em></h2>
   <div class="body">
@@ -940,7 +948,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 06 · MCP ═════════════════════════ -->
 
-<section class="slide" data-act="MCP" data-title="MCP architecture" data-at="27:00">
+<section class="slide" data-act="MCP" data-title="MCP architecture" data-at="25:00">
   <div class="kicker"><b>06</b> <span class="violet">Model Context Protocol</span></div>
   <h2 class="title">Host, client, <em>server</em></h2>
   <div class="body" style="gap:1.6rem">
@@ -998,7 +1006,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="MCP" data-title="Connect GitHub, read-only" data-at="29:00">
+<section class="slide" data-act="MCP" data-title="Connect GitHub, read-only" data-at="26:30">
   <div class="kicker"><b>06</b> <span class="violet">A live MCP integration</span></div>
   <h2 class="title">GitHub, <em>read-only</em></h2>
   <div class="body">
@@ -1022,7 +1030,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide dim-steps" data-act="MCP" data-title="The tool-call cycle" data-at="31:00">
+<section class="slide dim-steps" data-act="MCP" data-title="The tool-call cycle" data-at="28:00">
   <div class="kicker"><b>06</b> <span class="violet">A live MCP integration</span></div>
   <h2 class="title">One tool call, <em>end to end</em></h2>
   <div class="body">
@@ -1079,7 +1087,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="MCP" data-title="Issues are written by strangers" data-at="33:00">
+<section class="slide" data-act="MCP" data-title="Issues are written by strangers" data-at="29:30">
   <div class="kicker"><b>06</b> <span class="violet">Trust boundaries</span></div>
   <h2 class="title">Issues are written by <em>strangers</em></h2>
   <div class="body">
@@ -1105,7 +1113,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 07 · CONTEXT & WORKERS ═════════════════════════ -->
 
-<section class="slide" data-act="Context &amp; workers" data-title="Five kinds of context" data-at="34:00">
+<section class="slide" data-act="Context &amp; workers" data-title="Five kinds of context" data-at="31:00">
   <div class="kicker"><b>07</b> Memory, plans, context</div>
   <h2 class="title">Five kinds of <em>context</em></h2>
   <div class="body">
@@ -1128,7 +1136,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Context &amp; workers" data-title="Subagents" data-at="35:45">
+<section class="slide" data-act="Context &amp; workers" data-title="Subagents" data-at="32:30">
   <div class="kicker"><b>07</b> <span class="violet">Subagents</span></div>
   <h2 class="title">Fresh eyes, <em>separate context</em></h2>
   <div class="body">
@@ -1177,7 +1185,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="Context &amp; workers" data-title="Hooks" data-at="37:30">
+<section class="slide" data-act="Context &amp; workers" data-title="Hooks" data-at="34:00">
   <div class="kicker"><b>07</b> Hooks</div>
   <h2 class="title">Instructions are advice. <em>Hooks are guarantees.</em></h2>
   <div class="body" style="gap:1.6rem">
@@ -1212,7 +1220,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 08 · THE WORKFLOW ═════════════════════════ -->
 
-<section class="slide dim-steps" data-act="The workflow" data-title="Issue → verified diff" data-at="39:00">
+<section class="slide dim-steps" data-act="The workflow" data-title="Issue → verified diff" data-at="36:00">
   <div class="kicker"><b>08</b> Everything together</div>
   <h2 class="title">Issue → <em>verified diff</em></h2>
   <div class="body">
@@ -1235,7 +1243,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="The workflow" data-title="The fix, and the proof" data-at="41:30">
+<section class="slide" data-act="The workflow" data-title="The fix, and the proof" data-at="39:00">
   <div class="kicker"><b>08</b> Everything together</div>
   <h2 class="title">The fix, <em>and the proof</em></h2>
   <div class="body">
@@ -1253,7 +1261,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide" data-act="The workflow" data-title="Same recipe, on-chain" data-at="43:00">
+<section class="slide" data-act="The workflow" data-title="Same recipe, on-chain" data-at="42:00">
   <div class="kicker"><b>08</b> Web3</div>
   <h2 class="title">Same recipe, <em>on-chain</em></h2>
   <div class="body">
@@ -1279,7 +1287,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
 
 <!-- ═════════════════════════ 09 · CLOSING ═════════════════════════ -->
 
-<section class="slide" data-act="Closing" data-title="Which ingredient?" data-at="44:00">
+<section class="slide" data-act="Closing" data-title="Which ingredient?" data-at="43:00">
   <div class="kicker"><b>09</b> Decision guide</div>
   <h2 class="title">Which <em>ingredient?</em></h2>
   <div class="body">
@@ -1300,7 +1308,7 @@ svg.diagram { width: 100%; height: auto; display: block; overflow: visible; font
   </ul></aside>
 </section>
 
-<section class="slide finale" data-act="Closing" data-title="Let it cook" data-at="44:40">
+<section class="slide finale" data-act="Closing" data-title="Let it cook" data-at="44:30">
   <canvas id="embers2" aria-hidden="true"></canvas>
   <div class="finale-grid">
     <div class="stack" style="gap:2.4rem">
