@@ -345,6 +345,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 /* ── integrations ── */
 .integ { display: grid; grid-template-columns: .9fr 1.1fr; gap: 4vw; align-items: center; }
 .integ > * { min-width: 0; }
+.integ-stack { display: flex; flex-direction: column; gap: 1.6vh; }
+.integ .browser { transform: none; box-shadow: 0 20px 50px rgba(0, 0, 0, .5), 0 0 0 1px var(--line); }
+.integ .browser .bar span { margin-left: 10px; margin-right: auto; }
+.integ .term { box-shadow: 0 20px 50px rgba(0, 0, 0, .5), 0 0 0 1px var(--line); }
+.integ .term pre { min-height: 0; padding: .85em 1.1em; font-size: .72em; line-height: 1.5; }
 .plugs { display: flex; flex-wrap: wrap; gap: .6em; }
 .plug { display: inline-flex; align-items: center; gap: .5em; font-family: var(--f-mono); font-size: .75em; padding: .45em .9em; border: 1px dashed var(--line); border-radius: 999px; color: var(--mute); }
 .plug.real { border: 1px solid var(--tally); color: var(--ink); }
@@ -923,9 +928,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
             <li><b>Embeddable player</b><span>drop it into any event page</span></li>
           </ul>
         </div>
-        <div class="term rise" style="--d:3">
-          <div class="bar"><i></i><i></i><i></i><span>your platform → VoxBento</span></div>
-          <pre><span class="c"># create the event, then a booth per language</span>
+        <div class="integ-stack">
+          <div class="browser rise" style="--d:3">
+            <div class="bar"><i></i><i></i><i></i><span>eventyay.com/…/stages/mainhall</span></div>
+            <img src="@@img:eventyay_subtitles.jpg@@" alt="Eventyay stage with live VoxBento subtitles in Bengali">
+          </div>
+          <div class="term rise" style="--d:4">
+            <div class="bar"><i></i><i></i><i></i><span>your platform → VoxBento</span></div>
+            <pre><span class="c"># create the event, then a booth per language</span>
 <span class="m">POST</span> <span class="u">/api/v1/events/</span>
 <span class="m">POST</span> <span class="u">/api/v1/events/ots26/rooms/1/booths/de</span>
 
@@ -937,6 +947,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--tally); outline
 
 <span class="c"># known gaps: transcription routes (#507),</span>
 <span class="c"># GET /events/{slug} (#619)</span></pre>
+          </div>
         </div>
       </div>
     </div>
