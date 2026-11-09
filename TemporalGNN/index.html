@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Forecasting clique tension in the Enron email network: why groups vanish, why evaluation can mislead, and why persistence is hard to beat. A coursework project by Arnav Angarkar.">
+<title>Temporal Graph Models for Forecasting Clique Tension — Presentation</title>
+<style>
+:root{--bg:#0a0f1e;--bg2:#121a33;--tx:#e8ecf6;--mu:#9aa6c4;--ac:#5eead4;--am:#fbbf24;--rd:#fb7185;--bl:#60a5fa;--vi:#a78bfa;--gr:#4ade80;--cd:rgba(255,255,255,.055);--bd:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#05070f;color:var(--tx);font-family:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;overflow:hidden}
+#view{position:fixed;left:0;top:0;width:100vw;height:100vh;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:radial-gradient(1200px 700px at 85% -10%,#1b2750 0,transparent 60%),radial-gradient(900px 600px at -10% 110%,#16304a 0,transparent 55%),linear-gradient(160deg,#0a0f1e,#0d1630);overflow:hidden;border-radius:6px}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:56px 90px 56px;opacity:0;visibility:hidden;transform:translateX(40px);transition:opacity .45s ease,transform .45s ease;overflow:hidden}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.slide.past{transform:translateX(-40px)}
+.slide aside{display:none}
+.slide.center{justify-content:center}
+.hdr{flex:none}.bodywrap{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.bo{width:100%;flex:none}.bz{transform-origin:0 0}
+.sec{font-size:20px;letter-spacing:.22em;text-transform:uppercase;color:var(--ac);margin-bottom:8px;font-weight:600}
+h1{font-size:54px;line-height:1.12;font-weight:750;letter-spacing:-.01em;margin-bottom:22px}
+h2{font-size:34px;font-weight:650;color:var(--ac);margin:12px 0 8px}
+h3{font-size:28px;font-weight:650;color:var(--am);margin:8px 0 6px}
+p,li{font-size:28px;line-height:1.42;color:var(--tx)}
+li{margin:6px 0 6px 30px}
+.mu{color:var(--mu)} .s{font-size:23px} .xs{font-size:20px;color:var(--mu)}
+b,.b{color:#fff;font-weight:700} .ac{color:var(--ac)} .am{color:var(--am)} .rd{color:var(--rd)} .gr{color:var(--gr)} .bl{color:var(--bl)} .vi{color:var(--vi)}
+.cols{display:flex;gap:46px;align-items:flex-start} .c1{flex:1;min-width:0} .c2{flex:2;min-width:0} .c3{flex:3;min-width:0}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:18px;padding:20px 28px;margin:10px 0}
+.card.g{border-color:rgba(74,222,128,.5)} .card.r{border-color:rgba(251,113,133,.55)} .card.a{border-color:rgba(251,191,36,.55)} .card.v{border-color:rgba(167,139,250,.55)}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",Georgia,serif;font-size:36px;line-height:1.5;background:rgba(94,234,212,.07);border-left:6px solid var(--ac);padding:12px 26px;border-radius:10px;margin:12px 0;color:#f3fffd}
+.eq.std{border-left-color:var(--am);background:rgba(251,191,36,.06)}
+.eq i,.m i{font-style:italic}
+.m{font-family:"Cambria Math","STIX Two Math","Times New Roman",Georgia,serif;font-size:1.08em}
+sub,sup{font-size:.62em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 6px}
+.frac>span:first-child{border-bottom:2px solid currentColor;padding:0 6px 2px}.frac>span:last-child{padding:2px 6px 0}
+.badge{display:inline-block;font-size:18px;font-weight:650;padding:4px 14px;border-radius:30px;margin:0 8px 6px 0;letter-spacing:.03em}
+.badge.paper{background:rgba(74,222,128,.15);color:var(--gr);border:1px solid rgba(74,222,128,.5)}
+.badge.std{background:rgba(251,191,36,.13);color:var(--am);border:1px solid rgba(251,191,36,.5)}
+.badge.ill{background:rgba(167,139,250,.14);color:var(--vi);border:1px solid rgba(167,139,250,.5)}
+.badge.res{background:rgba(94,234,212,.12);color:var(--ac);border:1px solid rgba(94,234,212,.5)}
+.step{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}.step.on{opacity:1;transform:none}
+.flow{display:flex;align-items:center;gap:14px;flex-wrap:nowrap}
+.box{background:var(--cd);border:1.5px solid var(--bd);border-radius:14px;padding:12px 18px;font-size:24px;text-align:center;line-height:1.25}
+.box.ac{border-color:var(--ac)} .box.am{border-color:var(--am)} .box.rd{border-color:var(--rd)} .box.gr{border-color:var(--gr)} .box.bl{border-color:var(--bl)} .box.vi{border-color:var(--vi)}
+.arr{color:var(--mu);font-size:34px}
+.tbl{border-collapse:collapse;width:100%;font-size:24px}
+.tbl th{color:var(--ac);text-align:left;padding:7px 14px;border-bottom:2px solid var(--bd);font-weight:650}
+.tbl td{padding:6px 14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.tbl tr.hl td{background:rgba(94,234,212,.08)} .tbl tr.ref td{color:var(--mu)}
+.tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
+.big{font-size:96px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.kv{display:flex;gap:26px;flex-wrap:wrap}.kv .card{flex:1;min-width:230px;text-align:center}
+.kv .v{font-size:56px;font-weight:800;color:var(--ac);line-height:1.1}.kv .k{font-size:21px;color:var(--mu)}
+svg text{font-family:inherit}
+.bars .row{display:flex;align-items:center;gap:14px;margin:9px 0;font-size:24px}
+.bars .lab{width:360px;text-align:right;color:var(--mu)}
+.bars .bar{height:34px;border-radius:7px}
+.seg{height:46px;display:flex;align-items:center;justify-content:center;font-size:20px;border-radius:6px;color:#06101c;font-weight:650;white-space:nowrap;overflow:hidden}
+/* UI */
+#prog{position:fixed;left:0;top:0;height:5px;background:linear-gradient(90deg,var(--ac),var(--bl));z-index:30;width:0;transition:width .35s}
+#bar{position:fixed;right:14px;bottom:12px;z-index:30;display:flex;gap:8px;opacity:.35;transition:opacity .25s}
+#bar:hover{opacity:1}
+#bar button{background:rgba(20,28,56,.92);color:var(--tx);border:1px solid var(--bd);border-radius:9px;padding:7px 13px;font-size:15px;cursor:pointer}
+#bar button:hover{border-color:var(--ac);color:var(--ac)}
+#cnt{position:fixed;left:16px;bottom:14px;z-index:30;font-size:15px;color:var(--mu);background:rgba(10,15,30,.7);padding:4px 12px;border-radius:8px}
+#notes{position:fixed;left:0;right:0;bottom:0;height:36vh;background:#0c1226;border-top:2px solid var(--ac);z-index:25;padding:16px 36px;overflow:auto;display:none;font-size:19px;line-height:1.5;color:#dbe3f7}
+#notes b{color:var(--am)} #notes h4{color:var(--ac);font-size:17px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+#notes p,#notes li{font-size:19px;line-height:1.5;color:#dbe3f7} #notes li{margin-left:22px}
+#toc{position:fixed;inset:0;background:rgba(5,7,15,.96);z-index:40;display:none;overflow:auto;padding:40px 60px}
+#toc h2{font-size:30px;margin:22px 0 8px;color:var(--ac)} #toc a{display:inline-block;margin:4px 10px 4px 0;padding:6px 12px;border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:17px;cursor:pointer;text-decoration:none}
+#toc a:hover{border-color:var(--ac);color:var(--ac)} #toc .x{position:fixed;right:30px;top:20px;font-size:17px;color:var(--mu);cursor:pointer}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="view"><div id="stage">
+
+<!-- ===================== A. INTRODUCTION ===================== -->
+<section class="slide" data-sec="A · Introduction">
+<div style="height:150px"></div>
+<div class="sec">Research presentation</div>
+<h1 style="font-size:66px;max-width:1650px">Temporal Graph Models for Forecasting Clique Tension in Evolving Communication Networks: Group Turnover and Evaluation Pitfalls</h1>
+<p style="margin-top:34px;font-size:36px"><b>Arnav Angarkar</b></p>
+<p class="mu s" style="margin-top:14px">Department of Computer Science and Engineering, Indian Institute of Information Technology Dharwad, Dharwad, Karnataka, India</p>
+<div class="flow step" style="margin-top:60px"><span class="box ac">Enron email network</span><span class="arr">→</span><span class="box">cliques &amp; tension</span><span class="arr">→</span><span class="box">forecast next month</span><span class="arr">→</span><span class="box am">does a neural network beat "copy this month"?</span></div>
+<aside><h4>Say</h4><p>Hello everyone. This work asks one simple question: can we forecast how entangled company teams will be next month, and do fancy graph neural networks help? I will start from zero, so no background in graphs or machine learning is needed.</p><h4>Likely question</h4><p>None yet. Transition: let me first explain why anyone would care.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Motivation</div><h1>Why does this problem matter?</h1>
+<div class="cols"><div class="c1">
+<p>Organizations talk through email and chat. These logs show <b>who really works with whom</b>, not just the org chart.</p>
+<div class="card a step"><h3>The worry: silos</h3><p>A <b>silo</b> is a group that talks a lot inside itself and very little to the rest of the company. Silos cause duplicated work and slow decisions.</p></div>
+<div class="card step"><p class="s">An earlier research preprint (2025) proposed <b>clique-based scores</b> to spot silo-like structure, but only on <b>one static picture</b>.</p></div>
+<div class="card g step"><p class="s"><b>Our step:</b> measure the scores <b>every month</b> and try to <b>forecast the next month</b>.</p></div>
+</div>
+<div class="c1"><svg class="g" data-g="company" style="height:520px"></svg><p class="xs" style="text-align:center">Illustration: two dense teams linked by one weak tie</p></div></div>
+<aside><h4>Say</h4><p>Companies leave a trace in email: who talks to whom. A silo is a team that mostly talks to itself. An earlier preprint defined these scores on a single static graph. We ask: can we watch it over time and predict it?</p><h4>Key point</h4><p>This slide is motivation and illustration, not a result.</p><h4>Likely question</h4><p>"Are silos proven bad?" We do not test that; the paper treats the scores only as descriptive measures.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Before we start</div><h1>Plain-English glossary 1: the network words</h1>
+<div class="cols"><div class="c1">
+<div class="card"><p class="s"><b class="ac">Network / graph</b> — a picture of connections: dots (people) and lines (they talked).</p></div>
+<div class="card"><p class="s"><b class="ac">Node · edge</b> — a dot · a line between two dots.</p></div>
+<div class="card"><p class="s"><b class="ac">Clique</b> — a small team where <b>everyone has talked to everyone else</b>.</p></div>
+<div class="card"><p class="s"><b class="ac">Snapshot</b> — the network built from one 30-day window of emails.</p></div></div>
+<div class="c1">
+<div class="card a"><p class="s"><b class="am">ICCS</b> (Inter-Clique Conflict Score) — a number from 0 to 1 saying <b>how tightly two teams touch each other</b>. High = lots of people on the border between them.</p></div>
+<div class="card a"><p class="s"><b class="am">Tension</b> — one number per team: its ICCS added up over <b>all other teams</b>. High = the team is heavily entangled with others.</p></div>
+<div class="card a"><p class="s"><b class="am">SRI</b> (Silo Risk Index) — tension passed down to <b>people</b>: a person's total over the teams they belong to.</p></div>
+<div class="card"><p class="s"><b class="ac">Dissolve · survive</b> — a team that is gone / still there next month.</p></div></div></div>
+<aside><h4>Say</h4><p>Quick vocabulary, so nothing later is a surprise. The three amber ones are the measures this project is built on. I will explain each one slowly with an example in a few slides.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Foundations from zero</div><h1>What is a communication network?</h1>
+<div class="cols"><div class="c1">
+<ul><li class="step"><b>Node</b> = a person.</li><li class="step"><b>Edge</b> (line) = two people were on the same email.</li><li class="step"><b>Weight</b> = how many emails they shared (thicker line = more).</li></ul>
+<div class="card step"><p class="s">An email with <b>n</b> people creates <b>n(n−1)/2</b> lines.<br>Example: 3 people → 3 lines; 4 people → 6 lines.</p></div>
+<span class="badge ill">Illustrative example</span>
+</div><div class="c1"><svg class="g" data-g="net" style="height:540px"></svg></div></div>
+<aside><h4>Say</h4><p>A graph is just dots and lines. Dots are employees; a line means they emailed together. If three people are on one email, everyone connects to everyone, which is three lines.</p><h4>Avoid</h4><p>Do not say the graph contains message content. It only records who was on each email.</p><h4>Transition</h4><p>Now: some groups are tightly connected. These are cliques.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Foundations from zero</div><h1>Cliques: tight teams in the network</h1>
+<div class="cols"><div class="c1">
+<p>A <b>clique</b> is a set of people where <b>everyone is connected to everyone</b>.</p>
+<p class="mu s">A clique is <b>maximal</b> if no one else can be added and still keep that property.</p>
+<div class="card step"><p class="s"><span class="bl">Blue</span>: people 1,2,3,4 are all linked → a clique of size 4.<br><span class="gr">Green</span>: 5,6,7 form a triangle → a clique of size 3.<br>The line 4–5 alone is just a pair, too small (we keep groups of ≥ 3).</p></div>
+<div class="card step"><p class="s">In the paper: all maximal cliques with ≥ 3 members in each monthly graph; keep the <b>30 largest</b> per month.</p></div>
+</div><div class="c1"><svg class="g" data-g="cliq" style="height:500px"></svg></div></div>
+<aside><h4>Say</h4><p>A clique is a team where every pair has communicated. We use the Bron–Kerbosch algorithm to enumerate all maximal cliques, keep those with at least three members, and keep the thirty largest in each month.</p><h4>Likely question</h4><p>"Is a clique really a team?" Honest answer: 55% of our cliques are exactly one email's recipient list, so some are just cc lists. This is analysed later.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Foundations from zero</div><h1>What does "tension" mean here?</h1>
+<div class="cols"><div class="c3">
+<p><b>Tension</b> measures how much a clique is <b>entangled with the other cliques</b> in the same month.</p>
+<div class="card step"><p>For two cliques A and B, <b>ICCS</b> (<b>I</b>nter-<b>C</b>lique <b>C</b>onflict <b>S</b>core) counts the people who sit on the <b>border between them</b> (people in one who talk to the other), divided by their combined size. A fuller explanation, step by step, comes in the next section.</p></div>
+<div class="card step"><p>A clique's <b>tension</b> = the sum of its ICCS with <b>all other cliques</b> that month.</p></div>
+<div class="card a step"><p class="s"><b>SRI</b> = <b>S</b>ilo <b>R</b>isk <b>I</b>ndex: the same idea per <i>person</i> instead of per group (defined later).</p></div>
+<div class="card a step"><p class="s"><b>Caution (stated in the paper):</b> high ICCS means groups are tightly <i>coupled</i> at their boundary. That is almost the opposite of isolation, so ICCS and SRI are used here only as <b>descriptive</b> measures, not proven silo detectors.</p></div>
+</div></div>
+<aside><h4>Say</h4><p>Tension is a number per clique and month: the sum of boundary overlaps with all other cliques. Exact formulas are on the next section. Be upfront that these scores are descriptive; the paper says validity against external labels is untested.</p><h4>Likely question</h4><p>"Does tension measure silos?" No evidence yet. SRI correlates 0.82 with how many cliques a person belongs to.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">The task</div><h1>What exactly are we forecasting?</h1>
+<div class="flow" style="margin:26px 0"><div class="box bl">Month <i>k</i><br>cliques with tension <i>T</i></div><span class="arr">→</span><div class="box am" style="font-size:28px"><b>?</b><br>model</div><span class="arr">→</span><div class="box gr">Month <i>k</i>+1<br>tension of the <b>same</b> clique</div></div>
+<div class="cols"><div class="c1"><div class="card step"><h3>The easy baseline</h3><p><b>Persistence:</b> predict next month's tension = this month's tension.</p></div>
+<div class="card step"><h3>The challenge</h3><p>To score a forecast we need next month's true value. But only <b>40.3%</b> of cliques can be found again next month.</p></div></div>
+<div class="c1"><div class="card r step"><h3>So the real question is</h3><p>Can a model beat "copy this month" once we handle disappearing groups fairly?</p></div>
+<div class="kv step"><div class="card"><div class="v">40.3%</div><div class="k">of cliques survive one month</div></div><div class="card"><div class="v">59.7%</div><div class="k">dissolve</div></div></div></div></div>
+<aside><h4>Say</h4><p>For every clique this month, forecast its tension next month. The simplest forecast is to copy this month's value. The twist is that 60% of cliques do not exist next month.</p><h4>Transition</h4><p>That leads to the research questions.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Questions</div><h1>Research questions</h1>
+<ol style="margin-left:34px">
+<li class="step"><b>Persistence:</b> can next month's clique tension be forecast better than by carrying the current value forward?</li>
+<li class="step"><b>Architecture:</b> do graph information (GCN, GraphSAGE), temporal memory (GRU) or a survival head add anything?</li>
+<li class="step"><b>Deployable forecasting:</b> when dissolved groups must be forecast too, what works best?</li>
+<li class="step"><b>Measurement:</b> how much of the group turnover is produced by how we define groups?</li>
+</ol>
+<div class="card a step" style="margin-top:20px"><p class="s"><b>Initial expectation (paper's introduction):</b> "our first plan was to build [a temporal GNN] and show that it forecasts tension better than simple baselines." The data did not support that.</p></div>
+<aside><h4>Say</h4><p>Our original hope was that a temporal graph neural network would beat simple baselines. The paper is honest: it did not. These four questions organise the work.</p><h4>Avoid</h4><p>Do not say "hypothesis confirmed". The first expectation was refuted.</p></aside>
+</section>
+
+<section class="slide" data-sec="A · Introduction">
+<div class="sec">Contributions</div><h1>What the paper contributes</h1>
+<div class="cols"><div class="c1">
+<div class="card step"><h3>1 · Two protocols</h3><p class="s"><b>Protocol A</b> (deployable) and <b>Protocol B</b> (oracle-conditioned, survivors only); how each can mislead.</p></div>
+<div class="card step"><h3>2 · Fair comparison</h3><p class="s">Neural models vs controls often left out: cond-only regression, recalibrated persistence, ridge AR, GBDT, survival-weighted persistence.</p></div></div>
+<div class="c1">
+<div class="card step"><h3>3 · Measurement analysis</h3><p class="s">How much turnover is produced by the group definition itself (broadcast emails, K′ cap, threshold, window length, other group types).</p></div>
+<div class="card step"><h3>4 · Node-level SRI check</h3><p class="s">What SRI measures, and whether forecasts rank people better than the current SRI.</p></div></div></div>
+<p class="mu step" style="margin-top:10px">The paper describes the contribution as <b>mainly methodological</b>: an evaluation study with a mostly negative result about neural models.</p>
+<aside><h4>Say</h4><p>The contribution is not a new model. It is a careful way to evaluate forecasts when units disappear, a set of fair controls, and an analysis of what turnover really is.</p></aside>
+</section>
+
+<!-- ===================== B. FOUNDATIONS ===================== -->
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Metric 1, from scratch</div><h1>ICCS in plain English, before any formula</h1>
+<p><b>The question ICCS answers:</b> "How much do these two teams rub against each other?"</p>
+<div class="cols"><div class="c1">
+<ol style="margin-left:30px"><li class="step"><b>Take two teams</b> that each have their own tight circle (two cliques).</li><li class="step"><b>Look at their border:</b> who in one team also talks to someone in the other team? Those people are the <b>contact points</b>.</li><li class="step"><b>Count the contact points.</b> More contact points = more entangled.</li><li class="step"><b>Divide by the size of both teams</b>, so two big teams are not unfairly scored higher than two small ones.</li></ol>
+<div class="card g step"><p class="s"><b>Result:</b> a score from 0 (no contact) up to 1 (very tangled). <b>Name:</b> Inter-Clique Conflict Score = ICCS.</p></div></div>
+<div class="c1"><svg class="g" data-g="iccs" style="height:430px"></svg><div class="card a step"><p class="s"><b>Think of it as:</b> two offices sharing a corridor. The more people walking between them, the higher the score.</p></div></div></div>
+<aside><h4>Say</h4><p>Before I show the formula: ICCS counts how many people sit on the border between two teams and divides by the total number of people in both teams. In the picture, people 2, 3 and 4 are the contact points. Next slide gives the exact formula.</p><h4>Avoid</h4><p>Do not describe ICCS as measuring isolation; it measures how tightly teams touch.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Metric 1</div><h1>ICCS: the formula</h1>
+<div class="cols"><div class="c1">
+<div class="eq">ICCS(A, B) = <span class="frac"><span>contact points between A and B</span><span>size of A + size of B</span></span></div>
+<p class="s"><b>Contact point</b> = a person in one team who has talked to someone in the other team. The score is between 0 and 1.</p>
+<div class="card step"><span class="badge ill">Worked example (illustrative)</span><p class="s">A = {1,2,3}, B = {4,5,6}, extra lines 3–4 and 2–4.<br>Contact points: persons 2, 3 and 4 → 3.<br>ICCS = 3 ÷ (3 + 3) = <b class="ac">0.5</b></p></div></div>
+<div class="c1"><svg class="g" data-g="iccs" style="height:430px"></svg></div></div>
+<aside><h4>Say</h4><p>Count the people on the border between the two teams and divide by the total number of people in both. Here that is three over six, so 0.5. High means tangled together; it does not mean isolated.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Metrics 2 &amp; 3</div><h1>Tension and SRI</h1>
+<span class="badge paper">From the paper</span>
+<div class="eq">T(C) = Σ<sub>C′ ≠ C</sub> ICCS(C, C′) &nbsp;&nbsp;&nbsp; SRI(v) = Σ<sub>C ∋ v</sub> T(C)</div>
+<div class="cols"><div class="c1"><p class="s"><b>T(C):</b> sum of the clique's ICCS with <i>every other</i> clique that month. <b>SRI(v):</b> person v's risk = total tension of all cliques v belongs to.</p>
+<div class="card step"><span class="badge ill">Illustrative</span><p class="s">Clique C touches three others with ICCS 0.5, 0.3, 0.2 → T(C) = <b>1.0</b>.<br>Person v is in cliques with T = 1.0 and 2.5 → SRI(v) = <b>3.5</b>.</p></div></div>
+<div class="c1"><div class="card a step"><h3>Two facts reported in the paper</h3><ul class="s"><li>Because T sums over all other cliques, it grows with their number: corr. of mean tension and clique count across months = <b>0.94</b>.</li><li>SRI behaves like a membership count: Spearman <b>0.82</b> with clique count, <b>0.67</b> with degree.</li></ul></div>
+<div class="card step"><p class="s">→ This is why the paper also uses a <b>normalized tension</b> T̃ = T / max(K<sub>k</sub>−1, 1).</p></div></div></div>
+<aside><h4>Say</h4><p>Tension adds up ICCS across all partners; SRI pushes the clique number down to people. Two honest facts: tension scales with how many cliques exist, and SRI is largely a count of memberships.</p><h4>Likely question</h4><p>"So is SRI meaningful?" Needs external labels (departments, job titles) – listed as future work.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Structure used by the models</div><h1>The clique meta-graph</h1>
+<div class="cols"><div class="c1"><p>Make a <b>new graph</b> where <b>each clique is a node</b>; two cliques are linked if ICCS &gt; 0, with ICCS as edge weight. Models run on this graph.</p>
+<div class="card"><h3>5 features per clique <span class="badge paper">paper</span></h3><ol class="s" style="margin-left:26px"><li>clique size</li><li>conflict degree (number of meta-edges)</li><li>current tension T(C)</li><li>mean internal edge weight</li><li>total external edge weight</li></ol></div></div>
+<div class="c1"><svg class="g" data-g="meta" style="height:480px"></svg><p class="xs" style="text-align:center">Illustrative: edge thickness = ICCS</p></div></div>
+<aside><h4>Say</h4><p>The meta-graph is a graph of groups. Each group carries five numbers. The meta-graph is dense: most cliques touch most others, which matters for the GCN later.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Time</div><h1>Tracking cliques across months</h1>
+<div class="cols"><div class="c1">
+<p>Cliques have no ID. We link month <i>k</i> to <i>k</i>+1 with <b>Jaccard similarity</b>:</p>
+<span class="badge paper">From the paper</span>
+<div class="eq">J(C<sub>i</sub><sup>(k)</sup>, C<sub>j</sub><sup>(k+1)</sup>) = <span class="frac"><span>|C<sub>i</sub> ∩ C<sub>j</sub>|</span><span>|C<sub>i</sub> ∪ C<sub>j</sub>|</span></span></div>
+<p class="s">Matching is <b>one-to-one and greedy</b>: sort pairs with J ≥ τ (τ = 0.5) by J; accept a pair if neither clique is used yet.</p>
+<div class="card step"><span class="badge ill">Illustrative</span><p class="s">{1,2,3,4} vs {1,2,3,5}: shared 3, union 5 → J = <b class="gr">0.6</b> (same clique).<br>{1,2,3,4} vs {1,2,7,8}: shared 2, union 6 → J = <b class="rd">0.33</b> (dissolved).</p></div></div>
+<div class="c1"><div class="card a"><p class="s">Harsh for small groups: a 4-person clique that swaps 2 members has J = 2/6 ≈ 0.33 and counts as <b>dissolved</b>.</p></div><p class="s mu">Result: a partial injective map π<sub>k</sub> from cliques at <i>k</i> to cliques at <i>k</i>+1.</p></div></div>
+<aside><h4>Say</h4><p>To say "the same clique next month", we compare member sets with Jaccard: overlap divided by union. Half or more means same. Each new clique can be claimed once.</p><h4>Likely question</h4><p>"Why 0.5?" It is a convention; the paper tests τ from 0.3 to 0.7 and survival goes from 56% to 22%.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Time</div><h1>Survival and dissolution</h1>
+<div class="cols"><div class="c1">
+<div class="card g step"><h3 class="gr">Survives</h3><p class="s">The team is found again next month (member overlap J ≥ 0.5).</p></div>
+<div class="card r step"><h3 class="rd">Dissolves</h3><p class="s">No clique next month matches it well enough.</p></div>
+<div class="card step"><h3>Age</h3><p class="s">How many months in a row we have already seen this team. Older teams tend to survive more often.</p></div>
+<p class="s mu step">In the paper, survival is written s = 1 (survives) or s = 0 (dissolves).</p></div>
+<div class="c1"><svg class="g" data-g="temporal" style="height:520px"></svg></div></div>
+<aside><h4>Say</h4><p>Green lines are matches, dashed red circles dissolve, amber ones are new teams. Survival is just yes or no, and age counts how long a team has lasted. The diagram is illustrative.</p></aside>
+</section>
+
+<section class="slide" data-sec="B · Graph foundations">
+<div class="sec">Turnover</div><h1>Why do ~60% of cliques "disappear"?</h1>
+<div class="cols"><div class="c1">
+<p>Of <b>689</b> retained cliques: <b>278 (40.3%)</b> have a successor; <b>411 (59.7%)</b> do not. Looking at the 411:</p>
+<div class="bars" id="turn"></div></div>
+<div class="c1"><div class="card a step"><h3>Part of it is how we define groups</h3><ul class="s"><li><b>55.3%</b> of retained cliques are exactly one email's recipient list (a cc list, not a team).</li><li>The J ≥ 0.5 rule is strict for small groups.</li><li>10% are cut by the top-30 limit.</li></ul></div>
+<div class="card step"><p class="s">Other group definitions still show survival of only <b>30–44%</b> (cliques not in one email 30.5%; repeated pairs 43.8%; clique percolation 32.8%; Louvain 36.4%).</p></div></div></div>
+<aside><h4>Say</h4><p>Sixty percent dissolution is partly real and partly measurement. A third of the "dissolutions" are partial changes, a sixth are matching conflicts, a tenth are a top-30 artefact. Even with other definitions survival stays between about 30 and 44%.</p><h4>Likely question</h4><p>"So is turnover fake?" Partly artefact, but it remains high under every definition tried.</p></aside>
+</section>
+
+<!-- ===================== C. DATASET & SETUP ===================== -->
+<section class="slide" data-sec="C · Data &amp; setup">
+<div class="sec">Dataset</div><h1>The Enron email data</h1>
+<div class="kv"><div class="card"><div class="v">10,883</div><div class="k">emails</div></div><div class="card"><div class="v">148 / 143</div><div class="k">employee IDs / active</div></div><div class="card"><div class="v">44</div><div class="k">30-day snapshots</div></div><div class="card"><div class="v">689</div><div class="k">retained cliques</div></div></div>
+<div class="cols" style="margin-top:12px"><div class="c1"><ul class="s"><li>Source: simplicial email-Enron dataset (Benson et al., 2018): each record = timestamp + set of Enron employees on the email.</li><li>1,307 days, <b>Nov 1998 – Jun 2002</b>; 73% of emails have exactly two participants; largest has 18.</li><li>Activity peaks in 2001 and collapses after the Dec 2001 bankruptcy; snapshots 41–43 have no cliques.</li></ul></div>
+<div class="c1"><div class="card"><p class="s">Per snapshot: <b>55.0 ± 39.7</b> active people and <b>163.8 ± 147.1</b> edges. 115 out-of-order timestamps were sorted.</p></div><div class="card a"><p class="s">Mailboxes come from ~150 <b>custodians</b>, so it is not the whole company graph.</p></div></div></div>
+<aside><h4>Say</h4><p>Real emails, only who-was-on-it. About ten thousand emails, forty-four months, 689 retained cliques. The collapse is in the data.</p><h4>Limitation</h4><p>Custodian sample; single company.</p></aside>
+</section>
+
+<section class="slide" data-sec="C · Data &amp; setup">
+<div class="sec">Targets</div><h1>Protocol A vs Protocol B</h1>
+<span class="badge paper">Definitions from the paper</span>
+<div class="cols"><div class="c1"><div class="card g"><h3 class="gr">Protocol A — deployable</h3><div class="eq" style="font-size:30px">y<sub>i</sub><sup>A</sup> = s<sub>i</sub><sup>(k)</sup> · T<sup>(k+1)</sup>(C<sub>π<sub>k</sub>(i)</sub>)</div><p class="s">Score <b>every</b> clique; dissolved ones get target <b>0</b>. What you face in real use.</p></div></div>
+<div class="c1"><div class="card r"><h3 class="rd">Protocol B — oracle-conditioned</h3><div class="eq" style="font-size:30px">y<sub>i</sub><sup>B</sup> = T<sup>(k+1)</sup>(C<sub>π<sub>k</sub>(i)</sub>) &nbsp; for s<sub>i</sub>=1</div><p class="s">Score <b>only survivors</b>. Survival is known only <i>after</i> the fact, so it conditions on the future (survivorship bias).</p></div></div></div>
+<div class="card step"><span class="badge ill">Illustrative example</span><p class="s">3 cliques, tensions now: <b>8, 5, 6</b>. Next month only clique 1 survives (tension 7). <b>A</b> targets: 7, 0, 0. Persistence predicts 8, 5, 6 → MSE = (1+25+36)/3 = <b>20.7</b>. Predicting 2,2,2 gives <b>11</b> – "predict small" wins. <b>B</b>: only clique 1, error 1 – looks great but uses the future. Persistence × 0.4 → 3.2, 2, 2.4 → MSE = <b>8.1</b>.</p></div>
+<aside><h4>Say</h4><p>A is the honest protocol; B is useful to study the tension part alone but cheats. The toy example shows why both can mislead. The original paper's headline win was a Protocol B number.</p><h4>Common misunderstanding</h4><p>Protocol B is not wrong; it just cannot be deployed.</p></aside>
+</section>
+
+<section class="slide" data-sec="C · Data &amp; setup">
+<div class="sec">Evaluation setup</div><h1>How the data is split in time</h1>
+<h3>Rolling origin (main test) <span class="badge paper">paper</span></h3>
+<div id="roll"></div>
+<p class="s" style="margin-top:8px">For each of <b>24 origins</b> o = 16…39: train on transitions before o (last 15%, ≥ 2, for early stopping), forecast transition o. 20 origins precede the collapse. Pooled: <b>614</b> Protocol A rows, <b>237</b> Protocol B rows (38.6% survive).</p>
+<h3>Chronological split (earlier work)</h3>
+<div class="flow" style="gap:0"><div class="seg" style="width:55%;background:var(--bl)">train: transitions 0–29</div><div class="seg" style="width:14%;background:var(--am)">val 30–35</div><div class="seg" style="width:19%;background:var(--rd)">test 36–42 (collapse)</div></div>
+<p class="xs">Only 35 survivors from 4 snapshots in the test window; survival 42.6% / 40.0% / 32.1% in train / val / test.</p>
+<aside><h4>Say</h4><p>Rolling origin mimics real use: always train on the past, forecast the next month, then move on. The chronological split has only the bankruptcy months, which is too short and special.</p><h4>Likely question</h4><p>"Why from origin 16?" Earlier months have too few cliques (snapshots before ~13 have almost none).</p></aside>
+</section>
+
+<section class="slide" data-sec="C · Data &amp; setup">
+<div class="sec">Honesty</div><h1>Dataset limitations</h1>
+<div class="cols"><div class="c1"><div class="card a step"><h3>Scale</h3><p class="s">Only <b>689 cliques</b> in ~39 usable months; early rolling origins train on a few dozen survivors.</p></div><div class="card a step"><h3>One company, one period</h3><p class="s">One firm, one 30-day horizon, one period that ends in collapse. Custodian sample, no external contacts.</p></div></div>
+<div class="c1"><div class="card a step"><h3>Pairs, not hyperedges</h3><p class="s">Projecting emails onto pairs loses "same message"; 55% of cliques are single emails.</p></div><div class="card r step"><h3>No external labels used</h3><p class="s">ICCS/SRI are not validated against departments or job titles. A second dataset (email-Eu-core) is <b>not</b> in the paper.</p></div></div></div>
+<aside><h4>Say</h4><p>I want to be upfront. Small data, one company, one period, projected pairs, and no external validation. Everything later should be read with these limits.</p></aside>
+</section>
+
+<!-- ===================== D. BASELINES ===================== -->
+<section class="slide" data-sec="D · Baselines">
+<div class="sec">Before the models</div><h1>Plain-English glossary 2: the forecasting words</h1>
+<div class="cols"><div class="c1">
+<div class="card"><p class="s"><b class="ac">Forecast</b> — a prediction of next month's value.</p></div>
+<div class="card"><p class="s"><b class="ac">Persistence</b> — the simplest forecast: "next month = this month".</p></div>
+<div class="card"><p class="s"><b class="ac">Baseline</b> — a simple method every fancy model must beat to be worth using.</p></div>
+<div class="card"><p class="s"><b class="ac">MSE</b> (mean squared error) — average of (prediction − truth)². Lower is better.</p></div>
+<div class="card"><p class="s"><b class="ac">MSE ratio</b> — model error ÷ persistence error. Below 1 = better than persistence.</p></div></div>
+<div class="c1">
+<div class="card"><p class="s"><b class="ac">Ridge AR</b> — a straight-line forecast from the value's own past, with a penalty against overfitting.</p></div>
+<div class="card"><p class="s"><b class="ac">GBDT</b> (gradient-boosted decision trees) — many small if-then flowcharts added together.</p></div>
+<div class="card"><p class="s"><b class="ac">MLP</b> (multi-layer perceptron) — a basic neural network. <b>GCN</b> (graph convolutional network) and <b>GraphSAGE</b> — neural networks that also look at neighbours. <b>GRU</b> (gated recurrent unit) — adds memory of past months.</p></div>
+<div class="card"><p class="s"><b class="ac">Overfitting</b> — memorising the training data instead of learning a rule that works on new data.</p></div></div></div>
+<aside><h4>Say</h4><p>Second vocabulary check, for the models and measures. The key one is persistence: the dumb forecast that everything is compared to.</p></aside>
+</section>
+
+<section class="slide" data-sec="D · Baselines">
+<div class="sec">Baselines first</div><h1>Persistence: "next month = this month"</h1>
+<span class="badge paper">Stated in the paper</span><div class="eq">ŷ<sub>i</sub> = T<sup>(k)</sup>(C<sub>i</sub>)</div>
+<div class="cols"><div class="c1"><ul><li class="step"><b>No parameters</b>, no learning, cannot overfit.</li><li class="step">Scales automatically with whatever tension level the month has.</li><li class="step">Tension is <b>sticky</b>: current and next-month tension correlate (r ≈ 0.67–0.72 in the paper).</li></ul></div>
+<div class="c1"><div class="card step"><span class="badge ill">Illustrative</span><p>Tension now = 8 → predict 8.<br>Truth next month = 7 → error 1, squared error <b>1</b>.</p></div><div class="card g step"><p class="s"><b>Why it is such a strong baseline:</b> any learned model must find signal <i>beyond</i> "stay the same", and must not add noise from its own parameters.</p></div></div></div>
+<aside><h4>Say</h4><p>Persistence is the bar: copy this month. It has no parameters, so it cannot overfit, and tension is persistent. This is the same lesson as in intermittent-demand forecasting and dynamic-graph benchmarks.</p><h4>Likely question</h4><p>"Isn't that a trivial baseline?" That is exactly the point: it is hard to beat.</p></aside>
+</section>
+
+<section class="slide" data-sec="D · Baselines">
+<div class="sec">Baselines</div><h1>Three more simple forecasts</h1>
+<div class="cols"><div class="c1"><div class="card"><h3 class="ac">Recalibrated persistence</h3><p class="s">A straight line learned from data: next = a × now + b. <br><span class="badge ill">Illustrative</span> a = 0.9, b = 0.5, now = 8 → 7.7</p><p class="s"><b>Ratio 0.98</b> (about the same)</p></div>
+<div class="card"><h3 class="ac">Ridge AR</h3><p class="s">A straight line that also looks at <b>last month</b> and the change. "Ridge" = a penalty that stops it overfitting.</p><p class="s"><b>Ratio 0.95</b> (about the same)</p></div></div>
+<div class="c1"><div class="card"><h3 class="ac">GBDT (decision trees)</h3><p class="s">Many small if–then rules added together. Cannot go beyond values it saw in training.</p><p class="s"><b>Ratio 1.12</b> (worse)</p></div>
+<div class="card"><h3 class="ac">GBDT + neighbours</h3><p class="s">The same, plus the average and maximum tension of linked cliques.</p><p class="s"><b>Ratio 1.17</b> (worse)</p></div></div></div>
+<p class="s mu step">Ratio = model error ÷ persistence error. Below 1 is better. These are all on surviving cliques over 24 months.</p>
+<aside><h4>Say</h4><p>Three more simple forecasts. The straight-line ones tie with persistence; the tree models do worse, probably because they cannot go beyond what they saw. Adding neighbour information to the trees did not help either.</p></aside>
+</section>
+
+<!-- ===================== E. NEURAL ===================== -->
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks 1</div><h1>A neuron and the MLP</h1>
+<div class="cols"><div class="c1"><p>A <b>neuron</b> computes a weighted sum of its inputs plus a bias, then bends it with an <b>activation</b>. <b>ReLU</b>(z) = max(0, z).</p>
+<span class="badge std">Standard</span><div class="eq">h = ReLU( w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + … + b )</div>
+<div class="card"><span class="badge ill">Illustrative</span><p class="s">x = (size 4, tension 8), w = (0.5, 0.2), b = −1:<br>z = 2 + 1.6 − 1 = 2.6 → <b>h = 2.6</b>. With b = −5: z = −1.4 → h = <b>0</b>.</p></div></div>
+<div class="c1"><svg class="g" data-g="mlp" style="height:400px"></svg><p class="xs" style="text-align:center">Layers of neurons; each layer's output feeds the next. Weights and biases are learned.</p>
+<div class="card a step"><p class="s">The paper's <b>MLP encoder</b> uses the same clique features with <b>no neighbours</b>: every clique is processed independently.</p></div></div></div>
+<aside><h4>Say</h4><p>A neuron multiplies, adds, and clips negatives. Stack them to get an MLP. Training adjusts weights to reduce error. Crucially, our MLP sees one clique at a time: it ignores the graph. That makes it the "no graph" reference.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks 2</div><h1>Graph neural networks: use the neighbours</h1>
+<div class="cols"><div class="c1"><p><b>Idea:</b> a clique's neighbours in the meta-graph may carry information about its future. A graph neural network lets each node <b>collect information from its neighbours</b>.</p>
+<ol class="s" style="margin-left:28px"><li class="step">Each node starts with its feature vector.</li><li class="step">It <b>aggregates</b> (averages) neighbours' vectors.</li><li class="step">A neural layer transforms the result.</li><li class="step">Repeat → information travels 1, then 2 hops.</li></ol></div>
+<div class="c1"><svg class="g" data-g="meta" style="height:430px"></svg><p class="xs" style="text-align:center">Meta-graph: each clique can "listen" to the others</p><div class="card step"><p class="s"><b>Why it could help:</b> tension is defined by the surrounding cliques, so neighbours should matter.</p></div></div></div>
+<aside><h4>Say</h4><p>A GNN lets each clique look at its neighbours. Because tension is literally defined through neighbours, it was reasonable to expect help. The next slides show the exact computation and why it can backfire here.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks 3</div><h1>GCN aggregation: a real calculation</h1>
+<span class="badge ill">Illustrative numbers (not experimental results)</span>
+<div class="cols"><div class="c1"><p class="s">4 cliques all linked to each other, with equal weights. Current tensions: <b>9, 3, 6, 4</b>. With self-loops, Ã is all ones, D̃ = 4, so Â = ¼·(all ones).</p>
+<div class="eq std" style="font-size:30px">new value = ¼(9+3+6+4) = <b>5.5</b> &nbsp; for <i>every</i> clique</div>
+<p class="s step">The clique with tension <b class="rd">9</b> and the one with <b class="bl">3</b> end up <b>identical</b>: the clique's own value was averaged away.</p></div>
+<div class="c1"><div style="display:flex;gap:30px"><div style="flex:1"><p class="xs" style="text-align:center">before</p><svg class="g" data-g="k4a" style="height:300px"></svg></div><div style="flex:1" class="step"><p class="xs" style="text-align:center">after one layer</p><svg class="g" data-g="k4b" style="height:300px"></svg></div></div></div></div>
+<aside><h4>Say</h4><p>Take four fully connected cliques with tensions nine, three, six and four. One averaging step turns all of them into 5.5. The strongest predictor of next month's tension is the clique's own current tension, and averaging has destroyed it.</p><h4>Caution</h4><p>Real weights are ICCS values and learned transformations, so the effect is weaker; this is the extreme case.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks 3</div><h1>Over-smoothing and the dense meta-graph</h1>
+<div class="cols"><div class="c1"><p><b>Over-smoothing:</b> repeated neighbour averaging makes node representations <b>more and more alike</b>.</p>
+<div class="card a step"><h3>Why it is a concern here</h3><p class="s">Our meta-graph is <b>dense</b>: most cliques overlap with most others. Two rounds of averaging can wash out a clique's own tension, the strongest predictor.</p></div>
+<div class="card step"><h3>What the experiments show</h3><ul class="s"><li><b>Plain GCN</b> (no direct access to tension): ratio <b class="rd">1.15</b>; it cannot even match persistence on its own training data (MSE 14.6 vs 12.9).</li><li><b>Residual GCN</b>: ratio <b>1.00</b>; best validation point at <b>epoch 0</b>.</li></ul></div></div>
+<div class="c1"><div class="card g step"><h3>Honest interpretation</h3><p class="s">The paper states the blurring explanation, but <b>GraphSAGE, which keeps the clique's own signal, did not improve either</b>. So over-smoothing is a plausible <b>partial</b> explanation, not the whole story, and was not isolated by a dedicated experiment.</p></div>
+<div class="card v step"><p class="s">Not a claim that GCNs are ineffective in general: these <b>configurations</b> did not beat persistence on <b>this</b> small dataset.</p></div></div></div>
+<aside><h4>Say</h4><p>The GCN does worse than persistence when it must rebuild the value from scratch. We blame the smoothing, but we also tested a design that avoids it, and it did not help. So the safest statement: graph information did not provide reliable improvement here.</p><h4>Likely question</h4><p>"Did you prove over-smoothing?" No: plausible, partial, untested directly.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks</div><h1>GraphSAGE: keep "me" and "my neighbours" separate</h1>
+<p>The GCN <b>mixes</b> a clique with its neighbours in one average. GraphSAGE keeps <b>two paths</b>:</p>
+<div class="flow" style="margin:14px 0"><div class="box bl">my own features</div><span class="arr">+</span><div class="box vi">average of my neighbours</div><span class="arr">→</span><div class="box ac">new representation</div></div>
+<div class="cols"><div class="c1"><div class="card"><span class="badge ill">Illustrative</span><p class="s">Own tension 9, neighbours 3, 6, 4 (average 4.33). Mixing 80% own + 20% neighbours → <b>8.07</b>. The clique keeps its identity.</p></div>
+<p class="s mu">Why we tried it: to avoid the blurring of the GCN.</p></div>
+<div class="c1"><div class="card g step"><h3>Result</h3><p class="s">Ratio <b>1.00</b>: same as persistence and the same as the MLP. Looking at neighbours did not help here.</p></div></div></div>
+<aside><h4>Say</h4><p>GraphSAGE keeps the clique own value separate from the neighbour average, so its own tension is not averaged away. We tried it for exactly that reason. It performed the same as the MLP, so neighbour information added nothing measurable.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks</div><h1>Memory over time: the GRU</h1>
+<div class="cols"><div class="c1">
+<p><b>Idea:</b> a team that has existed for 5 months may behave differently from a new team. A <b>GRU</b> (gated recurrent unit) lets the model <b>remember</b> a team's earlier months.</p>
+<div class="flow step" style="margin:10px 0"><div class="box">last month's memory</div><span class="arr">+</span><div class="box">this month's data</div><span class="arr">→</span><div class="box ac">updated memory</div></div>
+<p class="s step">A "gate" decides how much old memory to keep and how much to replace. A team with no earlier month simply starts with no memory.</p></div>
+<div class="c1"><div class="card a step"><h3>Why it could not help much</h3><p class="s">Most teams have only <b>one or two</b> earlier months, so there is little to remember.</p></div>
+<div class="card g step"><h3>Result</h3><p class="s">GCN + GRU ratio <b>1.02</b>, the same as the GCN without memory.</p></div>
+<div class="card v step"><p class="s">This does <b>not</b> mean memory never helps; it did not help <b>here</b>.</p></div></div></div>
+<aside><h4>Say</h4><p>The GRU is a memory unit. It carries a team past behaviour into this month. With cliques that mostly last only one or two months there is almost nothing to remember, and the result was the same as without memory. I am not claiming memory is useless in general.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks</div><h1>One encoder, two answers</h1>
+<div class="flow" style="margin:16px 0 24px"><div class="box">clique features</div><span class="arr">→</span><div class="box bl">encoder<br><span class="xs">MLP · GCN · GraphSAGE · GCN+GRU</span></div><span class="arr">→</span><div style="display:flex;flex-direction:column;gap:12px"><div class="box gr">tension head → predicted tension (≥ 0)</div><div class="box rd">survival head → chance of surviving (0–1)</div></div></div>
+<div class="cols"><div class="c1"><div class="card"><h3 class="gr">Tension head</h3><p class="s">Gives next month's tension. It uses <b>softplus</b>, a smooth function that keeps the answer positive.</p></div></div>
+<div class="c1"><div class="card"><h3 class="rd">Survival head</h3><p class="s">Gives a probability. It uses a <b>sigmoid</b>, which squeezes any number into 0–1.</p></div></div></div>
+<div class="card step"><p class="s"><b>Why two heads?</b> They answer two different questions: <i>Will this team still exist?</i> and <i>How big will its tension be if it does?</i></p></div>
+<aside><h4>Say</h4><p>All the neural models share this layout. The encoder builds a summary of each clique; one head predicts the tension, the other predicts the survival probability.</p></aside>
+</section>
+
+<section class="slide" data-sec="E · Neural networks">
+<div class="sec">Neural networks 6</div><h1>Plain vs residual tension head</h1>
+<div class="cols"><div class="c1"><div class="card r"><h3 class="rd">Plain</h3><div class="eq std" style="font-size:30px">T̂ = Softplus( g<sub>c</sub>(z) )</div><p class="s">Must <b>build the whole number from scratch</b>. At the start g<sub>c</sub> ≈ 0 → T̂ ≈ ln 2 ≈ <b>0.69</b>, far from typical tensions (~6.5).</p></div></div>
+<div class="c1"><div class="card g"><h3 class="gr">Residual (used for the main models)</h3><div class="eq" style="font-size:30px">T̂ = Softplus( T<sup>(k)</sup> + g<sub>c</sub>(z) )</div><p class="s">The last layer of g<sub>c</sub> starts at <b>zero</b>. With T = 8: T̂ = ln(1+e<sup>8</sup>) ≈ <b>8.0</b>: the model <b>starts at persistence</b>.</p></div></div></div>
+<div class="card step"><p class="s"><b>Why this matters for a fair comparison:</b> a residual model begins exactly at the baseline and moves away only if that lowers the validation loss. A plain model must <i>first</i> rediscover persistence. Any neural advantage must therefore be real signal.</p></div>
+<div class="card a step"><p class="s"><b>What happened:</b> residual GCN and SAGE stayed at persistence (best validation at epoch 0); plain GCN was <b>15% worse</b> than persistence (ratio 1.15).</p></div>
+<aside><h4>Say</h4><p>This design came from review feedback: it removes the unfair advantage persistence had. Residual models start identical to persistence, so if they cannot improve, it is evidence there is little to gain.</p><h4>Likely question</h4><p>"Is softplus(8) exactly 8?" ln(1+e^8)=8.0003; practically yes.</p></aside>
+</section>
+
+<!-- ===================== F. SURVIVAL & TRAINING ===================== -->
+<section class="slide" data-sec="F · Survival &amp; training">
+<div class="sec">Training options</div><h1>Three ways to train</h1>
+<div class="cols"><div class="c1"><div class="card"><h3 class="am">Zero-fill</h3><p class="s">Train on <b>all</b> cliques. Dissolved ones count as tension 0.</p></div></div>
+<div class="c1"><div class="card"><h3 class="bl">Conditional-only</h3><p class="s">Train on <b>survivors only</b>. No survival prediction.</p></div></div>
+<div class="c1"><div class="card"><h3 class="ac">Two-stage (hurdle)</h3><p class="s">Train <b>both heads</b>: survival chance and tension.</p></div></div></div>
+<div class="card step"><p class="s"><b>Why compare them?</b> Conditional-only vs two-stage shows whether the <b>survival head</b> helps the tension forecast. Zero-fill vs conditional-only shows whether training on the <b>right rows</b> matters.</p></div>
+<div class="card g step"><p class="s"><b>Result:</b> two-stage and conditional-only are about the same (ratio 0.99 for the MLP, 1.00 for the GCN). The survival head does not improve the tension forecast for survivors.</p></div>
+<aside><h4>Say</h4><p>Three training styles. The two-stage version comes from statistics for data with many zeros: first model whether it is zero, then how big it is. In our results it makes no difference to the tension forecast.</p></aside>
+</section>
+
+<section class="slide" data-sec="F · Survival &amp; training">
+<div class="sec">Survival modelling</div><h1>The two-stage forecast</h1>
+<div class="eq">forecast = <b>chance of surviving</b> × <b>tension if it survives</b></div>
+<div class="cols"><div class="c1"><div class="card step"><span class="badge ill">Illustrative example</span><p class="s">Survival chance <b>70%</b>, tension if it survives <b>8</b>:<br>forecast = 0.7 × 8 + 0.3 × 0 = <b class="ac">5.6</b></p></div>
+<p class="s mu step">With squared error, the best single guess is this average outcome.</p></div>
+<div class="c1"><div class="card step"><h3>Same idea, no neural network</h3><p class="s"><b>Persistence × survival chance.</b> We tried five ways to get the chance, from "the overall survival rate" up to a <b>hazard model</b>: a simple model where the survival chance depends on how old the team is (plus its size and tension).</p></div></div></div>
+<aside><h4>Say</h4><p>If a clique has a seventy percent chance to live and would have tension eight, the best single forecast is five point six. The same trick works with plain persistence: multiply it by a survival chance. The hazard model is just a simple model of survival by age.</p></aside>
+</section>
+
+<section class="slide" data-sec="F · Survival &amp; training">
+<div class="sec">Training</div><h1>The training pipeline</h1>
+<div class="flow" style="flex-wrap:wrap;row-gap:18px;margin:12px 0"><div class="box step on">standardize features<br><span class="xs">training stats only</span></div><span class="arr">→</span><div class="box step on">initialise<br><span class="xs">residual head = persistence</span></div><span class="arr">→</span><div class="box step on">predict on training months</div><span class="arr">→</span><div class="box step on am">compute loss</div></div>
+<div class="flow" style="flex-wrap:wrap;row-gap:18px;margin:12px 0"><div class="box step ac">Adam update<br><span class="xs">nudge weights downhill</span></div><span class="arr">→</span><div class="box step">validation loss<br><span class="xs">held-out months</span></div><span class="arr">→</span><div class="box step rd">no improvement for 30 epochs?<br><span class="xs">stop</span></div><span class="arr">→</span><div class="box step gr">restore best epoch → forecast origin</div></div>
+<div class="cols"><div class="c1"><ul class="s step"><li><b>Epoch</b> = one pass over training data; up to <b>300</b>.</li><li><b>Adam</b> = standard optimiser; <b>learning rate</b> = step size; weight decay 10<sup>−4</sup>; dropout 0.1.</li></ul></div><div class="c1"><ul class="s step"><li><b>Overfitting</b>: training loss keeps falling, validation loss rises → <b>early stopping</b> keeps the best epoch.</li><li><b>Seeds</b>: results averaged over <b>5</b> random initialisations (3 for alternative group definitions).</li></ul></div></div>
+<aside><h4>Say</h4><p>The pipeline is standard. We stop when validation does not improve for thirty epochs and keep the best epoch. This replaced the earlier setup of thirty-five fixed steps, which a reviewer rightly called undertrained.</p></aside>
+</section>
+
+<!-- ===================== G. EVALUATION ===================== -->
+<section class="slide" data-sec="G · Evaluation">
+<div class="sec">Evaluation methodology</div><h1>Why evaluation design matters: the collapse trap</h1>
+<div class="cols"><div class="c1"><p>On the chronological test window (bankruptcy months, 35 survivors), surviving cliques had much <b>lower tension</b> than in earlier years (mean <b>4.23</b> vs 6.17). Any model that forecasts low looks good there.</p>
+<div id="trap"></div>
+<p class="xs">Collapse window MSE on survivors (five seeds): persistence 5.04; plain GCN (two-stage) 2.62 ± 0.67; residual models 4.91–5.29.</p></div>
+<div class="c1"><div class="card r step"><h3>Same model, two verdicts</h3><p class="s">Plain GCN looks <b>48% better</b> than persistence on the collapse window, but over 24 rolling origins it is <b>15% worse</b> (ratio 1.15).</p></div>
+<div class="card step"><p class="s"><b>Rolling origin</b> mimics real deployment (always forecast the next unseen month), covers 20 pre-collapse origins, and avoids one special period.</p></div></div></div>
+<aside><h4>Say</h4><p>This is a key message of the paper: a short special window can reverse the conclusion. On the bankruptcy months a plain GCN appears dramatically better; across the whole history it is worse. That is why we use rolling origin.</p><h4>Avoid</h4><p>2.62 vs 5.04 is 48% lower MSE; do not call it significant.</p></aside>
+</section>
+
+<section class="slide" data-sec="G · Evaluation">
+<div class="sec">Statistics 1</div><h1>MSE and the MSE ratio</h1>
+<div class="cols"><div class="c1"><span class="badge std">Standard definition</span><div class="eq">MSE = <span class="frac"><span>1</span><span>n</span></span> Σ<sub>i=1</sub><sup>n</sup> (ŷ<sub>i</sub> − y<sub>i</sub>)²</div>
+<div class="eq">ratio = <span class="frac"><span>MSE<sub>model</sub></span><span>MSE<sub>persistence</sub></span></span></div>
+<p class="s"><b>ŷ</b> = forecast, <b>y</b> = truth, <b>n</b> = number of cliques pooled over the 24 origins. <b>Ratio &lt; 1</b> = better than persistence; <b>= 1</b> = same; <b>&gt; 1</b> = worse.</p></div>
+<div class="c1"><div class="card"><span class="badge ill">Illustrative</span><p class="s">Persistence MSE 10, model MSE 9.6 → ratio <b>0.96</b> (4% better). Model MSE 11.5 → <b>1.15</b> (15% worse).</p></div>
+<div class="card a step"><p class="s"><b>Key lesson:</b> a lower point estimate does <b>not</b> establish significance. The next slides ask: is a 4% difference bigger than what chance would produce?</p></div>
+<p class="s mu">The paper also reports MAE and median absolute error. For Protocol A the reference is persistence × base rate.</p></div></div>
+<aside><h4>Say</h4><p>Our main number is the ratio of mean squared errors. Below one is better than persistence. But a ratio of 0.96 on 237 survivors in 24 months could be noise, hence the tests.</p></aside>
+</section>
+
+<section class="slide" data-sec="G · Evaluation">
+<div class="sec">Checking results</div><h1>Is a difference real, or just luck?</h1>
+<div class="cols"><div class="c1">
+<div class="card step"><h3>1 · Confidence range</h3><p class="s">A ratio of 0.96 looks better, but how much could it change with different months? We re-draw the months many times (in blocks of 3 consecutive months, since neighbouring months are similar) to get a <b>range</b>. If the range includes 1, we cannot tell.</p></div>
+<div class="card step"><h3>2 · A significance test</h3><p class="s">Gives a <b>p-value</b>: how surprising the difference would be if the two forecasts were equally good.</p></div></div>
+<div class="c1">
+<div class="card a step"><h3>3 · Many models, many chances</h3><p class="s">We compare about 15 models. Test enough and some look good by luck, so we make the test <b>stricter</b>. After that, none beats persistence.</p></div>
+<div class="card g step"><h3>4 · "Not different" ≠ "the same"</h3><p class="s">To say two models are the same, their range must stay within about <b>10%</b> of each other.</p></div>
+<div class="card step"><span class="badge ill">Example from the paper</span><p class="s">Residual MLP: ratio 0.96, range [0.93, 1.00]. It only just reaches 1.</p></div></div></div>
+<aside><h4>Say</h4><p>A lower number is not automatically better. We ask how much it would change with different months, we correct for comparing many models, and to say two models are the same we require them to stay within ten percent. The technical names are bootstrap, Diebold-Mariano test, adjustment correction and equivalence testing, all in the paper.</p></aside>
+</section>
+
+<section class="slide" data-sec="G · Evaluation">
+<div class="sec">Checking survival forecasts</div><h1>AUROC: can the model rank who survives?</h1>
+<div class="cols"><div class="c1"><p>AUROC = the chance that a <b>random survivor</b> gets a higher survival score than a <b>random dissolver</b>.</p>
+<ul class="s"><li><b>0.5</b> = coin flip</li><li><b>1.0</b> = perfect ranking</li></ul></div>
+<div class="c1"><div class="card"><span class="badge ill">Illustrative</span><p class="s">Survivors score 0.7 and 0.4; dissolved score 0.5 and 0.2. Of 4 pairs, 3 are ranked correctly → AUROC = <b>0.75</b>.</p></div></div></div>
+<div class="card a step"><p class="s"><b>In our data:</b> hazard 0.65, logistic 0.66, GBDT 0.67, neural survival heads 0.55–0.62, "last month's survival rate" 0.53. Survival is only <b>weakly predictable</b>. The paper also reports Brier score and calibration.</p></div>
+<aside><h4>Say</h4><p>AUROC checks ranking. A coin flip is 0.5. Our best simple models reach about 0.65, which is modest, and the neural survival heads are weaker.</p></aside>
+</section>
+
+<!-- ===================== H. RESULTS ===================== -->
+<section class="slide" data-sec="H · Results">
+<div class="sec">Results — Protocol B (survivors)</div><h1>MSE ratio to persistence</h1>
+<div id="chB"></div>
+<div class="flow" style="gap:24px;margin-top:6px"><span class="xs"><span style="color:var(--gr)">■</span> interval entirely below 1</span><span class="xs"><span style="color:var(--rd)">■</span> interval entirely above 1</span><span class="xs"><span style="color:#8fa0d6">■</span> interval includes 1 (tied / inconclusive)</span><span class="xs"><span style="color:var(--am)">┆</span> persistence = 1.0</span></div>
+<aside><h4>Say</h4><p>Bars show the ratio; whiskers show the 95% moving-block bootstrap interval. The dashed line is persistence. No model has an interval entirely below one; the residual MLP touches it. Models without current tension tend to be above.</p><h4>Avoid</h4><p>The colour reflects only the bootstrap interval, not the adjusted test.</p></aside>
+</section>
+
+<section class="slide" data-sec="H · Results">
+<div class="sec">Results</div><h1>Better, worse or the same?</h1>
+<div class="cols"><div class="c1"><div class="card g step"><h3 class="gr">About the same as persistence</h3><p class="s">Ridge AR, recalibrated persistence, residual MLP, GCN, GraphSAGE and GCN+GRU (ratios 0.95–1.02). The MLP is nominally best (0.96) but not reliably.</p></div>
+<div class="card r step"><h3 class="rd">Worse</h3><p class="s">Plain GCN 1.15, GBDT 1.12, GBDT + neighbours 1.17. These must rebuild or extrapolate the value.</p></div></div>
+<div class="c1"><div class="card step"><h3>Nothing beat persistence reliably</h3><p class="s">After adjusting for comparing many models, no model is clearly better than persistence.</p></div>
+<div class="card step"><h3>"The same" for these pairs</h3><ul class="s"><li>graph models ≈ MLP</li><li>GRU ≈ no GRU</li><li>two-stage ≈ conditional-only</li></ul></div>
+<div class="card a step"><p class="s"><b>Wording:</b> "the tested configurations did not reliably beat persistence on this data", not "neural networks are useless".</p></div></div></div>
+<aside><h4>Say</h4><p>Nothing clearly beats persistence. Several comparisons come out the same. Use careful wording: these configurations, this dataset.</p></aside>
+</section>
+
+<section class="slide" data-sec="H · Results">
+<div class="sec">Interpretation</div><h1>Why did sophisticated models not win?</h1>
+<div class="cols"><div class="c1"><div class="card step"><h3>1 · Graph information</h3><p class="s">GCN, SAGE and GBDT-with-neighbours all failed to improve. Dense meta-graph → averaging may blur the clique's own tension, but SAGE (which avoids that) did not help either.</p></div>
+<div class="card step"><h3>2 · Memory (GRU)</h3><p class="s">Short histories (1–2 predecessors); equivalent to no GRU.</p></div>
+<div class="card step"><h3>3 · Survival head</h3><p class="s">Two-stage ≈ cond-only: the classifier does not change the survivors' tension forecast.</p></div></div>
+<div class="c1"><div class="card g step"><h3>4 · Persistence is strong</h3><p class="s">Tension is sticky (r ≈ 0.67–0.72), persistence has zero parameters and tracks any level shift.</p></div>
+<div class="card step"><h3>5 · Residual start matters</h3><p class="s">Without it (plain GCN) models are 15% worse; with it they converge <i>to</i> persistence.</p></div>
+<div class="card a step"><h3>6 · Small data regime</h3><p class="s">689 cliques: a model with many weights competes with a zero-parameter baseline. A larger dataset <b>might</b> change the answer (hypothesis).</p></div></div></div>
+<aside><h4>Say</h4><p>Six readings. Items one to three are directly tested; four to six are interpretations. The paper says persistence is hard to beat and warns that a bigger dataset might differ.</p></aside>
+</section>
+
+<!-- ===================== I. PROTOCOL A ===================== -->
+<section class="slide" data-sec="I · Protocol A">
+<div class="sec">The deployable result</div><h1>Why survival must be forecast</h1>
+<div class="cols"><div class="c1"><p>Forecasting only survivors is <b>not</b> the real problem: in practice you must forecast <b>every</b> clique, including those that will vanish.</p>
+<div class="card r step"><p class="s">Persistence alone predicts tension for groups that will not exist → large error (it is not a fair reference for Protocol A).</p></div>
+<div class="card g step"><p class="s"><b>Fair reference:</b> persistence × (training) base survival rate: <b>MSE 19.42</b>.</p></div></div>
+<div class="c1"><div class="eq">ŷ<sub>i</sub><sup>A</sup> = p̂<sub>i</sub> · T<sup>(k)</sup>(C<sub>i</sub>)</div><span class="badge paper">paper</span><p class="s">Replace the base rate with a <b>clique-specific</b> survival probability p̂<sub>i</sub>. The expectation logic: E[outcome] = P(survive) × T + P(dissolve) × 0.</p>
+<div class="card step"><h3>Which survival forecasts?</h3><p class="s">AUROC: logistic <b>0.66</b>, hazard <b>0.65</b>, GBDT <b>0.67</b>; neural heads 0.55–0.62; last month's rate 0.53 (≈ coin flip). Survival is <b>weakly predictable</b>, mainly from age, size and tension.</p></div></div></div>
+<aside><h4>Say</h4><p>In real use you cannot choose only survivors. So Protocol A scores everything. The best simple reference is persistence times a survival probability. Which probability matters, and a hazard model with clique age does best among simple ones.</p></aside>
+</section>
+
+<section class="slide" data-sec="I · Protocol A">
+<div class="sec">Protocol A results</div><h1>Deployable forecasts: MSE ratio to persistence × base rate</h1>
+<div id="chA"></div>
+<div class="flow" style="gap:24px"><span class="xs"><span style="color:var(--gr)">■</span> interval below 1</span><span class="xs"><span style="color:var(--rd)">■</span> above 1</span><span class="xs"><span style="color:#8fa0d6">■</span> includes 1</span><span class="xs">† = result of the stricter test (adjusted for comparing many models)</span></div>
+<aside><h4>Say</h4><p>Reference is persistence times the base rate, MSE 19.42. Hazard 16.20, ratio 0.83. Notice the bootstrap intervals exclude one for hazard, logistic and plain GCN, but the adjusted p-values are 0.5 or above.</p></aside>
+</section>
+
+<section class="slide" data-sec="I · Protocol A">
+<div class="sec">Protocol A results</div><h1>Where does the improvement come from?</h1>
+<div class="cols"><div class="c1"><div class="kv"><div class="card"><div class="k">Persistence × base rate</div><div class="v">19.42</div></div><div class="card"><div class="k">Persistence × hazard</div><div class="v">16.20</div></div></div>
+<div class="card g step"><p class="s">Ratio <b>0.83</b> (≈ 16.6%, i.e. about <b>17%</b>, lower MSE).</p></div>
+<p class="s mu step">Same logic holds for four of five group definitions (raw-target ratios 0.65–0.92), but <b>not</b> for Louvain communities (1.03; hazard AUROC 0.61).</p></div>
+<div class="c1"><h3>Error decomposition (squared error per clique)</h3><div id="dec"></div>
+<div class="card a step"><p class="s"><b>Reading:</b> for hazard-weighted persistence the <b>dissolved</b> part falls from 10.8 to 5.8 while the <b>survivor</b> part rises from 8.6 to 10.4. The gain comes from handling <b>dissolved</b> cliques, not from better tension forecasts.</p></div></div></div>
+<aside><h4>Say</h4><p>Splitting error into survivors and dissolved shows the mechanism: predicting who will dissolve reduces the big errors on cliques that vanish; the survivor part actually gets slightly worse. Better survival forecasts, not better tension forecasts.</p></aside>
+</section>
+
+<section class="slide" data-sec="I · Protocol A">
+<div class="sec">Protocol A results</div><h1>How sure are we about the 17%?</h1>
+<div class="cols"><div class="c1"><div class="card g"><h3 class="gr">For it</h3><ul class="s"><li>Error ratio 0.83, confidence range <b>[0.76, 0.94]</b>, below 1.</li><li>Similar for the logistic version.</li><li>Holds for 4 of 5 group definitions.</li></ul></div></div>
+<div class="c1"><div class="card r"><h3 class="rd">Against it</h3><ul class="s"><li>A stricter test (adjusted for comparing many models) gives <b>p = 0.54</b>, not significant.</li><li>Better in 17 of 24 months only.</li><li>Not true for Louvain communities.</li></ul></div></div></div>
+<div class="card a step" style="margin-top:14px"><p><b>Say it like this:</b> the improvement is <b>suggestive, not proven</b>. It is the best realistic forecast we found, and it needs confirming on more data.</p></div>
+<aside><h4>Say</h4><p>I will not overstate it. The range excludes one, but the stricter test does not confirm it. So: suggestive.</p></aside>
+</section>
+
+<!-- ===================== J. ROBUSTNESS ===================== -->
+<section class="slide" data-sec="J · Robustness &amp; limits">
+<div class="sec">Robustness</div><h1>Other group definitions and a normalized target</h1>
+<div class="cols"><div class="c1"><p class="s">Same comparison for five group definitions × raw / normalized target (T̃ = T / max(K−1, 1)).</p>
+<div class="card g step"><h3>Raw target</h3><p class="s">Residual MLP and GCN ratios stay within <b>0.92–1.09</b> in every definition; none significantly better than persistence after adjustment. Wide intervals for percolation/Louvain (51 and 69 survivors).</p></div>
+<div class="card a step"><h3>Normalized target</h3><p class="s">Neural models are <b>worse</b> than persistence (MLP ratios 1.12–1.84; one exception: GCN on cliques not in one email, 0.99). <b>Recalibrated persistence and ridge AR do 10–18% better</b> for clique-based definitions (none significant after adjustment).</p></div></div>
+<div class="c1"><div class="card step"><h3>Why linear models win there (plausible)</h3><p class="s">Average coupling tends to drift back toward typical values month to month, which a straight line captures; residual networks stay near persistence because early stopping ends before they learn it. <span class="mu">(Interpretation, not tested.)</span></p></div>
+<div class="card step"><p class="s">The <b>only setting</b> where any forecast beat persistence by more than a few percent was a <b>two-parameter linear model</b>.</p></div></div></div>
+<aside><h4>Say</h4><p>On the raw target the conclusion holds for all five definitions. On the normalized target the neural models do worse, and only the straight-line models help, with no correction-surviving evidence. The explanation is plausible, not proven.</p></aside>
+</section>
+
+<section class="slide" data-sec="J · Robustness &amp; limits">
+<div class="sec">Honest boundaries</div><h1>Demonstrated vs. hypothesis</h1>
+<div class="cols"><div class="c1"><div class="card g"><h3 class="gr">Demonstrated (in this data)</h3><ul class="s"><li>~60% of cliques have no next-month match; part is measurement.</li><li>Protocol B and short windows can mislead (48% "better" vs 15% worse).</li><li>Tested neural configurations did not reliably beat persistence; graph, memory and survival head added nothing measurable.</li><li>A hazard-weighted persistence is the best deployable forecast tried (suggestive).</li></ul></div></div>
+<div class="c1"><div class="card a"><h3 class="am">Hypotheses / open</h3><ul class="s"><li>Over-smoothing as the cause (partial at best).</li><li>Larger data or other architectures might beat persistence.</li><li>ICCS/SRI as silo measures: untested.</li><li>Generalisation to other companies or horizons: untested.</li><li>Why linear models help on normalized tension: interpretation.</li></ul></div></div></div>
+<p class="s mu step">Other limits: custodian sample; two hyperparameters tuned on one split; no published temporal GNN (EvolveGCN, DySAT, ROLAND) compared; pairwise projection of emails.</p>
+<aside><h4>Say</h4><p>This slide separates what we showed from what we only suspect. Use it to answer "can you generalise?": no, and the paper says so.</p></aside>
+</section>
+
+<section class="slide" data-sec="J · Robustness &amp; limits">
+<div class="sec">Next steps</div><h1>Future work</h1>
+<div class="cols"><div class="c1"><div class="card step"><h3>Data</h3><p class="s">A second dataset, ideally with <b>department labels</b> (email-Eu-core), to test generalisation and to validate ICCS/SRI against external labels.</p></div><div class="card step"><h3>Groups</h3><p class="s">Track <b>hyperedges</b> (whole emails) instead of projected cliques.</p></div></div>
+<div class="c1"><div class="card step"><h3>Models</h3><p class="s">Compare with published temporal GNNs; wider tuning; discrete-time survival models; multi-step horizons.</p></div><div class="card step"><h3>Validity</h3><p class="s">Check whether tension relates to real silo or collaboration outcomes.</p></div></div></div>
+<aside><h4>Say</h4><p>The next steps follow directly from the limits: a second dataset with labels, hyperedges, more models and multi-step horizons. The second dataset is the most important.</p></aside>
+</section>
+
+<!-- ===================== K. CONCLUSION ===================== -->
+<section class="slide" data-sec="K · Conclusion">
+<div class="sec">Conclusion</div><h1>Main findings</h1>
+<ol style="margin-left:34px"><li class="step"><b>Groups turn over fast</b> (about 60% in a month), partly because of how groups are defined (55% are single emails), so the target is often undefined.</li><li class="step"><b>Evaluation can mislead:</b> Protocol B and a short collapse window made a plain GCN look 48% better; over 24 rolling origins it is 15% worse.</li><li class="step"><b>Properly trained neural models converged to persistence</b>: residual MLP, GCN, SAGE and GCN+GRU are within ~±4% and equivalent.</li><li class="step"><b>Graph, memory and the survival head added nothing measurable.</b></li><li class="step"><b>Best deployable forecast:</b> persistence × hazard survival probability, ≈ 17% lower MSE (suggestive; adjusted p = 0.54).</li></ol>
+<aside><h4>Say</h4><p>Five findings. Emphasise the first two as the methodological message and the last as the practical one.</p></aside>
+</section>
+
+<section class="slide" data-sec="K · Conclusion">
+<div class="sec">Conclusion</div><h1>Contribution, failures and the practical model</h1>
+<div class="cols"><div class="c1"><div class="card g step"><h3 class="gr">What it contributes</h3><p class="s">A clean way to evaluate forecasts when units disappear (Protocols A/B, rolling origin, equivalence), fair controls, and a measurement analysis of turnover.</p></div><div class="card r step"><h3 class="rd">What did not work</h3><p class="s">Graph neural networks, GraphSAGE, GRU memory and the hurdle survival head did not reliably beat persistence on this dataset.</p></div></div>
+<div class="c1"><div class="card step"><h3 class="ac">Most useful practical model</h3><p class="s"><b>Persistence × a simple survival probability</b> (hazard model on clique age, size, tension, group count). Two lines of code, no deep learning.</p></div><div class="card a step"><h3>For researchers</h3><p class="s">Report persistence first; score dissolved units; test with equivalence margins; validate scores externally.</p></div></div></div>
+<aside><h4>Say</h4><p>The positive contribution is methodological and a very simple practical forecast; the negative result is that the sophisticated models did not reliably help here.</p></aside>
+</section>
+
+<section class="slide" data-sec="K · Conclusion">
+<div style="height:170px"></div>
+<div class="sec">Take-home message</div>
+<h1 style="font-size:62px;max-width:1650px;line-height:1.2">Groups vanish so quickly that tension forecasting is mostly about guessing <span class="am">who survives</span>. On this data, properly trained graph and temporal networks add nothing over <span class="ac">copying this month's value</span>.</h1>
+<p class="mu step" style="font-size:32px;margin-top:30px">The best forecast we found is persistence scaled by a simple survival probability.</p>
+<aside><h4>Say</h4><p>If the audience remembers one sentence, it is this one. Pause here, then open Q&amp;A.</p></aside>
+</section>
+
+<section class="slide" data-sec="K · Conclusion">
+<div class="sec">Discussion</div><h1>Questions? — likely ones and short answers</h1>
+<div class="cols"><div class="c1"><div class="card"><p class="s"><b>Why not a bigger GNN?</b> Properly trained, tuned, residual start; best validation was epoch 0 for GCN/SAGE. Small data (689 cliques); larger data might differ.</p></div>
+<div class="card"><p class="s"><b>Is Protocol B wrong?</b> No; it conditions on the future, so it only isolates the tension part.</p></div>
+<div class="card"><p class="s"><b>Is the 17% significant?</b> Bootstrap interval excludes 1; adjusted p = 0.54 → suggestive.</p></div></div>
+<div class="c1"><div class="card"><p class="s"><b>Did you prove over-smoothing?</b> No: plausible, partial; SAGE did not help either.</p></div>
+<div class="card"><p class="s"><b>Do ICCS/SRI measure silos?</b> Not shown; they measure coupling; need external labels.</p></div>
+<div class="card"><p class="s"><b>Does this generalise?</b> Unknown: one company, one period; second dataset is future work.</p></div></div></div>
+<p class="mu" style="text-align:center;margin-top:10px;font-size:30px"><b class="ac">Thank you</b> · Arnav Angarkar</p>
+<aside><h4>Say</h4><p>Open the floor. Use these answers; be candid about limits.</p></aside>
+</section>
+
+</div></div>
+
+<div id="cnt"></div>
+<div id="bar"><button id="bT" title="Contents (T)">Contents</button><button id="bN" title="Speaker notes (N)">Notes</button><button id="bP">◀</button><button id="bX">▶</button><button id="bF" title="Fullscreen (F)">⛶</button></div>
+<div id="notes"></div>
+<div id="toc"><span class="x" onclick="toggleToc()">close ✕ (Esc)</span><div id="tocIn"></div></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+/* ---------- graph drawing ---------- */
+const nd=(id,x,y,o={})=>Object.assign({id,x,y},o);
+const B='#60a5fa',O='#fb923c',G='#4ade80',A='#fbbf24',R='#fb7185',V='#a78bfa';
+const complete=(ids,o)=>{const e=[];for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)e.push([ids[i],ids[j],o]);return e;};
+const GR={
+company:{w:940,h:500,n:[nd('E1',120,150,{c:B,t:'E1'}),nd('E2',300,100,{c:B,t:'E2'}),nd('E3',400,250,{c:B,t:'E3'}),nd('E4',240,390,{c:B,t:'E4'}),nd('E5',90,300,{c:B,t:'E5'}),nd('S1',640,110,{c:O,t:'S1'}),nd('S2',820,170,{c:O,t:'S2'}),nd('S3',850,320,{c:O,t:'S3'}),nd('S4',700,410,{c:O,t:'S4'}),nd('S5',540,270,{c:O,t:'S5'})],
+ e:[...complete(['E1','E2','E3','E4','E5'],{c:B,w:3}),...complete(['S1','S2','S3','S4','S5'],{c:O,w:3}),['E3','S5',{c:A,w:3,d:1}]],lab:[[210,40,'Engineering team',B],[740,50,'Sales team',O],[470,200,'weak tie',A]]},
+net:{w:760,h:520,n:[nd('A',380,70,{t:'A'}),nd('B',160,170,{t:'B'}),nd('C',200,380,{t:'C'}),nd('D',420,300,{t:'D'}),nd('E',620,160,{t:'E'}),nd('F',600,400,{t:'F'}),nd('G',380,470,{t:'G'}),nd('H',90,300,{t:'H'})],
+ e:[['A','B',{w:6}],['A','D',{w:3}],['A','E',{w:2}],['B','C',{w:4}],['B','H',{w:2}],['C','D',{w:8}],['D','E',{w:3}],['D','F',{w:5}],['E','F',{w:2}],['C','G',{w:2}],['G','F',{w:3}],['C','H',{w:2}],['B','D',{w:2}]],lab:[[380,505,'thicker line = more shared emails',null]]},
+cliq:{w:780,h:500,n:[nd('1',110,110,{c:B,t:'1'}),nd('2',310,110,{c:B,t:'2'}),nd('3',110,320,{c:B,t:'3'}),nd('4',310,320,{c:B,t:'4'}),nd('5',500,220,{c:G,t:'5'}),nd('6',680,110,{c:G,t:'6'}),nd('7',680,330,{c:G,t:'7'})],
+ e:[...complete(['1','2','3','4'],{c:B,w:4}),['4','5',{c:'#6b7aa8',w:3}],...complete(['5','6','7'],{c:G,w:4})],lab:[[210,455,'clique of size 4',B],[600,455,'clique of size 3',G]]},
+iccs:{w:760,h:500,n:[nd('1',110,110,{c:B,t:'1'}),nd('2',110,360,{c:A,t:'2'}),nd('3',290,230,{c:A,t:'3'}),nd('4',470,230,{c:A,t:'4'}),nd('5',650,110,{c:G,t:'5'}),nd('6',650,360,{c:G,t:'6'})],
+ e:[...complete(['1','2','3'],{c:B,w:4}),...complete(['4','5','6'],{c:G,w:4}),['3','4',{c:A,w:5}],['2','4',{c:A,w:5}]],lab:[[200,455,'A = {1,2,3}',B],[560,455,'B = {4,5,6}',G],[380,60,'overlap = {2,3,4}',A]]},
+meta:{w:720,h:480,n:[nd('C1',360,70,{r:36,t:'C1',c:R}),nd('C2',130,190,{r:30,t:'C2',c:A}),nd('C3',590,190,{r:32,t:'C3',c:A}),nd('C4',200,380,{r:34,t:'C4',c:R}),nd('C5',520,380,{r:28,t:'C5',c:G})],
+ e:[['C1','C2',{w:7}],['C1','C3',{w:5}],['C1','C4',{w:9}],['C1','C5',{w:3}],['C2','C4',{w:6}],['C2','C3',{w:2}],['C3','C5',{w:5}],['C4','C5',{w:8}],['C3','C4',{w:3}],['C2','C5',{w:2}]]},
+temporal:{w:760,h:520,n:[nd('a1',90,90,{r:34,t:'A1',c:G}),nd('a2',90,210,{r:34,t:'A2',c:G}),nd('a3',90,330,{r:34,t:'A3',c:R,d:1}),nd('a4',90,450,{r:34,t:'A4',c:R,d:1}),nd('b1',380,110,{r:34,t:'B1',c:G}),nd('b2',380,240,{r:34,t:'B2',c:R,d:1}),nd('b3',380,380,{r:34,t:'B3',c:A}),nd('c1',680,110,{r:34,t:'C1',c:G}),nd('c2',680,260,{r:34,t:'C2',c:A}),nd('c3',680,400,{r:34,t:'C3',c:A})],
+ e:[['a1','b1',{c:G,w:5}],['a2','b1',{c:'#4b5a8a',w:2,d:1}],['a2','b2',{c:G,w:5}],['b1','c1',{c:G,w:5}]],lab:[[90,35,'month k',null],[380,35,'month k+1',null],[680,35,'month k+2',null],[380,500,'green = survives · dashed red = dissolves · amber = new',null]]},
+k4a:{w:420,h:300,n:[nd('a',90,70,{r:38,t:'9',c:R}),nd('b',330,70,{r:38,t:'3',c:B}),nd('c',90,230,{r:38,t:'6',c:A}),nd('d',330,230,{r:38,t:'4',c:G})],e:complete(['a','b','c','d'],{c:'#6b7aa8',w:3})},
+k4b:{w:420,h:300,n:[nd('a',90,70,{r:38,t:'5.5',c:V}),nd('b',330,70,{r:38,t:'5.5',c:V}),nd('c',90,230,{r:38,t:'5.5',c:V}),nd('d',330,230,{r:38,t:'5.5',c:V})],e:complete(['a','b','c','d'],{c:'#6b7aa8',w:3})}
+};
+function drawGraph(svg,cfg){
+ svg.setAttribute('viewBox',`0 0 ${cfg.w} ${cfg.h}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.style.width='100%';
+ let s='';const m={};cfg.n.forEach(n=>m[n.id]=n);
+ (cfg.e||[]).forEach(([a,b,o])=>{o=o||{};const p=m[a],q=m[b];s+=`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${o.c||'#5b6890'}" stroke-width="${o.w||3}" ${o.d?'stroke-dasharray="10 8"':''} opacity=".9"/>`;});
+ cfg.n.forEach(n=>{const r=n.r||28;s+=`<circle cx="${n.x}" cy="${n.y}" r="${r}" fill="#18213f" stroke="${n.c||'#8fa0d6'}" stroke-width="4" ${n.d?'stroke-dasharray="7 6"':''}/><text x="${n.x}" y="${n.y+8}" text-anchor="middle" font-size="${r>30?24:22}" fill="#fff" font-weight="700">${n.t||''}</text>`;});
+ (cfg.lab||[]).forEach(([x,y,t,c])=>{s+=`<text x="${x}" y="${y}" text-anchor="middle" font-size="22" fill="${c||'#9aa6c4'}" font-weight="600">${t}</text>`;});
+ svg.innerHTML=s;
+}
+function drawMLP(svg){const L=[5,6,4,1],w=760,h=400;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);let s='',pos=[];L.forEach((n,i)=>{const x=90+i*190,col=[];for(let j=0;j<n;j++){col.push([x,h/2+(j-(n-1)/2)*58]);}pos.push(col);});
+ for(let i=0;i<L.length-1;i++)pos[i].forEach(p=>pos[i+1].forEach(q=>s+=`<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#4b5a8a" stroke-width="1.5"/>`));
+ const cl=['#60a5fa','#a78bfa','#a78bfa','#4ade80'];pos.forEach((c,i)=>c.forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="17" fill="#18213f" stroke="${cl[i]}" stroke-width="3"/>`));
+ ['5 features','hidden (ReLU)','hidden (ReLU)','output'].forEach((t,i)=>s+=`<text x="${90+i*190}" y="${h-8}" text-anchor="middle" font-size="19" fill="#9aa6c4">${t}</text>`);svg.innerHTML=s;svg.style.width='100%';}
+$$('svg.g').forEach(s=>{const k=s.dataset.g;if(k==='mlp')drawMLP(s);else drawGraph(s,GR[k]);});
+/* ---------- charts ---------- */
+function chart(el,rows,o){if(!el)return;const lw=o.lw||470,pw=o.pw||1000,rh=o.rh||44,W=lw+pw+260,H=rows.length*rh+54,x=v=>lw+(v-o.min)/(o.max-o.min)*pw;
+ let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%">`;
+ o.ticks.forEach(t=>{s+=`<line x1="${x(t)}" y1="12" x2="${x(t)}" y2="${H-34}" stroke="rgba(255,255,255,.08)"/><text x="${x(t)}" y="${H-10}" text-anchor="middle" font-size="19" fill="#9aa6c4">${t}</text>`;});
+ rows.forEach((r,i)=>{const y=22+i*rh,mid=y+rh/2-8,ref=r.ref;let col=ref?'#7b88b8':(r.hi<1?'#4ade80':(r.lo>1?'#fb7185':'#8fa0d6'));
+  s+=`<text x="${lw-14}" y="${mid+7}" text-anchor="end" font-size="22" fill="${ref?'#9aa6c4':'#e8ecf6'}">${r.l}</text>`;
+  if(!ref){s+=`<rect x="${Math.min(x(1),x(r.v))}" y="${mid-11}" width="${Math.abs(x(r.v)-x(1))}" height="22" rx="4" fill="${col}" opacity=".85"/><line x1="${x(r.lo)}" y1="${mid}" x2="${x(r.hi)}" y2="${mid}" stroke="#fff" stroke-width="2.5"/><line x1="${x(r.lo)}" y1="${mid-8}" x2="${x(r.lo)}" y2="${mid+8}" stroke="#fff" stroke-width="2.5"/><line x1="${x(r.hi)}" y1="${mid-8}" x2="${x(r.hi)}" y2="${mid+8}" stroke="#fff" stroke-width="2.5"/>`;}
+  const txt=ref?'1.00 (reference)':`${r.v.toFixed(2)} [${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]${r.p!==undefined?' † p='+r.p.toFixed(2):''}`;
+  s+=`<text x="${x(o.max)+14}" y="${mid+7}" font-size="21" fill="#cdd6ee">${txt}</text>`;});
+ s+=`<line x1="${x(1)}" y1="8" x2="${x(1)}" y2="${H-34}" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="8 6"/></svg>`;el.innerHTML=s;}
+const R1=(l,v,lo,hi,p)=>({l,v,lo,hi,p});
+chart($('#chB'),[{l:'Persistence (reference)',ref:1},R1('Ridge AR',.95,.87,1.07),R1('Recalibrated persistence',.98,.92,1.03),R1('Residual MLP',.96,.93,1.00),R1('Residual GCN',1.00,.97,1.03),R1('Residual GraphSAGE',1.00,.96,1.03),R1('Residual GCN+GRU',1.02,.98,1.04),R1('GBDT',1.12,.99,1.30),R1('Plain GCN',1.15,.96,1.33),R1('GBDT + neighbours',1.17,1.00,1.39)],{min:.8,max:1.45,ticks:[.8,.9,1,1.1,1.2,1.3,1.4],rh:70,lw:430,pw:950});
+chart($('#chA'),[{l:'Persistence × base rate (ref.)',ref:1},R1('All zeros',1.15,.99,1.32,.46),R1('Persistence × last month rate',.95,.89,1.04),R1('Persistence × logistic',.85,.78,.95,.56),R1('Persistence × hazard',.83,.76,.94,.54),R1('Persistence × GBDT classifier',.87,.75,1.05),R1('GBDT hurdle',.87,.77,1.05),R1('Poisson GBDT',.96,.82,1.19),R1('Plain GCN (two-stage)',.86,.79,.94,.53),R1('Residual MLP (two-stage)',.93,.87,1.00),R1('Residual GCN',.97,.93,1.01),R1('Residual GraphSAGE',1.00,.95,1.04),R1('Residual GCN+GRU',.95,.92,1.01)],{min:.7,max:1.35,ticks:[.7,.8,.9,1,1.1,1.2,1.3],rh:53,lw:470,pw:900});
+/* ---------- small html visuals ---------- */
+function hbars(el,rows,max,w){if(!el)return;el.innerHTML=rows.map(r=>`<div class="row"><div class="lab" style="width:${w||430}px;font-size:22px">${r[0]}</div><div class="bar" style="width:${r[1]/max*(r[3]||560)}px;background:${r[2]}"></div><span style="font-size:22px">${r[4]||r[1]}</span></div>`).join('');}
+hbars($('#turn'),[['partial overlap (0.3 ≤ J < 0.5)',158,'#fbbf24',560,'158 (38%)'],['no overlapping clique',150,'#fb7185',560,'150 (37%)'],['lost in one-to-one assignment',61,'#a78bfa',560,'61 (15%)'],['cut by the top-30 limit',42,'#60a5fa',560,'42 (10%)']],158,400);
+(function(){const e=$('#dec');if(!e)return;const rows=[['Persistence × base rate',8.59,10.83],['Persistence × hazard',10.44,5.76],['Plain GCN (two-stage)',11.93,4.74],['Residual MLP (two-stage)',8.43,9.69]];
+ e.innerHTML=rows.map(r=>`<div class="row" style="margin:12px 0"><div class="lab" style="width:330px;text-align:right;color:#9aa6c4;font-size:21px">${r[0]}</div><div style="display:flex"><div class="bar" style="width:${r[1]*26}px;background:#60a5fa;display:flex;align-items:center;justify-content:center;font-size:19px;color:#06101c;font-weight:700">${r[1].toFixed(1)}</div><div class="bar" style="width:${r[2]*26}px;background:#fb7185;display:flex;align-items:center;justify-content:center;font-size:19px;color:#06101c;font-weight:700">${r[2].toFixed(1)}</div></div></div>`).join('')+'<p class="xs"><span style="color:#60a5fa">■</span> survivor part &nbsp; <span style="color:#fb7185">■</span> dissolved part (sum = MSE: 19.42, 16.20, 16.67, 18.12)</p>';})();
+(function(){const e=$('#roll');if(!e)return;let rows='';[16,17,20,39].forEach((o,i)=>{const tot=44,tr=(o-4)/tot*100,va=3/tot*100,fc=1/tot*100;rows+=`<div class="flow" style="gap:0;margin:5px 0"><span class="xs" style="width:100px">origin ${o}</span><div style="flex:1;display:flex;gap:0"><div class="seg" style="width:${tr}%;background:#60a5fa">train</div><div class="seg" style="width:${va}%;background:#fbbf24;font-size:15px">val</div><div class="seg" style="width:${Math.max(fc,2.5)}%;background:#4ade80;font-size:15px">▶</div></div></div>`;});e.innerHTML=rows+'<p class="xs" style="margin-left:100px">expanding training window → forecast the next month → move the origin forward (blocks shown schematically)</p>';})();
+(function(){const e=$('#trap');if(!e)return;e.innerHTML=[['Collapse window: persistence',5.04,'#7b88b8','5.04'],['Collapse window: plain GCN',2.62,'#4ade80','2.62 ± 0.67'],['24 rolling origins: persistence = 1.00',1.0,'#7b88b8','ratio 1.00'],['24 rolling origins: plain GCN',1.15,'#fb7185','ratio 1.15']].map((r,i)=>`<div class="row" style="display:flex;align-items:center;gap:12px;margin:10px 0"><div style="width:420px;text-align:right;color:#9aa6c4;font-size:21px">${r[0]}</div><div class="bar" style="height:30px;border-radius:6px;width:${i<2?r[1]*70:r[1]*220}px;background:${r[2]}"></div><span style="font-size:21px">${r[3]}</span></div>`).join('');})();
+(function(){const e=$('#boot');if(!e)return;let a='<p class="xs">original months</p><div style="display:flex;gap:6px;margin:6px 0 16px">';for(let i=1;i<=12;i++)a+=`<div style="width:50px;height:50px;border-radius:8px;background:#26335f;display:flex;align-items:center;justify-content:center;font-size:20px">${i}</div>`;a+='</div><p class="xs">one resample: blocks of 3 consecutive months drawn with replacement</p><div style="display:flex;gap:6px;margin:6px 0">';[[4,5,6,'#60a5fa'],[10,11,12,'#fbbf24'],[4,5,6,'#60a5fa'],[1,2,3,'#4ade80']].forEach(b=>{b.slice(0,3).forEach(n=>a+=`<div style="width:50px;height:50px;border-radius:8px;background:${b[3]};color:#06101c;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:20px">${n}</div>`);a+='<div style="width:10px"></div>';});e.innerHTML=a+'</div>';})();
+(function(){const e=$('#equi');if(!e)return;const lo=.9,hi=1.11,mn=.8,mx=1.25,W=640,x=v=>(v-mn)/(mx-mn)*W;e.innerHTML=`<svg viewBox="0 0 ${W+40} 120" style="width:100%"><rect x="${x(lo)+20}" y="20" width="${x(hi)-x(lo)}" height="60" fill="rgba(74,222,128,.15)" stroke="#4ade80" stroke-dasharray="6 5"/><line x1="${x(1)+20}" y1="10" x2="${x(1)+20}" y2="90" stroke="#fbbf24" stroke-width="2"/><line x1="${x(.94)+20}" y1="50" x2="${x(.99)+20}" y2="50" stroke="#fff" stroke-width="5"/><text x="${x(.965)+20}" y="42" text-anchor="middle" font-size="16" fill="#fff">0.94–0.99</text><text x="${x(lo)+20}" y="108" text-anchor="middle" font-size="16" fill="#9aa6c4">0.90</text><text x="${x(1)+20}" y="108" text-anchor="middle" font-size="16" fill="#fbbf24">1.0</text><text x="${x(hi)+20}" y="108" text-anchor="middle" font-size="16" fill="#9aa6c4">1.11</text></svg><p class="xs">Residual MLP vs persistence: interval inside the green band → equivalent</p>`;})();
+chart($('#node'),[{l:'Observed SRI at k (persistence)',v:.30,lo:.20,hi:.41},{l:'Persistence × hazard',v:.32,lo:.22,hi:.41},{l:'Residual MLP / GCN / SAGE / GCN+GRU',v:.30,lo:.19,hi:.40},{l:'Group (clique) count',v:.26,lo:.16,hi:.36},{l:'Degree',v:.23,lo:.16,hi:.30}].map(r=>(r.ref=0,r)),{min:0,max:.5,ticks:[0,.1,.2,.3,.4,.5],rh:58,lw:500,pw:640});
+/* node chart: repurpose baseline line (at 1) - redraw cleanly */
+(function(){const e=$('#node');if(!e)return;let s=e.innerHTML;e.innerHTML=s.replace(/<line x1="[0-9.]+" y1="8"[^>]*stroke="#fbbf24"[^>]*\/>/,'').replace(/\(\d\.\d\d\) \[/g,'[');
+ e.innerHTML=e.innerHTML.replace(/<text([^>]*)>(\d\.\d\d) \[([^<]*)<\/text>/g,'<text$1>ρ=$2 [$3</text>');})();
+
+/* ---------- navigation ---------- */
+const slides=$$('.slide'),N=slides.length;let cur=0,notesOn=false;
+slides.forEach(s=>{s._steps=$$('.step',s).filter(e=>!e.classList.contains('on'));s._on=0;const a=$('aside',s);s._notes=a?a.innerHTML:'<p>No notes.</p>';if(a)a.remove();});
+const MAXZ=1.5;
+function fitBody(s){const wrap=$('.bodywrap',s);if(!wrap)return;const bo=wrap.firstElementChild,bz=bo.firstElementChild;const avail=wrap.clientHeight-6;let best=1;
+ for(let z=MAXZ;z>1.001;z=Math.round((z-.05)*100)/100){bz.style.width=(100/z)+'%';bz.style.transform='scale('+z+')';if(bz.offsetHeight*z<=avail){best=z;break;}}
+ bz.style.width=(100/best)+'%';bz.style.transform='scale('+best+')';bo.style.height=(bz.offsetHeight*best)+'px';}
+function layout(){slides.forEach(s=>{if(!s._laid){const kids=[...s.children];if(!kids.length)return;
+  if(!kids[0].classList.contains('sec')){if(kids[0].tagName==='DIV'&&!kids[0].className)kids[0].remove();s.classList.add('center');s._laid=1;return;}
+  const hdr=document.createElement('div');hdr.className='hdr';let i=0;while(i<kids.length){hdr.appendChild(kids[i]);if(kids[i].tagName==='H1'){i++;break;}i++;}
+  const wrap=document.createElement('div'),bo=document.createElement('div'),bz=document.createElement('div');wrap.className='bodywrap';bo.className='bo';bz.className='bz';
+  for(;i<kids.length;i++)bz.appendChild(kids[i]);bo.appendChild(bz);wrap.appendChild(bo);s.appendChild(hdr);s.appendChild(wrap);s._laid=1;}
+  fitBody(s);});}
+function fit(){const h=window.innerHeight*(notesOn?.64:1),sc=Math.min(window.innerWidth/1920,h/1080);const st=$('#stage');st.style.transform=`translate(${(window.innerWidth-1920*sc)/2}px,${(h-1080*sc)/2}px) scale(${sc})`;$('#notes').style.display=notesOn?'block':'none';}
+function ui(){const s=slides[cur];$('#cnt').textContent=`${cur+1} / ${N} · ${s.dataset.sec}`;$('#prog').style.width=((cur+1)/N*100)+'%';$('#notes').innerHTML=`<div style="color:#9aa6c4;font-size:15px;margin-bottom:6px">PRESENTER NOTES · slide ${cur+1}</div>`+s._notes;location.hash='#'+(cur+1);}
+function go(i,all){i=Math.max(0,Math.min(N-1,i));slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('past',k<i);});cur=i;const s=slides[i];s._steps.forEach((e,k)=>{if(all){e.classList.add('on');}else e.classList.remove('on');});s._on=all?s._steps.length:0;ui();}
+function next(){const s=slides[cur];if(s._on<s._steps.length){s._steps[s._on++].classList.add('on');}else if(cur<N-1)go(cur+1,false);ui();}
+function prev(){const s=slides[cur];if(s._on>0){s._steps[--s._on].classList.remove('on');}else if(cur>0)go(cur-1,true);ui();}
+function toggleToc(){const t=$('#toc');t.style.display=t.style.display==='block'?'none':'block';}
+function buildToc(){let h='<h2 style="color:#fff;font-size:36px;margin-top:0">Contents</h2>',sec='';slides.forEach((s,i)=>{if(s.dataset.sec!==sec){sec=s.dataset.sec;h+=`<h2>${sec}</h2>`;}const t=($('h1',s)||{textContent:'Title'}).textContent.slice(0,70);h+=`<a onclick="go(${i},true);toggleToc()">${i+1}. ${t}</a>`;});$('#tocIn').innerHTML=h;}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1,true);else if(e.key==='f'||e.key==='F')toggleFs();else if(e.key==='n'||e.key==='N'){notesOn=!notesOn;fit();}else if(e.key==='t'||e.key==='T')toggleToc();else if(e.key==='Escape'){$('#toc').style.display='none';}});
+$('#bP').onclick=prev;$('#bX').onclick=next;$('#bF').onclick=toggleFs;$('#bN').onclick=()=>{notesOn=!notesOn;fit();};$('#bT').onclick=toggleToc;
+window.addEventListener('resize',fit);buildToc();fit();layout();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);window.addEventListener('load',layout);
+go((parseInt(location.hash.slice(1))||1)-1,false);
+/* overflow self-check: window.checkOverflow() */
+window.checkOverflow=function(){const bad=[];slides.forEach((s,i)=>{s.classList.add('active');s._steps.forEach(e=>e.classList.add('on'));let mb=0;const r0=s.getBoundingClientRect(),sc=r0.height/1080;$$('*',s).forEach(e=>{if(e.closest('svg')&&e.tagName!=='svg')return;const r=e.getBoundingClientRect();if(r.height===0)return;mb=Math.max(mb,(r.bottom-r0.top)/sc);});if(mb>1075||s.scrollWidth>1925)bad.push([i+1,Math.round(mb)]);s.classList.remove('active');});go(cur,false);return bad;};
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@ Slides from my talks and workshops, published at **https://arnavballincode.githu
 |---|---|
 | Let the Agent Cook 🔥 · Building AI-native developer workflows (workshop, [hands-on repo](https://github.com/ArnavBallinCode/let-the-agent-cook)) | [/LetTheAgentCook/](https://arnavballincode.github.io/Talks/LetTheAgentCook/) |
 | Open Tech Summit 2026 · VoxBento | [/OpenTechSummit2026/](https://arnavballincode.github.io/Talks/OpenTechSummit2026/) |
+| Temporal Graph Models for Forecasting Clique Tension · coursework project | [/TemporalGNN/](https://arnavballincode.github.io/Talks/TemporalGNN/) |
 
 ## Adding a talk
 
